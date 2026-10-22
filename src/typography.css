@@ -1,0 +1,44 @@
+:root {
+  font-family: "Inter Variable", "Segoe UI", Arial, sans-serif;
+}
+h1,
+h2,
+.kpi-value,
+.goal-number,
+.chart-summary > strong,
+.pipeline-overview strong,
+.order-summary h3,
+.deal-amount,
+.brand > strong {
+  font-family: "Manrope Variable", "Inter Variable", "Segoe UI", sans-serif;
+}
+.sidebar-collapsed .sidebar-collapse {
+  display: inline-flex;
+  position: absolute;
+  top: 77px;
+  left: 22px;
+  transform: rotate(180deg);
+}
+.sidebar-collapsed .sidebar-nav-area {
+  margin-top: 45px;
+}
+@media (max-width: 640px) {
+  .global-search-trigger,
+  .notifications-button,
+  .topbar-avatar {
+    min-height: 36px;
+    min-width: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .topbar-right {
+    gap: 9px;
+  }
+  .sidebar-collapsed .sidebar-collapse {
+    display: none;
+  }
+  .sidebar-collapsed .sidebar-nav-area {
+    margin-top: 0;
+  }
+}

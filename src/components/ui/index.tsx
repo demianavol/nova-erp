@@ -3,7 +3,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { X, Search, ArrowUpRight, Inbox } from "lucide-react";
+import { X, Search, ArrowUpRight, Inbox, Check } from "lucide-react";
 import { cn, initials } from "../../lib/utils";
 
 const buttonVariants = cva("btn", {
@@ -48,14 +48,119 @@ export const Textarea = React.forwardRef<
   <textarea className={cn("input textarea", className)} ref={ref} {...props} />
 ));
 Textarea.displayName = "Textarea";
+const FieldLabelContext = React.createContext<string | undefined>(undefined);
+
+// Keep a native form control for React Hook Form; render the popup in a portal
+// so its position is independent of dialog transforms and page scaling.
 export const Select = React.forwardRef<
   HTMLSelectElement,
   React.SelectHTMLAttributes<HTMLSelectElement>
->(({ className, children, ...props }, ref) => (
-  <select className={cn("input select", className)} ref={ref} {...props}>
-    {children}
-  </select>
-));
+>(({ className, children, ...props }, ref) => {
+  const fieldLabel = React.useContext(FieldLabelContext);
+  const nativeRef = React.useRef<HTMLSelectElement>(null);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const [selected, setSelected] = React.useState(
+    String(props.value ?? props.defaultValue ?? ""),
+  );
+  const [options, setOptions] = React.useState<
+    { value: string; label: string; disabled: boolean }[]
+  >([]);
+
+  React.useLayoutEffect(() => {
+    const native = nativeRef.current;
+    if (!native) return;
+    setSelected(native.value);
+    const next = Array.from(native.options, (option) => ({
+      value: option.value,
+      label: option.text,
+      disabled: option.disabled,
+    }));
+    setOptions((previous) =>
+      JSON.stringify(previous) === JSON.stringify(next) ? previous : next,
+    );
+  });
+
+  const change = (value: string) => {
+    const native = nativeRef.current;
+    if (!native || value === native.value) return;
+    native.value = value;
+    setSelected(value);
+    native.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+
+  return (
+    <>
+      <select
+        {...props}
+        hidden
+        aria-hidden="true"
+        tabIndex={-1}
+        ref={(element) => {
+          nativeRef.current = element;
+          if (element) element.focus = () => triggerRef.current?.focus();
+          if (typeof ref === "function") ref(element);
+          else if (ref) ref.current = element;
+        }}
+      >
+        {children}
+      </select>
+      <Dropdown.Root>
+        <Dropdown.Trigger asChild>
+          <button
+            ref={triggerRef}
+            type="button"
+            id={props.id ? `${props.id}-trigger` : undefined}
+            className={cn("input select select-trigger", className)}
+            disabled={props.disabled}
+            aria-label={props["aria-label"] ?? fieldLabel}
+            aria-labelledby={props["aria-labelledby"]}
+            aria-invalid={props["aria-invalid"]}
+            aria-describedby={props["aria-describedby"]}
+            onBlur={() => {
+              const native = nativeRef.current;
+              if (native)
+                native.dispatchEvent(
+                  new FocusEvent("focusout", { bubbles: true }),
+                );
+            }}
+          >
+            <span>
+              {options.find((option) => option.value === selected)?.label ??
+                "Выберите…"}
+            </span>
+          </button>
+        </Dropdown.Trigger>
+        <Dropdown.Portal>
+          <Dropdown.Content
+            className="dropdown select-menu"
+            align="start"
+            sideOffset={6}
+            collisionPadding={12}
+          >
+            <Dropdown.RadioGroup value={selected} onValueChange={change}>
+              {options.map((option) => (
+                <Dropdown.RadioItem
+                  key={option.value}
+                  value={option.value}
+                  disabled={option.disabled}
+                  className="dropdown-item select-option"
+                  textValue={option.label}
+                >
+                  <span className="select-check">
+                    <Dropdown.ItemIndicator>
+                      <Check size={14} />
+                    </Dropdown.ItemIndicator>
+                  </span>
+                  <span>{option.label}</span>
+                </Dropdown.RadioItem>
+              ))}
+            </Dropdown.RadioGroup>
+          </Dropdown.Content>
+        </Dropdown.Portal>
+      </Dropdown.Root>
+    </>
+  );
+});
 Select.displayName = "Select";
 export function Field({
   label,
@@ -69,15 +174,17 @@ export function Field({
   className?: string;
 }) {
   return (
-    <label className={cn("field", className)}>
-      <span>{label}</span>
-      {children}
-      {error && (
-        <span role="alert" className="field-error">
-          {error}
-        </span>
-      )}
-    </label>
+    <FieldLabelContext.Provider value={label}>
+      <label className={cn("field", className)}>
+        <span>{label}</span>
+        {children}
+        {error && (
+          <span role="alert" className="field-error">
+            {error}
+          </span>
+        )}
+      </label>
+    </FieldLabelContext.Provider>
   );
 }
 export function Badge({

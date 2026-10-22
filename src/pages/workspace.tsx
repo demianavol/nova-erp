@@ -36,29 +36,27 @@ import {
   Select,
 } from "../components/ui";
 import { TaskRow } from "./dashboard";
+import {
+  defaultTaskFilters,
+  filterTasks,
+  type TaskStatus,
+  type TaskSort,
+} from "../data/tasks";
 
 export function Tasks() {
   const { data } = useERP(),
     navigate = useNavigate();
-  const [search, setSearch] = useState(""),
-    [status, setStatus] = useState("active"),
-    [department, setDepartment] = useState("all");
-  const list = data.tasks
-    .filter(
-      (t) =>
-        (status === "all" ||
-          (status === "done"
-            ? t.done
-            : status === "overdue"
-              ? !t.done && t.dueAt < today()
-              : !t.done)) &&
-        (department === "all" || t.department === department) &&
-        t.title.toLowerCase().includes(search.toLowerCase().trim()),
-    )
-    .sort(
-      (a, b) =>
-        Number(a.done) - Number(b.done) || a.dueAt.localeCompare(b.dueAt),
-    );
+  const [filters, setFilters] = useState(defaultTaskFilters);
+  const { search, status, department, employee, sort } = filters;
+  const list = filterTasks(data, filters, today());
+  const updateFilter = (next: Partial<typeof filters>) =>
+    setFilters((current) => ({ ...current, ...next }));
+  const resetFilters = () => setFilters(defaultTaskFilters);
+  const filtered = Object.keys(defaultTaskFilters).some(
+    (key) =>
+      filters[key as keyof typeof filters] !==
+      defaultTaskFilters[key as keyof typeof filters],
+  );
   return (
     <>
       <PageHeading
@@ -102,31 +100,75 @@ export function Tasks() {
             <button
               key={key}
               className={cn(status === key && "active")}
-              onClick={() => setStatus(key)}
+              onClick={() => updateFilter({ status: key as TaskStatus })}
             >
               {label}
             </button>
           ))}
         </div>
-        <div className="list-toolbar">
+        <div className="list-toolbar task-toolbar">
           <SearchInput
             value={search}
-            onChange={setSearch}
+            onChange={(value) => updateFilter({ search: value })}
             placeholder="Найти задачу…"
           />
-          <Select
-            aria-label="Отдел задач"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-          >
-            <option value="all">Все отделы</option>
-            {departments.map((d) => (
-              <option key={d} value={d}>
-                {departmentNames[d]}
-              </option>
-            ))}
-          </Select>
+          <div className="task-filter-controls">
+            <Field label="Отдел">
+              <Select
+                aria-label="Отдел задач"
+                value={department}
+                onChange={(e) => updateFilter({ department: e.target.value })}
+              >
+                <option value="all">Все отделы</option>
+                {departments.map((d) => (
+                  <option key={d} value={d}>
+                    {departmentNames[d]}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+            <Field label="Сотрудник">
+              <Select
+                aria-label="Сотрудник задач"
+                value={employee}
+                onChange={(e) => updateFilter({ employee: e.target.value })}
+              >
+                <option value="all">Все сотрудники</option>
+                {data.employees.map((person) => (
+                  <option key={person.id} value={person.id}>
+                    {person.name}
+                  </option>
+                ))}
+              </Select>
+            </Field>
+            <Field label="Сортировка">
+              <Select
+                aria-label="Сортировка задач"
+                value={sort}
+                onChange={(e) =>
+                  updateFilter({ sort: e.target.value as TaskSort })
+                }
+              >
+                <option value="due">По сроку</option>
+                <option value="status">По статусу</option>
+                <option value="priority">По приоритету</option>
+                <option value="employee">По сотруднику</option>
+              </Select>
+            </Field>
+            {filtered && (
+              <Button variant="ghost" size="sm" onClick={resetFilters}>
+                <RotateCcw size={14} />
+                Сбросить
+              </Button>
+            )}
+          </div>
         </div>
+        {sort === "status" && (
+          <p className="task-sort-hint">
+            Сначала просроченные, затем в работе и завершённые. Внутри статуса —
+            по сроку.
+          </p>
+        )}
         <div className="task-page-list">
           {list.length ? (
             list.map((t) => <TaskRow task={t} key={t.id} />)
@@ -135,13 +177,20 @@ export function Tasks() {
               title="Задач в этой выборке нет"
               description="Измените фильтры или создайте новую задачу."
               action={
-                <Button
-                  variant="outline"
-                  onClick={() => navigate("/tasks?create=1")}
-                >
-                  <Plus size={15} />
-                  Новая задача
-                </Button>
+                filtered ? (
+                  <Button variant="outline" onClick={resetFilters}>
+                    <RotateCcw size={15} />
+                    Сбросить фильтры
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate("/tasks?create=1")}
+                  >
+                    <Plus size={15} />
+                    Новая задача
+                  </Button>
+                )
               }
             />
           )}

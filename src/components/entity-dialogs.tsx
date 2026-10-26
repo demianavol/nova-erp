@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { useState } from "react";
 import { EmployeeChip } from "./people";
 import { StageMenu } from "./stage-menu";
@@ -15,6 +16,7 @@ import {
   Check,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useWorkspace } from "../data/workspace";
 import { useERP } from "../data/store";
 import {
   channels,
@@ -601,6 +603,7 @@ type DealPanelProps = {
 };
 function DealForm({ entity, close, initialStage }: DealPanelProps) {
   const { data, saveDeal } = useERP();
+  const [params] = useSearchParams();
   const form = useForm<DealInput>({
     resolver: zodResolver(dealInputSchema),
     defaultValues: entity || {
@@ -608,6 +611,7 @@ function DealForm({ entity, close, initialStage }: DealPanelProps) {
       customerId: data.customers[0]?.id || "",
       managerId: "e1",
       stage: initialStage || "new",
+      priority: "medium",
       channel: "B2B",
       expectedAt: shiftDate(today(), 7),
       items: [
@@ -625,7 +629,10 @@ function DealForm({ entity, close, initialStage }: DealPanelProps) {
     <form
       onSubmit={form.handleSubmit((value) => {
         try {
-          saveDeal(value, entity?.id);
+          const id = saveDeal(value, entity?.id);
+          const project = params.get("project");
+          if (!entity && project)
+            useWorkspace.getState().attach(project, "dealIds", id);
           toast.success(entity ? "Сделка обновлена" : "Сделка создана");
           close();
         } catch {
@@ -660,6 +667,16 @@ function DealForm({ entity, close, initialStage }: DealPanelProps) {
               value={values.stage}
               onChange={(stage) => form.setValue("stage", stage)}
             />
+          </Field>
+          <Field label="Приоритет сделки">
+            <Select
+              {...form.register("priority")}
+              defaultValue={entity?.priority || "medium"}
+            >
+              <option value="high">Высокий</option>
+              <option value="medium">Средний</option>
+              <option value="low">Низкий</option>
+            </Select>
           </Field>
         </div>
         <ItemsEditor
@@ -857,7 +874,9 @@ function TaskForm({ entity, close }: { entity?: Task; close: () => void }) {
       employeeId:
         data.employees.find((e) => e.department === department)?.id || "e1",
       department,
-      dueAt: today(),
+      dueAt: z.iso.date().safeParse(params.get("date")).success
+        ? params.get("date")!
+        : today(),
       priority: "medium",
       done: false,
       notes: "",
@@ -867,7 +886,11 @@ function TaskForm({ entity, close }: { entity?: Task; close: () => void }) {
     <form
       onSubmit={form.handleSubmit((value) => {
         try {
-          saveTask(value, entity?.id);
+          const id = saveTask(value, entity?.id);
+          if (!entity && params.get("project"))
+            useWorkspace
+              .getState()
+              .attach(params.get("project")!, "taskIds", id);
           toast.success(entity ? "Задача обновлена" : "Задача создана");
           close();
         } catch {
@@ -946,7 +969,15 @@ export function EntityDialogs() {
         : location.pathname === "/tasks"
           ? "task"
           : null;
-  const close = () => navigate(location.pathname, { replace: true });
+  const close = () => {
+    const remaining = new URLSearchParams();
+    for (const key of ["project", "view"])
+      if (params.get(key)) remaining.set(key, params.get(key)!);
+    navigate(
+      location.pathname + (remaining.size ? "?" + remaining.toString() : ""),
+      { replace: true },
+    );
+  };
   if (!open || !type) return null;
   const entity = id
     ? (type === "order"

@@ -141,6 +141,7 @@ export const dealInputSchema = z.object({
   managerId: id,
   channel: z.enum(channels),
   stage: z.enum(stages),
+  priority: z.enum(["low", "medium", "high"]).optional(),
   expectedAt: day,
   items: z.array(lineSchema).min(1, "Добавьте товары"),
   notes: z.string().max(3000),
@@ -176,6 +177,7 @@ const activitySchema = z.object({
   route: z.string(),
   createdAt: z.string(),
   type: z.enum(["order", "deal", "customer", "task", "system"]),
+  demo: z.boolean().optional(),
 });
 export const dataSchema = z.object({
   version: z.literal(1),

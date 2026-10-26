@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   ArrowUpRight,
   Building2,
-  Check,
   CheckCheck,
   ClipboardList,
   Clock3,
@@ -35,6 +34,7 @@ import {
   SectionHeading,
   Select,
 } from "../components/ui";
+import { projectTasks, sprintRange, useWorkspace } from "../data/workspace";
 import { TaskRow } from "./dashboard";
 import {
   defaultTaskFilters,
@@ -48,7 +48,13 @@ export function Tasks() {
     navigate = useNavigate();
   const [filters, setFilters] = useState(defaultTaskFilters);
   const { search, status, department, employee, sort } = filters;
-  const list = filterTasks(data, filters, today());
+  const [params] = useSearchParams();
+  const projects = useWorkspace((s) => s.projects);
+  const project = projects.find((p) => p.id === params.get("project"));
+  const view = params.get("view") || "";
+  const scopeTasks = projectTasks(data.tasks, project, view);
+  const list = filterTasks({ ...data, tasks: scopeTasks }, filters, today());
+  const taskQuery = project ? "&project=" + encodeURIComponent(project.id) : "";
   const updateFilter = (next: Partial<typeof filters>) =>
     setFilters((current) => ({ ...current, ...next }));
   const resetFilters = () => setFilters(defaultTaskFilters);
@@ -61,10 +67,21 @@ export function Tasks() {
     <>
       <PageHeading
         eyebrow="РАБОЧЕЕ ПРОСТРАНСТВО"
-        title="Задачи команды"
-        description="Ясные приоритеты. Общий фокус. Видимый результат."
+        title={
+          view === "sprint"
+            ? "Спринт недели"
+            : view === "backlog"
+              ? "Бэклог"
+              : "Задачи команды"
+        }
+        description={
+          view === "sprint"
+            ? `${project?.name || "Вся команда"} · ${sprintRange().from} — ${sprintRange().to}`
+            : project?.name ||
+              "Ясные приоритеты. Общий фокус. Видимый результат."
+        }
         actions={
-          <Button onClick={() => navigate("/tasks?create=1")}>
+          <Button onClick={() => navigate("/tasks?create=1" + taskQuery)}>
             <Plus size={17} />
             Создать задачу
           </Button>
@@ -73,19 +90,19 @@ export function Tasks() {
       <div className="task-stats">
         <div>
           <ClipboardList size={19} />
-          <strong>{data.tasks.filter((t) => !t.done).length}</strong>
+          <strong>{scopeTasks.filter((t) => !t.done).length}</strong>
           <span>в работе</span>
         </div>
         <div>
           <Clock3 size={19} />
           <strong>
-            {data.tasks.filter((t) => !t.done && t.dueAt < today()).length}
+            {scopeTasks.filter((t) => !t.done && t.dueAt < today()).length}
           </strong>
           <span>просрочено</span>
         </div>
         <div>
           <CheckCheck size={19} />
-          <strong>{data.tasks.filter((t) => t.done).length}</strong>
+          <strong>{scopeTasks.filter((t) => t.done).length}</strong>
           <span>завершено</span>
         </div>
       </div>
@@ -541,45 +558,9 @@ export function Settings() {
           <section className="card settings-card">
             <SectionHeading
               title="Внешний вид"
-              description="Выберите комфортную тему"
+              description="Настройте содержимое рабочего пространства"
             />
-            <div className="theme-options">
-              {(["light", "dark"] as const).map((t) => (
-                <button
-                  key={t}
-                  className={cn(
-                    "theme-option",
-                    `theme-preview-${t}`,
-                    preferences.theme === t && "selected",
-                  )}
-                  onClick={() => preferences.update({ theme: t })}
-                >
-                  <span className="theme-preview">
-                    <i />
-                    <span>
-                      <b />
-                      <b />
-                      <b />
-                    </span>
-                  </span>
-                  <strong>
-                    {t === "light" ? "Светлая" : "Тёмная"}
-                    {preferences.theme === t && <Check size={14} />}
-                  </strong>
-                </button>
-              ))}
-            </div>
             <div className="display-options">
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={!preferences.welcomeHidden}
-                  onChange={(e) =>
-                    preferences.update({ welcomeHidden: !e.target.checked })
-                  }
-                />
-                Приветственный баннер на главной
-              </label>
               <label className="checkbox-label">
                 <input
                   type="checkbox"
@@ -610,7 +591,7 @@ export function Settings() {
             </div>
             <p className="form-hint">
               Сброс удалит ваши изменения и восстановит исходный набор данных.
-              Профиль и тема сохранятся.
+              Профиль и настройки внешнего вида сохранятся.
             </p>
             <Button variant="outline" onClick={() => setConfirm(true)}>
               <RotateCcw size={15} />

@@ -32,7 +32,7 @@ import {
 import { useERP } from "../data/store";
 import { Badge } from "./ui";
 
-export const channelColors = ["#8b75ed", "#a5a0f2", "#b9d8cc", "#edc69c"];
+export const channelColors = ["#a66cf5", "#61cbd9", "#73cfa6", "#e5b77a"];
 export function KPIGrid({ period }: { period: Period }) {
   const [selected, setSelected] = useState<MetricKey | null>(null);
   const keys = ["revenue", "orders", "average", "conversion"] as const;
@@ -172,8 +172,8 @@ export function RevenueChart({
         >
           <defs>
             <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#8b75ed" stopOpacity={0.21} />
-              <stop offset="95%" stopColor="#8b75ed" stopOpacity={0} />
+              <stop offset="0%" stopColor="#a66cf5" stopOpacity={0.21} />
+              <stop offset="95%" stopColor="#a66cf5" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid
@@ -197,7 +197,7 @@ export function RevenueChart({
             tickFormatter={(v) => `${Math.round(Number(v) / 1000)} т.`}
           />
           <Tooltip
-            cursor={{ stroke: "#8b75ed", strokeDasharray: "3 3" }}
+            cursor={{ stroke: "#a66cf5", strokeDasharray: "3 3" }}
             contentStyle={{
               background: "var(--card)",
               border: "1px solid var(--border)",
@@ -214,7 +214,7 @@ export function RevenueChart({
           <Area
             type="monotone"
             dataKey="previous"
-            stroke="#c7c5da"
+            stroke="#747181"
             strokeWidth={2}
             strokeDasharray="5 5"
             fill="transparent"
@@ -223,12 +223,12 @@ export function RevenueChart({
           <Area
             type="monotone"
             dataKey="revenue"
-            stroke="#8b75ed"
+            stroke="#a66cf5"
             strokeWidth={2.5}
             fill="url(#revenueGradient)"
             activeDot={{
               r: 5,
-              fill: "#8b75ed",
+              fill: "#a66cf5",
               stroke: "var(--card)",
               strokeWidth: 3,
             }}

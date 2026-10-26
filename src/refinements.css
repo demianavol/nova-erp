@@ -125,7 +125,9 @@
 }
 .kpi-interactive:hover {
   border-color: color-mix(in srgb, var(--primary) 55%, var(--border));
-  box-shadow: 0 6px 20px #7762d511;
+  box-shadow:
+    inset 0 1px 0 #ffffff0a,
+    0 6px 22px #9254ee20;
   transform: translateY(-2px);
 }
 .kpi-interactive:focus-visible {
@@ -174,8 +176,7 @@
   padding-right: 15px;
 }
 .display-options {
-  border-top: 1px solid var(--border);
-  padding-top: 19px;
+  padding: 18px 22px 22px;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -344,8 +345,9 @@
 }
 .finance-mini-card {
   border: 1px solid var(--border);
-  background: var(--card);
-  border-radius: 10px;
+  background: var(--panel);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
   padding: 15px 18px;
   text-align: left;
   transition: border-color 0.18s;

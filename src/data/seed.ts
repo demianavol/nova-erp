@@ -1,4 +1,5 @@
 import type { Data, Order, Product } from "./schema";
+import { enrichDemoWorkspace } from "./demo-activities";
 import { channels, departments } from "./schema";
 type TaskDepartment = (typeof departments)[number];
 import { shiftDate, today } from "../lib/utils";
@@ -279,7 +280,7 @@ export function seedData(anchor = today()): Data {
     notes: "",
     createdAt: shiftDate(anchor, -4),
   }));
-  return {
+  return enrichDemoWorkspace({
     version: 1,
     seededAt: anchor,
     employees,
@@ -343,5 +344,5 @@ export function seedData(anchor = today()): Data {
         createdAt: `${anchor}T08:50:00Z`,
       },
     ],
-  };
+  });
 }

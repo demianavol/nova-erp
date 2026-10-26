@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { z } from "zod";
 import { seedData } from "./seed";
+import { enrichDemoWorkspace } from "./demo-activities";
 import {
   validateData,
   customerInputSchema,
@@ -29,7 +30,9 @@ export function loadData(storage?: StorageLike): {
   try {
     const raw = storage.getItem(DATA_KEY);
     return {
-      data: raw ? validateData(JSON.parse(raw)) : seedData(),
+      data: raw
+        ? enrichDemoWorkspace(validateData(JSON.parse(raw)))
+        : seedData(),
       error: null,
     };
   } catch {
@@ -320,7 +323,8 @@ export const useERP = create<Store>((set, get) => {
 });
 
 const preferencesSchema = z.object({
-  theme: z.enum(["light", "dark"]),
+  // Accept saved light preferences while keeping the interface dark-only.
+  theme: z.enum(["light", "dark"]).transform(() => "dark" as const),
   collapsed: z.boolean(),
   name: z.string().trim().min(2).max(60),
   email: z.email(),
@@ -330,11 +334,7 @@ const preferencesSchema = z.object({
 });
 type Preferences = z.infer<typeof preferencesSchema>;
 const defaults: Preferences = {
-  theme:
-    typeof matchMedia !== "undefined" &&
-    matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light",
+  theme: "dark",
   collapsed: false,
   name: "Али Бабаев",
   email: "demo@nova.local",
@@ -362,7 +362,9 @@ function loadPreferences(): Preferences {
   }
 }
 export const usePreferences = create<
-  Preferences & { update: (value: Partial<Preferences>) => void }
+  Preferences & {
+    update: (value: Partial<z.input<typeof preferencesSchema>>) => void;
+  }
 >((set, get) => ({
   ...loadPreferences(),
   update(value) {

@@ -11,12 +11,10 @@ import {
   EyeOff,
   LockKeyhole,
   Mail,
-  Moon,
   ShieldCheck,
   Sparkles,
-  Sun,
 } from "lucide-react";
-import { useAuth, usePreferences } from "../data/store";
+import { useAuth } from "../data/store";
 import { Logo } from "../components/layout";
 import { Badge, Button, Field, Input } from "../components/ui";
 
@@ -27,7 +25,6 @@ const loginSchema = z.object({
 });
 export function Login() {
   const { authenticated, login } = useAuth();
-  const preferences = usePreferences();
   const location = useLocation();
   const [visible, setVisible] = useState(false),
     [error, setError] = useState("");
@@ -42,21 +39,6 @@ export function Login() {
       <div className="login-main">
         <header className="login-header">
           <Logo />
-          <button
-            className="login-theme"
-            aria-label="Переключить тему"
-            onClick={() =>
-              preferences.update({
-                theme: preferences.theme === "light" ? "dark" : "light",
-              })
-            }
-          >
-            {preferences.theme === "light" ? (
-              <Moon size={20} />
-            ) : (
-              <Sun size={20} />
-            )}
-          </button>
         </header>
         <div className="login-form-wrap">
           <Badge tone="violet">

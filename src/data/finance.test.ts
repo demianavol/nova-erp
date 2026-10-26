@@ -6,7 +6,13 @@ import {
 } from "./finance";
 import { defaultFinancialSettings, validateData } from "./schema";
 import { seedData } from "./seed";
-import { migratePreferences, persistData, loadData, useERP } from "./store";
+import {
+  migratePreferences,
+  persistData,
+  loadData,
+  useERP,
+  usePreferences,
+} from "./store";
 import { orderTotal, periodFor } from "./selectors";
 
 describe("Управленческая финансовая модель", () => {
@@ -162,9 +168,28 @@ describe("Совместимость настроек интерфейса", () 
         promoHidden: true,
       }),
     ).toMatchObject({
+      theme: "dark",
       name: "Ирина Иванова",
+      email: "test@example.com",
+      role: "Директор",
+      collapsed: false,
       welcomeHidden: true,
       promoHidden: true,
     });
+  });
+  it("не возвращает светлую тему при обновлении старых настроек", () => {
+    const original = usePreferences.getState();
+    try {
+      original.update({ theme: "light", collapsed: true, promoHidden: true });
+      expect(usePreferences.getState()).toMatchObject({
+        theme: "dark",
+        collapsed: true,
+        promoHidden: true,
+        name: original.name,
+        email: original.email,
+      });
+    } finally {
+      usePreferences.setState(original);
+    }
   });
 });

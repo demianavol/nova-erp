@@ -1,10 +1,4 @@
-import React, {
-  Component,
-  Suspense,
-  lazy,
-  useEffect,
-  type ReactNode,
-} from "react";
+import React, { Component, Suspense, lazy, type ReactNode } from "react";
 import ReactDOM from "react-dom/client";
 import {
   HashRouter,
@@ -14,7 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Toaster } from "sonner";
-import { useAuth, usePreferences } from "./data/store";
+import { useAuth } from "./data/store";
 import { Layout } from "./components/layout";
 import { Login } from "./pages/login";
 import { Button, Empty } from "./components/ui";
@@ -23,6 +17,7 @@ import "@fontsource-variable/manrope";
 import "./styles.css";
 import "./typography.css";
 import "./refinements.css";
+import "./workspace.css";
 
 const Dashboard = lazy(() =>
   import("./pages/dashboard").then((m) => ({ default: m.Dashboard })),
@@ -105,11 +100,6 @@ function Protected() {
   );
 }
 function App() {
-  const theme = usePreferences((s) => s.theme);
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    document.documentElement.style.colorScheme = theme;
-  }, [theme]);
   return (
     <ErrorBoundary>
       <a
@@ -148,7 +138,7 @@ function App() {
           </Routes>
         </Suspense>
       </HashRouter>
-      <Toaster richColors position="bottom-right" theme={theme} closeButton />
+      <Toaster richColors position="bottom-right" theme="dark" closeButton />
     </ErrorBoundary>
   );
 }

@@ -6,23 +6,17 @@ import {
   Plus,
   CalendarDays,
   ChevronRight,
-  Sparkles,
-  Target,
-  CircleCheck,
   ShoppingBag,
-  Users,
   Check,
   Circle,
   Layers3,
-  X,
 } from "lucide-react";
-import { useERP, usePreferences } from "../data/store";
+import { useERP } from "../data/store";
 import { channels, departmentNames, type Task } from "../data/schema";
 import {
   chartData,
   inPeriod,
   isRevenue,
-  metrics,
   orderTotal,
   periodFor,
   type Period,
@@ -45,6 +39,12 @@ import {
   FinancialSummary,
 } from "../components/finance-panel";
 import { DepartmentBadge, EmployeeChip } from "../components/people";
+import { WorkspaceCalendar } from "../components/workspace-calendar";
+import { HomeTasks } from "../components/home-tasks";
+import { ActivityFeed } from "../components/activity-feed";
+import { WorkspacePulse } from "../components/workspace-pulse";
+import { useWorkspace, projectTasks } from "../data/workspace";
+import { HomeDealBoard } from "../components/home-deal-board";
 
 export function PeriodPicker({
   period,
@@ -162,11 +162,8 @@ export function TaskRow({ task }: { task: Task }) {
 
 export function Dashboard({ sales = false }: { sales?: boolean }) {
   const navigate = useNavigate();
-  const data = useERP((s) => s.data),
-    name = usePreferences((s) => s.name);
-  const preferences = usePreferences();
+  const data = useERP((s) => s.data);
   const [period, setPeriod] = useState<Period>(periodFor(30));
-  const current = metrics(data.orders, data.deals, period);
   const selectedOrders = data.orders.filter((o) =>
     inPeriod(o.createdAt, period.from, period.to),
   );
@@ -176,8 +173,7 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
       .filter((o) => o.channel === name && isRevenue(o))
       .reduce((sum, o) => sum + orderTotal(o), 0),
   }));
-  const goal = 150000000,
-    completion = Math.round((current.revenue / goal) * 100);
+
   const topProducts = data.products
     .map((p) => ({
       ...p,
@@ -194,115 +190,38 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
     }))
     .sort((a, b) => b.sales - a.sales)
     .slice(0, 5);
-  const taskList = data.tasks
+  const workspace = useWorkspace();
+  const project = workspace.projects.find(
+    (p) => p.id === workspace.selectedProjectId,
+  );
+  const taskList = projectTasks(data.tasks, sales ? undefined : project)
     .filter((t) => !t.done && (!sales || t.department === "sales"))
     .sort((a, b) => a.dueAt.localeCompare(b.dueAt))
-    .slice(0, 4);
+    .slice(0, sales ? 4 : 3);
   const mainRevenue =
     chartData(data.orders, period).reduce((s, d) => s + d.revenue, 0) * 100;
   return (
-    <>
-      <PageHeading
-        eyebrow={sales ? "ОТДЕЛ ПРОДАЖ" : "РАБОЧЕЕ ПРОСТРАНСТВО"}
-        title={
-          sales ? "Продажи в деталях" : `Добрый день, ${name.split(" ")[0]}`
-        }
-        description={
-          sales
-            ? "Вся картина продаж. От первого контакта до повторной покупки."
-            : "Главное о вашем бизнесе — в одном пространстве."
-        }
-        actions={
-          <>
-            <Button variant="outline" onClick={() => navigate("/tasks")}>
-              <CalendarDays size={16} />
-              Задачи команды
-            </Button>
-            <Button onClick={() => navigate("/sales/orders?create=1")}>
-              <Plus size={17} />
-              Новый заказ
-            </Button>
-          </>
-        }
-      />
-      {!sales && !preferences.welcomeHidden && (
-        <div className="welcome-banner">
-          <button
-            className="dismiss-banner"
-            aria-label="Скрыть приветственный баннер"
-            title="Скрыть баннер"
-            onClick={() => preferences.update({ welcomeHidden: true })}
-          >
-            <X size={16} />
-          </button>
-          <div>
-            <span className="banner-label">
-              <span />
-              NOVA ДЛЯ FORM & HOME
-            </span>
-            <h2>
-              Всё под контролем.
-              <br />
-              Бизнес — в движении.
-            </h2>
-            <p>
-              Объединяйте команду, замечайте возможности
-              <br className="desktop-break" /> и превращайте данные в решения.
-            </p>
-            <Button
-              className="banner-button"
-              onClick={() => navigate("/sales")}
-            >
-              Перейти к продажам
-              <ArrowUpRight size={16} />
-            </Button>
-          </div>
-          <div className="banner-art" aria-hidden="true">
-            <div className="orbital orbital-1" />
-            <div className="orbital orbital-2" />
-            <div className="orbital orbital-3" />
-            <div className="banner-symbol">
-              <span />
-              <span />
-              <span />
-              <span />
-            </div>
-            <div className="floating-chip chip-1">
-              <span className="chip-icon">
-                <ShoppingBag size={16} />
-              </span>
-              <div>
-                <small>Новые возможности</small>
-                <strong>
-                  {
-                    data.deals.filter(
-                      (d) => d.stage !== "won" && d.stage !== "lost",
-                    ).length
-                  }{" "}
-                  активных сделок
-                </strong>
-              </div>
-              <ArrowUpRight size={15} />
-            </div>
-            <div className="floating-chip chip-2">
-              <span className="chip-icon green">
-                <CircleCheck size={16} />
-              </span>
-              <div>
-                <small>Команда на связи</small>
-                <strong>7 специалистов</strong>
-              </div>
-              <div className="tiny-avatars">
-                <i>АВ</i>
-                <i>АС</i>
-                <i>+5</i>
-              </div>
-            </div>
-            <span className="art-star star-1">✦</span>
-            <span className="art-star star-2">✦</span>
-          </div>
-        </div>
+    <div className={sales ? "sales-dashboard" : "home-dashboard"}>
+      {sales && (
+        <PageHeading
+          eyebrow="ОТДЕЛ ПРОДАЖ"
+          title="Продажи в деталях"
+          description="Вся картина продаж. От первого контакта до повторной покупки."
+          actions={
+            <>
+              <Button variant="outline" onClick={() => navigate("/tasks")}>
+                <CalendarDays size={16} />
+                Задачи команды
+              </Button>
+              <Button onClick={() => navigate("/sales/orders?create=1")}>
+                <Plus size={17} />
+                Новый заказ
+              </Button>
+            </>
+          }
+        />
       )}
+      {!sales && <HomeDealBoard />}
       <div className="overview-heading">
         <div>
           <h2>
@@ -334,41 +253,7 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
             </div>
           </section>
         ) : (
-          <section className="card goal-card">
-            <div className="goal-head">
-              <span className="soft-violet icon-box">
-                <Target size={20} />
-              </span>
-              <Badge>Демо-план</Badge>
-            </div>
-            <h2>Двигаемся к цели</h2>
-            <p>План выручки на выбранный период</p>
-            <div className="goal-number">
-              <strong>
-                {Math.min(completion, 999)}
-                <span>%</span>
-              </strong>
-              <span>выполнено</span>
-            </div>
-            <div className="progress-track">
-              <span style={{ width: `${Math.min(completion, 100)}%` }} />
-            </div>
-            <div className="goal-values">
-              <span>{money(current.revenue, true)}</span>
-              <span>из {money(goal, true)}</span>
-            </div>
-            <div className="goal-note">
-              <Sparkles size={17} />
-              <p>
-                {completion >= 100
-                  ? "Отличная работа! План уже выполнен."
-                  : `До цели осталось ${money(Math.max(0, goal - current.revenue), true)}. Каждая сделка приближает результат.`}
-              </p>
-            </div>
-            <TextLink onClick={() => navigate("/sales/pipeline")}>
-              Открыть воронку
-            </TextLink>
-          </section>
+          <WorkspacePulse project={project} />
         )}
       </div>
       {sales && (
@@ -436,10 +321,10 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
                       <i
                         style={{
                           background: [
-                            "#a7a2b7",
-                            "#a195ed",
-                            "#85aec6",
-                            "#e2b881",
+                            "#a5a3b3",
+                            "#b187f1",
+                            "#70d3e4",
+                            "#ecc180",
                           ][i],
                         }}
                       />
@@ -457,10 +342,10 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
                         style={{
                           width: `${Math.max(8, (count / Math.max(data.deals.length, 1)) * 220)}%`,
                           background: [
-                            "#d1cedc",
-                            "#c2b7f4",
-                            "#b6d5e6",
-                            "#eed4b2",
+                            "#777381",
+                            "#9254ee",
+                            "#43aebd",
+                            "#b48a4b",
                           ][i],
                         }}
                       />
@@ -576,85 +461,50 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
             )}
           </div>
         </section>
-        <section className="card tasks-card">
-          <SectionHeading
-            title="В фокусе команды"
-            description="Ближайшие задачи и приоритеты"
-            action={
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Создать задачу"
-                onClick={() => navigate("/tasks?create=1")}
-              >
-                <Plus size={18} />
-              </Button>
-            }
-          />
-          <div>
-            {taskList.length ? (
-              taskList.map((t) => <TaskRow task={t} key={t.id} />)
-            ) : (
-              <Empty
-                title="Всё выполнено"
-                description="Создайте новую задачу для команды."
-              />
-            )}
-          </div>
-          <button className="all-tasks" onClick={() => navigate("/tasks")}>
-            Все задачи
-            <ArrowRight size={15} />
-          </button>
-        </section>
-      </div>
-      {!sales && (
-        <section className="activity-section">
-          <SectionHeading
-            title="Лента событий"
-            action={
-              <Badge>
-                <span className="live-dot" />В реальном времени
-              </Badge>
-            }
-          />
-          <div className="activity-grid">
-            {data.activities.slice(0, 3).map((a) => (
-              <button key={a.id} onClick={() => navigate(a.route)}>
-                <span
-                  className={cn(
-                    "activity-icon",
-                    a.type === "order"
-                      ? "soft-violet"
-                      : a.type === "deal"
-                        ? "soft-blue"
-                        : "soft-green",
-                  )}
+        {sales ? (
+          <section className="card tasks-card">
+            <SectionHeading
+              title="В фокусе команды"
+              description="Ближайшие задачи и приоритеты"
+              action={
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Создать задачу"
+                  onClick={() =>
+                    navigate(
+                      "/tasks?create=1" +
+                        (!sales && project
+                          ? "&project=" + encodeURIComponent(project.id)
+                          : ""),
+                    )
+                  }
                 >
-                  {a.type === "order" ? (
-                    <ShoppingBag size={17} />
-                  ) : a.type === "deal" ? (
-                    <Target size={17} />
-                  ) : (
-                    <Users size={17} />
-                  )}
-                </span>
-                <div>
-                  <p>{a.title}</p>
-                  <span>{dateLabel(a.createdAt)}</span>
-                </div>
-                <ArrowUpRight size={15} />
-              </button>
-            ))}
-          </div>
-        </section>
-      )}
-      <div className="page-footer">
-        <span>
-          <span className="footer-mark">✦</span>NOVA ERP · Ваш бизнес в одном
-          ритме
-        </span>
-        <span>Демонстрационные данные · FORM & HOME</span>
+                  <Plus size={18} />
+                </Button>
+              }
+            />
+            <div>
+              {taskList.length ? (
+                taskList.map((t) => <TaskRow task={t} key={t.id} />)
+              ) : (
+                <Empty
+                  title="Всё выполнено"
+                  description="Создайте новую задачу для команды."
+                />
+              )}
+            </div>
+            <button className="all-tasks" onClick={() => navigate("/tasks")}>
+              Все задачи
+              <ArrowRight size={15} />
+            </button>
+          </section>
+        ) : (
+          <HomeTasks tasks={taskList} project={project} />
+        )}
       </div>
-    </>
+      {!sales && <WorkspaceCalendar project={project} />}
+      {!sales && <ActivityFeed project={project} />}
+    </div>
   );
 }

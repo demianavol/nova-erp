@@ -204,17 +204,49 @@ export function Avatar({
   name,
   color = "violet",
   size = "normal",
+  portrait = true,
 }: {
   name: string;
   color?: string;
   size?: "normal" | "sm" | "lg";
+  portrait?: boolean;
 }) {
+  const seed = Array.from(name).reduce((sum, c) => sum + c.charCodeAt(0), 0);
+  const photo = (seed % 6) + 1;
+  const positions = [
+    "50% 25%",
+    "50% 20%",
+    "50% 25%",
+    "50% 40%",
+    "52% 40%",
+    "63% 38%",
+  ];
   return (
     <span
-      className={cn("avatar", `avatar-${color}`, `avatar-${size}`)}
+      className={cn(
+        "avatar",
+        `avatar-${color}`,
+        `avatar-${size}`,
+        portrait && "avatar-portrait",
+      )}
       title={name}
+      role={portrait ? "img" : undefined}
+      aria-label={portrait ? name : undefined}
     >
-      {initials(name)}
+      {portrait ? (
+        <img
+          src={`${import.meta.env.BASE_URL}avatars/portrait-${photo}.png`}
+          alt=""
+          aria-hidden="true"
+          width="40"
+          height="40"
+          loading="lazy"
+          decoding="async"
+          style={{ objectPosition: positions[photo - 1] }}
+        />
+      ) : (
+        initials(name)
+      )}
     </span>
   );
 }

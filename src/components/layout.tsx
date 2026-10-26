@@ -15,19 +15,18 @@ import {
   ChevronDown,
   ChevronRight,
   ChevronsLeft,
+  PanelLeftOpen,
   CircleHelp,
   Command,
   LayoutDashboard,
   ListTodo,
   LogOut,
   Menu as MenuIcon,
-  Moon,
   Plus,
   Search,
   Settings2,
   ShoppingBag,
   Sparkles,
-  Sun,
   Target,
   Users,
   Wallet,
@@ -39,18 +38,23 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useAuth, useERP, usePreferences } from "../data/store";
-import { cn, dateLabel, money } from "../lib/utils";
+import { cn, dateLabel, money, today } from "../lib/utils";
 import { orderTotal } from "../data/selectors";
 import { Avatar, Badge, Button, Dialog, Empty, Input, Menu } from "./ui";
+import { ProjectNavigation } from "./project-navigation";
 import { EntityDialogs } from "./entity-dialogs";
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <span className="brand">
       <span className="brand-symbol">
-        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <path d="M7 24V8h5l8 10V8h5v16h-5L12 14v10H7Z" fill="currentColor" />
-        </svg>
+        <img
+          src={`${import.meta.env.BASE_URL}favicon.svg`}
+          width="36"
+          height="36"
+          alt=""
+          aria-hidden="true"
+        />
       </span>
       {!compact && (
         <>
@@ -69,12 +73,6 @@ const nav = [
   { to: "/departments/warehouse", label: "Склад", icon: Package },
   { to: "/departments/finance", label: "Финансы", icon: Wallet },
   { to: "/departments/team", label: "Команда", icon: Users },
-];
-const subnav = [
-  { to: "/sales", label: "Аналитика" },
-  { to: "/sales/orders", label: "Заказы" },
-  { to: "/sales/customers", label: "Клиенты" },
-  { to: "/sales/pipeline", label: "Воронка" },
 ];
 function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
   const data = useERP((s) => s.data),
@@ -256,7 +254,7 @@ export function Layout() {
     setMobile(false);
     pageRef.current?.scrollTo(0, 0);
     window.scrollTo(0, 0);
-  }, [location.pathname]);
+  }, [location.key]);
   useEffect(() => {
     if (!mobile) return;
     const previous = document.activeElement as HTMLElement;
@@ -309,6 +307,43 @@ export function Layout() {
     <div
       className={cn("app-shell", preferences.collapsed && "sidebar-collapsed")}
     >
+      <nav className="app-rail" aria-label="Быстрые переходы">
+        <Link to="/" className="rail-brand" aria-label="NOVA — обзор">
+          <Logo compact />
+        </Link>
+        {preferences.collapsed && (
+          <button
+            className="rail-expand"
+            aria-label="Развернуть навигацию"
+            aria-expanded={false}
+            aria-controls="workspace-sidebar"
+            title="Открыть проекты и навигацию"
+            onClick={() => preferences.update({ collapsed: false })}
+          >
+            <PanelLeftOpen size={19} />
+            <span>Проекты</span>
+          </button>
+        )}
+        <div className="rail-links">
+          {[
+            ...nav,
+            { to: "/tasks", label: "Задачи", icon: ListTodo, end: true },
+          ].map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              aria-label={item.label}
+              title={item.label}
+            >
+              <item.icon size={20} />
+            </NavLink>
+          ))}
+        </div>
+        <NavLink to="/settings" aria-label="Настройки" title="Настройки">
+          <Settings2 size={20} />
+        </NavLink>
+      </nav>
       {mobile && (
         <button
           className="sidebar-backdrop"
@@ -317,6 +352,7 @@ export function Layout() {
         />
       )}
       <aside
+        id="workspace-sidebar"
         ref={asideRef}
         inert={smallScreen && !mobile}
         role={smallScreen && mobile ? "dialog" : undefined}
@@ -325,9 +361,7 @@ export function Layout() {
         className={cn("sidebar", mobile && "sidebar-mobile-open")}
       >
         <div className="sidebar-brand">
-          <Link to="/" aria-label="NOVA — на главную">
-            <Logo compact={preferences.collapsed && !mobile} />
-          </Link>
+          <strong className="sidebar-title">Проекты</strong>
           <Button
             variant="ghost"
             size="icon"
@@ -353,136 +387,36 @@ export function Layout() {
             <X size={20} />
           </Button>
         </div>
-        <button
-          className="workspace-switch"
-          onClick={() => setCompany(true)}
-          title="Информация о компании FORM & HOME"
-          aria-label="О компании FORM & HOME"
-        >
-          <span className="workspace-avatar">
-            f<span>.</span>
-          </span>
-          <span className="workspace-text">
-            <strong>FORM & HOME</strong>
-            <small>Информация о компании</small>
-          </span>
-          <Building2 size={14} />
-        </button>
-        <div className="sidebar-nav-area">
-          <div className="nav-section-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
-          <nav aria-label="Основная навигация">
-            {nav.map((item) => (
-              <div key={item.to}>
-                <NavLink
-                  to={item.to}
-                  end={item.end}
-                  title={item.label}
-                  className={({ isActive }) =>
-                    cn("nav-link", isActive && "active")
-                  }
-                >
-                  <item.icon size={19} />
-                  <span>{item.label}</span>
-                  {item.to === "/sales" && (
-                    <ChevronDown
-                      size={14}
-                      className={cn("nav-chevron", !isSales && "closed")}
-                    />
-                  )}
-                  {item.to === "/" && <span className="nav-active-dot" />}
-                </NavLink>
-                {item.to === "/sales" && isSales && (
-                  <div className="subnav">
-                    {subnav.map((sub) => (
-                      <NavLink
-                        to={sub.to}
-                        key={sub.to}
-                        end
-                        className={({ isActive }) => cn(isActive && "active")}
-                      >
-                        <span />
-                        {sub.label}
-                        {sub.to.endsWith("orders") && (
-                          <small>
-                            {
-                              data.orders.filter((o) => o.shipping === "new")
-                                .length
-                            }
-                          </small>
-                        )}
-                      </NavLink>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-          <div className="nav-section-label tools-label">ИНСТРУМЕНТЫ</div>
-          <NavLink
-            to="/tasks"
-            title="Задачи"
-            className={({ isActive }) => cn("nav-link", isActive && "active")}
-          >
-            <ListTodo size={19} />
-            <span>Задачи</span>
-            <small className="task-nav-count">
-              {data.tasks.filter((t) => !t.done).length}
-            </small>
-          </NavLink>
-          <NavLink
-            to="/settings"
-            title="Настройки"
-            className={({ isActive }) => cn("nav-link", isActive && "active")}
-          >
-            <Settings2 size={19} />
-            <span>Настройки</span>
-          </NavLink>
-        </div>
+        <nav className="mobile-sections" aria-label="Разделы портала">
+          {[
+            ...nav,
+            { to: "/tasks", label: "Задачи", icon: ListTodo, end: true },
+            { to: "/settings", label: "Настройки", icon: Settings2, end: true },
+          ].map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              onClick={() => setMobile(false)}
+            >
+              <item.icon size={17} />
+              <span>{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+        <ProjectNavigation />
         <div className="sidebar-bottom">
           {!preferences.promoHidden && (
-            <div className="sidebar-promo">
-              <button
-                className="promo-dismiss"
-                aria-label="Скрыть блок знакомства с NOVA"
-                title="Скрыть блок"
-                onClick={() => preferences.update({ promoHidden: true })}
-              >
-                <X size={13} />
-              </button>
-              <span>
-                <Sparkles size={17} />
-                Больше ясности.
-              </span>
-              <strong>Больше возможностей.</strong>
-              <p>Ваш бизнес в одном ритме.</p>
-              <button onClick={() => setHelp(true)}>
-                Знакомство с NOVA
-                <ArrowUpRight size={14} />
-              </button>
-              <div className="promo-orbit" />
-            </div>
+            <button className="sidebar-intro" onClick={() => setHelp(true)}>
+              <Sparkles size={14} />
+              Знакомство с NOVA
+              <ArrowUpRight size={12} />
+            </button>
           )}
           <div className="sidebar-utility">
             <button title="Справка" onClick={() => setHelp(true)}>
               <CircleHelp size={17} />
               <span>Помощь и поддержка</span>
-            </button>
-            <button
-              title={
-                preferences.theme === "light" ? "Тёмная тема" : "Светлая тема"
-              }
-              aria-label="Переключить тему"
-              onClick={() =>
-                preferences.update({
-                  theme: preferences.theme === "light" ? "dark" : "light",
-                })
-              }
-            >
-              {preferences.theme === "light" ? (
-                <Moon size={17} />
-              ) : (
-                <Sun size={17} />
-              )}
             </button>
           </div>
           <div className="sidebar-profile">
@@ -501,6 +435,11 @@ export function Layout() {
                 </Button>
               }
               items={[
+                {
+                  label: "О компании",
+                  icon: <Building2 size={15} />,
+                  onClick: () => setCompany(true),
+                },
                 {
                   label: "Настройки профиля",
                   icon: <Settings2 size={15} />,
@@ -524,18 +463,31 @@ export function Layout() {
             >
               <MenuIcon size={21} />
             </Button>
-            <span className="breadcrumb-home">
-              <LayoutDashboard size={15} />
-              <span>Рабочее пространство</span>
-            </span>
-            <ChevronRight size={13} />
-            <strong>
-              {isSales && section !== "Аналитика" ? "Продажи" : section}
-            </strong>
-            {isSales && section !== "Аналитика" && (
+            {location.pathname === "/" ? (
+              <h1
+                className="topbar-greeting"
+                id="workspace-greeting"
+                title={`Добрый день, ${preferences.name.split(" ")[0]}`}
+              >
+                Добрый день, {preferences.name.split(" ")[0]}
+                <span>.</span>
+              </h1>
+            ) : (
               <>
+                <span className="breadcrumb-home">
+                  <LayoutDashboard size={15} />
+                  <span>Рабочее пространство</span>
+                </span>
                 <ChevronRight size={13} />
-                <span>{section}</span>
+                <strong>
+                  {isSales && section !== "Аналитика" ? "Продажи" : section}
+                </strong>
+                {isSales && section !== "Аналитика" && (
+                  <>
+                    <ChevronRight size={13} />
+                    <span>{section}</span>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -546,9 +498,37 @@ export function Layout() {
               onClick={() => setSearch(true)}
             >
               <Search size={16} />
-              <span>Найти что-нибудь…</span>
+              <span>Поиск в пространстве…</span>
               <kbd>Ctrl K</kbd>
             </button>
+            <span className="topbar-date">
+              <CalendarDays size={14} />
+              {dateLabel(today(), true)}
+            </span>
+            <Menu
+              trigger={
+                <Button variant="ghost" size="icon" aria-label="Создать запись">
+                  <Plus size={18} />
+                </Button>
+              }
+              items={[
+                {
+                  label: "Новый заказ",
+                  icon: <ShoppingBag size={15} />,
+                  onClick: () => navigate("/sales/orders?create=1"),
+                },
+                {
+                  label: "Новая задача",
+                  icon: <ListTodo size={15} />,
+                  onClick: () => navigate("/tasks?create=1"),
+                },
+                {
+                  label: "Новая сделка",
+                  icon: <Target size={15} />,
+                  onClick: () => navigate("/sales/pipeline?create=1"),
+                },
+              ]}
+            />
             <span className="topbar-divider" />
             <button
               className="notifications-button"
@@ -575,14 +555,6 @@ export function Layout() {
                   onClick: () => navigate("/settings"),
                 },
                 {
-                  label: "Переключить тему",
-                  icon: <Moon size={15} />,
-                  onClick: () =>
-                    preferences.update({
-                      theme: preferences.theme === "light" ? "dark" : "light",
-                    }),
-                },
-                {
                   label: "Выйти из аккаунта",
                   icon: <LogOut size={15} />,
                   onClick: logout,
@@ -597,6 +569,9 @@ export function Layout() {
           tabIndex={-1}
           className="page-content"
           id="main-content"
+          aria-labelledby={
+            location.pathname === "/" ? "workspace-greeting" : undefined
+          }
         >
           {storageError && (
             <div role="alert" className="storage-warning">

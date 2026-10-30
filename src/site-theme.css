@@ -1,0 +1,530 @@
+.yu-theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 1px solid var(--yu-line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--yu-ink);
+  transition:
+    background 200ms ease,
+    border-color 200ms ease;
+}
+.yu-theme-toggle:hover {
+  background: #9460ca15;
+  border-color: #a584c4;
+}
+.yu-theme-toggle:focus-visible {
+  outline: 2px solid var(--yu-accent);
+  outline-offset: 4px;
+}
+html[data-site-theme="dark"] {
+  color-scheme: dark;
+  background: #131219;
+}
+html[data-site-theme="dark"] .landing {
+  --yu-ink: #eeeaf5;
+  --yu-muted: #b9adc8;
+  --yu-accent: #b990f2;
+  --yu-line: #39313f;
+  --yu-paper: #201c28;
+  background: #131219;
+  color: var(--yu-ink);
+}
+html[data-site-theme="dark"] .landing .lp-header {
+  background: #15131de8;
+  border-color: #332d3b;
+}
+html[data-site-theme="dark"] .landing .yuc-brand {
+  color: #f5efff;
+}
+html[data-site-theme="dark"] .landing .yuc-brand img {
+  filter: brightness(0) invert(1);
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(
+    .lp-navigation a,
+    .yu-audience-nav a,
+    .eg-erp-link,
+    .lp-footer-grid a,
+    .lp-footer-grid p,
+    .lp-footer-grid h3,
+    .lp-footer-bottom,
+    .lp-company-copy p,
+    .lp-team-heading > p,
+    .lp-department-description p,
+    .lp-closing-intro > p,
+    .lp-closing-person,
+    .lp-closing-faq p,
+    .lp-process-explanation p,
+    .lp-process-hint,
+    .lp-brand-stages button,
+    .lp-demo-annotation,
+    .lp-network-status,
+    .lp-network-group h3,
+    .lp-metric h3,
+    .lp-metric > p,
+    .lp-product-evidence p > span,
+    .fsm-subtitle,
+    .fsm-card p,
+    .fsm-rating-source,
+    .fsm-footer,
+    .fsm-product-rating > span,
+    .lp-contact-description,
+    .lp-contact-note,
+    .lp-contact-field,
+    .lp-contact-field > span,
+    .lp-contact-summary
+  ) {
+  color: var(--yu-muted);
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(
+    .lp-company-copy h2 > span,
+    .lp-team-heading h2 > span,
+    .lp-product-evidence strong,
+    .fsm-product-rating > strong,
+    .lp-process-explanation h3,
+    .lp-closing-link,
+    .lp-market-fact,
+    .lp-department-link
+  ) {
+  color: var(--yu-accent);
+}
+html[data-site-theme="dark"] .landing .lp-company::before,
+html[data-site-theme="dark"] .landing .lp-team::before {
+  background: #1d1926;
+  border-color: var(--yu-line);
+}
+html[data-site-theme="dark"] .landing .lp-team::before {
+  background: #191b26;
+}
+html[data-site-theme="dark"] .landing .lp-partner-footer {
+  background: #17151d;
+  border-color: var(--yu-line);
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(
+    .lp-department-info,
+    .lp-footer-bottom,
+    .lp-product-evidence,
+    .lp-closing-faq details,
+    .lp-closing-faq > p,
+    .lp-closing-contact,
+    .lp-team-network,
+    .lp-demo-pane-heading
+  ) {
+  border-color: var(--yu-line);
+}
+html[data-site-theme="dark"] .landing .lp-menu-toggle {
+  color: var(--yu-ink);
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(.lp-block-title, .lp-department-description h3) {
+  color: var(--yu-ink);
+}
+html[data-site-theme="dark"] .landing .fsm-scroll-area {
+  background: #17131e;
+}
+html[data-site-theme="dark"]
+  .landing
+  .lp-team
+  .lp-network-group
+  .lp-department-buttons
+  > button {
+  background: linear-gradient(130deg, #393244cc, #272332b3);
+  border-color: #55455f;
+  color: #dfd4ef;
+  box-shadow:
+    inset 0 1px 0 #ffffff12,
+    0 8px 24px #00000012;
+}
+html[data-site-theme="dark"]
+  .landing
+  .lp-team
+  .lp-network-group
+  .lp-department-buttons
+  > button.is-connected {
+  color: #fff;
+}
+html[data-site-theme="dark"] .landing :is(.lp-network-hub, .lp-hub-logo) {
+  background: #241e31;
+  border-color: #554065;
+}
+html[data-site-theme="dark"] .landing .lp-network-line {
+  stroke: #393042;
+}
+html[data-site-theme="dark"] .landing .lp-network-connected {
+  stroke: #ac7be4;
+}
+html[data-site-theme="dark"] .landing .lp-network-hub.is-complete .lp-hub-logo {
+  background: #7145aa;
+}
+html[data-site-theme="dark"] .landing .lp-metric-popover {
+  background: #26202f;
+  border-color: #544160;
+  color: var(--yu-ink);
+  box-shadow: 0 16px 48px #0005;
+}
+html[data-site-theme="dark"] .landing .lp-metric .lp-metric-popover p {
+  color: #ccc0da;
+}
+html[data-site-theme="dark"] .landing .lp-metric-popover h4 {
+  color: #f2eafa;
+}
+html[data-site-theme="dark"] .landing .lp-metric-popover > span {
+  color: #ab96bb;
+}
+html[data-site-theme="dark"] .landing .lp-metric-motion {
+  color: #b596cf;
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(.mm-person-center, .mm-brand, .mm-brand-three) {
+  fill: #352b40;
+}
+html[data-site-theme="dark"] .landing .mm-growth {
+  stroke: #c399e3;
+}
+html[data-site-theme="dark"] .landing .lp-demo-glass {
+  background: linear-gradient(140deg, #4b365eae, #2b223ec9);
+  border-color: #c4a0ea66;
+  box-shadow:
+    inset 0 1px 0 #ffffff30,
+    0 22px 48px #0004;
+  color: #eee3fc;
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(
+    .lp-demo-pane-heading,
+    .lp-demo-product strong,
+    .lp-demo-product-note,
+    .lp-demo-tags,
+    .lp-demo-feedback
+  ) {
+  color: #e3d0f9;
+}
+html[data-site-theme="dark"] .landing .lp-demo-feedback > div {
+  background: #ffffff12;
+  border-color: #ffffff25;
+}
+html[data-site-theme="dark"] .landing :is(.fsm-dialog, .lp-contact-dialog) {
+  background: #211c2a;
+  border-color: var(--yu-line);
+  color: var(--yu-ink);
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(
+    .fsm-header,
+    .fsm-categories,
+    .fsm-footer,
+    .fsm-card,
+    .fsm-lightbox-caption
+  ) {
+  background: #211c2a;
+  border-color: var(--yu-line);
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(
+    .fsm-card h3,
+    .fsm-header h2,
+    .lp-contact-dialog h2,
+    .lp-contact-field > label,
+    .lp-contact-summary strong,
+    .fsm-lightbox-caption h2
+  ) {
+  color: #eee7f7;
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(
+    .fsm-close,
+    .lp-contact-close,
+    .fsm-categories button,
+    .lp-contact-dialog input,
+    .lp-contact-dialog select
+  ) {
+  background: #302738;
+  border-color: #5a4969;
+  color: #e2d1f1;
+}
+html[data-site-theme="dark"]
+  .landing
+  .fsm-categories
+  button[aria-pressed="true"] {
+  background: #ac7ddb;
+  color: #18101f;
+}
+html[data-site-theme="dark"]
+  .landing
+  :is(.lp-contact-mode, .lp-contact-summary, .lp-contact-success-icon) {
+  background: #392c49;
+  color: #dec6f8;
+}
+html[data-site-theme="dark"] .landing .lp-contact-error {
+  color: #ffaebc;
+}
+html[data-site-theme="dark"]
+  .employee-guide
+  :is(h1, h2, h3, .eg-company-journey strong) {
+  color: var(--yu-ink);
+}
+html[data-site-theme="dark"]
+  .employee-guide
+  :is(
+    .eg-intro,
+    .eg-answer p,
+    .eg-answer li,
+    .eg-breadcrumb,
+    .eg-source,
+    .eg-contact,
+    .eg-footer,
+    .eg-next-topic,
+    .eg-topics-menu summary,
+    .eg-topic-cards p,
+    .eg-topic-filters button,
+    .eg-visual figcaption > span,
+    .eg-flow-return,
+    .eg-flow-note p,
+    .eg-product-lanes > span,
+    .eg-product-lanes small,
+    .eg-agile-principle > span,
+    .eg-responsibility small,
+    .eg-channel-map small,
+    .eg-channel-map p,
+    .eg-tool-map p,
+    .eg-visual-foot,
+    .eg-adaptation-duration > strong > span,
+    .eg-welcome-box > span,
+    .eg-reply-time > p,
+    .eg-call-journey small,
+    .eg-call-journey p,
+    .eg-tenure > span,
+    .eg-tenure div > span,
+    .eg-topic-pagination small
+  ) {
+  color: var(--yu-muted);
+}
+html[data-site-theme="dark"]
+  .employee-guide
+  :is(
+    .eg-topic-cards > a,
+    .eg-search,
+    .eg-topics-menu > nav,
+    .eg-visual,
+    .eg-flow-node,
+    .eg-agile-principle,
+    .eg-channel-map > div,
+    .eg-tool-map > div,
+    .eg-welcome-box,
+    .eg-message-exchange > div,
+    .eg-reply-time,
+    .eg-value-tags > span,
+    .eg-call-icon,
+    .eg-tenure
+  ) {
+  background: #241f2e;
+  border-color: #4b3c5d;
+}
+html[data-site-theme="dark"]
+  .employee-guide
+  :is(
+    .eg-topic-cards > a:hover,
+    .eg-flow-note,
+    .eg-adaptation-focus,
+    .eg-message-exchange > div:last-child
+  ) {
+  background: #30253d;
+}
+html[data-site-theme="dark"]
+  .employee-guide
+  :is(
+    .eg-visual figcaption > strong,
+    .eg-flow-cell > button,
+    .eg-flow-note > span,
+    .eg-agile-principle > strong,
+    .eg-responsibility > span,
+    .eg-channel-map strong,
+    .eg-tool-map h3,
+    .eg-tool-map > div > div > span,
+    .eg-adaptation-focus > span,
+    .eg-welcome-box > strong,
+    .eg-message-exchange > div,
+    .eg-call-journey strong,
+    .eg-tenure strong,
+    .eg-topics-menu a,
+    .eg-contact a
+  ) {
+  color: #dcc2f5;
+}
+html[data-site-theme="dark"]
+  .employee-guide
+  .eg-flow-cell
+  > button.is-selected
+  .eg-flow-node {
+  background: #9163c4;
+  color: #fff;
+  border-color: #ae80dc;
+}
+html[data-site-theme="dark"]
+  .employee-guide
+  .eg-topic-filters
+  button[aria-pressed="true"] {
+  color: #d0a4f6;
+  border-color: #b98be9;
+}
+html[data-site-theme="dark"] .employee-guide .eg-welcome :is(h1, .eg-intro) {
+  color: #fff;
+}
+@media (max-width: 640px) {
+  html[data-site-theme="dark"] .landing .lp-navigation.is-open {
+    background: #211c2a;
+    border-color: var(--yu-line);
+  }
+  .yu-theme-toggle {
+    width: 32px;
+    height: 32px;
+  }
+}
+@media print {
+  .yu-theme-toggle {
+    display: none;
+  }
+}
+
+html[data-site-theme="dark"] .landing .lp-network-hub {
+  box-shadow:
+    0 0 0 13px #231d2f,
+    0 0 0 14px #463353;
+}
+html[data-site-theme="dark"] .landing .lp-brand-instruction {
+  color: var(--yu-muted);
+}
+html[data-site-theme="dark"] .landing .lp-demo-product > div > span {
+  color: #d4badf;
+}
+
+html[data-site-theme="dark"] .landing .fsm-mobile-filter {
+  background: #302738;
+  color: #e2d1f1;
+  border-color: #5a4969;
+}
+html[data-site-theme="dark"] .landing .lp-contact-dialog > p {
+  color: #b9adc8;
+}
+html[data-site-theme="dark"] .landing .lp-contact-success-mark {
+  background: #392c49;
+  color: #dec6f8;
+}
+
+/* Quiet neutral surfaces keep the imagery and typography in front. */
+html[data-site-theme="dark"],
+html[data-site-theme="dark"] .landing {
+  background: #18181b;
+}
+html[data-site-theme="dark"] .landing {
+  --yu-ink: #ecebef;
+  --yu-muted: #b8b6c0;
+  --yu-line: #343339;
+  --yu-paper: #212125;
+}
+html[data-site-theme="dark"] .landing .lp-header {
+  background: #1a1a1ef2;
+}
+html[data-site-theme="dark"] .landing .lp-company::before,
+html[data-site-theme="dark"] .landing .lp-team::before {
+  background: #202024;
+  border-color: #343339;
+}
+html[data-site-theme="dark"] .landing .lp-partner-footer {
+  background: #1b1b1e;
+  border-color: #343339;
+}
+html[data-site-theme="dark"] .landing .lp-closing-faq summary {
+  color: #d2d0da;
+}
+html[data-site-theme="dark"] .landing .lp-closing-faq > p {
+  color: #b8b6c0;
+}
+html[data-site-theme="dark"] .landing .lp-closing-faq details > p {
+  color: #b8b6c0;
+}
+.landing:not(.employee-guide) .lp-company::before {
+  background: #f5f4f7;
+}
+html[data-site-theme="dark"] .landing:not(.employee-guide) .lp-company::before {
+  background: #202024;
+}
+
+/* Opaque reading layers; translucent decoration stays behind the content. */
+html[data-site-theme="dark"] .landing .lp-direction-photo {
+  background: #222225;
+}
+html[data-site-theme="dark"] .landing .lp-direction-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #222225;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+}
+html[data-site-theme="dark"] .landing .lp-demo-glass-front {
+  background: linear-gradient(145deg, #41334f, #2d2837);
+  border-color: #78618e;
+  box-shadow:
+    inset 0 1px 0 #ffffff12,
+    0 18px 38px #0003;
+}
+html[data-site-theme="dark"] .landing .lp-demo-feedback > div {
+  color: #f2edf7;
+  background: #554660;
+  border-color: #756181;
+  font-weight: 450;
+}
+html[data-site-theme="dark"] .landing .lp-demo-feedback > div > svg {
+  color: #d2b3ee;
+}
+html[data-site-theme="dark"] .landing .lp-demo-pane-heading {
+  color: #f2edf7;
+  border-color: #766180;
+}
+html[data-site-theme="dark"] .landing .lp-team .lp-network-hub {
+  background: #242329;
+  border: 0;
+  box-shadow: none;
+}
+html[data-site-theme="dark"] .landing .lp-team .lp-hub-logo {
+  background: transparent;
+  border: 0;
+}
+html[data-site-theme="dark"]
+  .landing
+  .lp-team
+  .lp-network-hub.is-complete
+  .lp-hub-logo
+  img {
+  filter: brightness(0) invert(1);
+}
+html[data-site-theme="dark"] .landing .lp-hub-segments > path {
+  stroke: #403b48;
+}
+html[data-site-theme="dark"] .landing .lp-hub-segments > path.is-lit {
+  stroke: #c09bea;
+}
+html[data-site-theme="dark"]
+  .landing
+  .lp-network-hub.is-complete
+  .lp-hub-segments
+  > path {
+  stroke: #cda8fa;
+}

@@ -56,6 +56,17 @@ export const company = {
       image: "selfcare-editorial.webp",
       alt: "Визуал направления self-care: флакон и баночка для ухода на светлом камне",
     },
+    {
+      id: "oralcare",
+      title: "Уход за полостью рта",
+      english: "Oral care",
+      status: "Новое направление",
+      description:
+        "Oral care — отдельное направление ежедневного ухода за полостью рта\nОткрыты к обсуждению продуктов и сотрудничества с производителями",
+      focus: "Уход за полостью рта · Продукты · Сотрудничество",
+      image: "oralcare-editorial.png",
+      alt: "Визуальная концепция Oral care: зубная щётка, тюбик и флакон на светлом камне",
+    },
   ],
   departments: [
     {

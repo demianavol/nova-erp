@@ -76,88 +76,81 @@ export function BrandProcessDemo({ selected }: { selected: number }) {
       aria-label={labels[selected]}
     >
       <div className="lp-demo-backplate" aria-hidden="true" />
-      {[0, 1, 2].map((index) => (
-        <div
-          key={index}
-          className={`lp-demo-scene${selected === index ? " is-selected" : ""}`}
-          aria-hidden={selected !== index}
-        >
-          <div className="lp-demo-glass lp-demo-glass-back" />
-          <div className="lp-demo-glass lp-demo-glass-front">
-            <div className="lp-demo-pane-heading">
-              <span>Enmoone</span>
-              <span>
-                {index === 0 ? (
-                  <Package size={18} />
-                ) : index === 1 ? (
-                  <Image size={18} />
-                ) : (
-                  <TrendingUp size={18} />
-                )}
-              </span>
-            </div>
-            {index === 0 ? (
-              <div className="lp-demo-product">
-                <img
-                  src={photo(0)}
-                  width="150"
-                  height="195"
-                  alt="Рубашка Enmoone из каталога бренда"
-                  loading="lazy"
-                />
-                <div>
-                  <span>Женская одежда</span>
-                  <strong>
-                    От идеи
-                    <br />к продукту
-                  </strong>
-                  <div className="lp-demo-product-note">
-                    <Check size={15} /> Работа со спросом
-                  </div>
-                </div>
-              </div>
-            ) : index === 1 ? (
-              <>
-                <div className="lp-demo-photo-strip">
-                  {[1, 2, 4].map((item) => (
-                    <img
-                      key={item}
-                      src={photo(item)}
-                      width="100"
-                      height="130"
-                      alt=""
-                      loading="lazy"
-                    />
-                  ))}
-                </div>
-                <div className="lp-demo-tags">
-                  <span>Контент</span>
-                  <span>Продвижение</span>
-                  <span>Аудитория</span>
-                </div>
-              </>
-            ) : (
-              <div className="lp-demo-feedback">
-                <div>
-                  <Package size={21} />
-                  <span>Продукт</span>
-                  <ArrowRight size={16} />
-                </div>
-                <div>
-                  <TrendingUp size={21} />
-                  <span>Продажи на Wildberries</span>
-                  <ArrowDown size={16} />
-                </div>
-                <div>
-                  <MessageCircle size={21} />
-                  <span>Обратная связь покупателей</span>
-                  <Check size={16} />
-                </div>
-              </div>
-            )}
+      <div key={selected} className="lp-demo-scene is-selected">
+        <div className="lp-demo-glass lp-demo-glass-front">
+          <div className="lp-demo-pane-heading">
+            <span>Enmoone</span>
+            <span>
+              {selected === 0 ? (
+                <Package size={18} />
+              ) : selected === 1 ? (
+                <Image size={18} />
+              ) : (
+                <TrendingUp size={18} />
+              )}
+            </span>
           </div>
+          {selected === 0 ? (
+            <div className="lp-demo-product">
+              <img
+                src={photo(0)}
+                width="150"
+                height="195"
+                alt="Рубашка Enmoone из каталога бренда"
+                loading="lazy"
+              />
+              <div>
+                <span>Женская одежда</span>
+                <strong>
+                  От идеи
+                  <br />к продукту
+                </strong>
+                <div className="lp-demo-product-note">
+                  <Check size={15} /> Работа со спросом
+                </div>
+              </div>
+            </div>
+          ) : selected === 1 ? (
+            <>
+              <div className="lp-demo-photo-strip">
+                {[1, 2, 4].map((item) => (
+                  <img
+                    key={item}
+                    src={photo(item)}
+                    width="100"
+                    height="130"
+                    alt=""
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+              <div className="lp-demo-tags">
+                <span>Контент</span>
+                <span>Продвижение</span>
+                <span>Аудитория</span>
+              </div>
+            </>
+          ) : (
+            <div className="lp-demo-feedback">
+              <div>
+                <Package size={21} />
+                <span>Продукт</span>
+                <ArrowRight size={16} />
+              </div>
+              <div>
+                <TrendingUp size={21} />
+                <span>Продажи на Wildberries</span>
+                <ArrowDown size={16} />
+              </div>
+              <div>
+                <MessageCircle size={21} />
+                <span>Обратная связь покупателей</span>
+                <Check size={16} />
+              </div>
+            </div>
+          )}
         </div>
-      ))}
+      </div>
       <svg
         className="lp-demo-leaders"
         viewBox={`0 0 ${leaders.width} ${leaders.height}`}

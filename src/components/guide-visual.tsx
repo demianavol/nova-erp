@@ -55,37 +55,6 @@ export function GuideTopicIcon({
 type Step = { title: string; note: string; icon: LucideIcon; letter?: string };
 const flows: Record<string, { caption: string; badge: string; steps: Step[] }> =
   {
-    company: {
-      caption: "От идеи до роста",
-      badge: "Решения на основе спроса",
-      steps: [
-        {
-          title: "Продукт",
-          note: "Запускаем продукт в выбранной категории",
-          icon: Package,
-        },
-        {
-          title: "Медиа",
-          note: "Рассказываем о продукте через контент, инфлюенсеров и маркетинг",
-          icon: Play,
-        },
-        {
-          title: "Отклик",
-          note: "Собираем интерес, продажи и обратную связь аудитории",
-          icon: MessagesSquare,
-        },
-        {
-          title: "Гипотезы",
-          note: "Формируем гипотезы на основе данных и реального спроса",
-          icon: Lightbulb,
-        },
-        {
-          title: "Масштаб",
-          note: "Развиваем направления, которые подтвердили спрос",
-          icon: TrendingUp,
-        },
-      ],
-    },
     process: {
       caption: "Один спринт",
       badge: "2–4 недели",
@@ -182,21 +151,9 @@ function Flow({ id }: { id: string }) {
         <span>{String(selected + 1).padStart(2, "0")}</span>
         <p key={selected}>{flow.steps[selected].note}</p>
       </div>
-      {id !== "company" && (
-        <div className="eg-flow-return">
-          <RefreshCw size={13} /> Следующий цикл — с учётом выводов
-        </div>
-      )}
-      {id === "company" && (
-        <div className="eg-product-lanes">
-          <span>
-            <Package size={15} /> Одежда <small>Развиваем</small>
-          </span>
-          <span>
-            <Sparkles size={15} /> Self-care <small>Запускаем</small>
-          </span>
-        </div>
-      )}
+      <div className="eg-flow-return">
+        <RefreshCw size={13} /> Следующий цикл — с учётом выводов
+      </div>
     </>
   );
 }
@@ -234,7 +191,30 @@ export function GuideVisual({ id }: { id: string }) {
       className={`eg-visual eg-visual-${id}`}
       aria-label={`Наглядная схема: ${id === "adaptation" ? "период адаптации" : id === "motivation" ? "карьера и стаж" : "рабочий процесс"}`}
     >
-      {flows[id] ? (
+      {id === "company" ? (
+        <>
+          <figcaption>
+            <strong>Как растёт продукт</strong>
+          </figcaption>
+          <ol className="eg-company-journey">
+            <li>
+              <Package size={24} aria-hidden="true" />
+              <strong>Создаём</strong>
+              <span>Продукт и контент</span>
+            </li>
+            <li>
+              <MessagesSquare size={24} aria-hidden="true" />
+              <strong>Проверяем</strong>
+              <span>Спрос и обратную связь</span>
+            </li>
+            <li>
+              <TrendingUp size={24} aria-hidden="true" />
+              <strong>Развиваем</strong>
+              <span>Подтверждённые идеи</span>
+            </li>
+          </ol>
+        </>
+      ) : flows[id] ? (
         <Flow id={id} />
       ) : id === "model" ? (
         <>

@@ -6,16 +6,10 @@ import {
   type CSSProperties,
 } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  ArrowDown,
-  ArrowUpRight,
-  Menu,
-  Plus,
-  Star,
-  Heart,
-  X,
-} from "lucide-react";
+import { ArrowDown, ArrowUpRight, Plus, Star, Heart } from "lucide-react";
 import { CompanyBrand } from "../components/company-brand";
+import { useSiteTheme } from "../components/site-theme";
+import { PublicHeader } from "../components/public-header";
 import { FashionShowcaseModal } from "../components/fashion-showcase-modal";
 import { HeroFilm } from "../components/hero-film";
 import { CompanyMetric } from "../components/company-metric";
@@ -32,12 +26,6 @@ import { company } from "../data/company";
 import "../landing.css";
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}brand/${name}`;
-const navigation = [
-  ["about", "Компания"],
-  ["directions", "Продукты"],
-  ["advantages", "Преимущества"],
-  ["partners", "Сотрудничество"],
-] as const;
 const questions = [
   [
     "Что прислать о производстве?",
@@ -45,7 +33,7 @@ const questions = [
   ],
   [
     "Какие направления развивает компания?",
-    "Мы развиваем собственный бренд одежды на маркетплейсах и запускаем направление self-care\nНовые категории и рынки — следующий этап развития",
+    "Развиваем собственный бренд одежды на маркетплейсах и запускаем self-care\nOral care — новое направление ухода за полостью рта",
   ],
   [
     "Как вы развиваете бренды?",
@@ -238,7 +226,9 @@ function DirectionPhoto({
         alt={direction.alt}
         fetchPriority="high"
       />
-      <DirectionVideo direction={direction} playing={playing} />
+      {direction.id !== "oralcare" && (
+        <DirectionVideo direction={direction} playing={playing} />
+      )}
       <div className="lp-direction-shade" aria-hidden="true" />
       <span className="lp-photo-label">
         0{index + 1} / {direction.english.toUpperCase()}
@@ -285,7 +275,6 @@ function DirectionPhoto({
         >
           <div>
             <span className="lp-direction-status">{direction.status}</span>
-            <p>{direction.description}</p>
             <div className="lp-direction-actions">
               {direction.id === "fashion" && onOpenShowcase && (
                 <button
@@ -299,13 +288,15 @@ function DirectionPhoto({
                   Товары Enmoone <ArrowUpRight size={16} />
                 </button>
               )}
-              <a
-                href={company.partnerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Обсудить направление <ArrowUpRight size={17} />
-              </a>
+              {direction.id !== "fashion" && (
+                <a
+                  href={company.partnerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Обсудить направление <ArrowUpRight size={17} />
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -369,6 +360,7 @@ function FoundingYear() {
 }
 
 export function Landing() {
+  useSiteTheme();
   const employeeRoute = "/employees";
   const [playing, setPlaying] = useState(false);
   const [showcaseOpen, setShowcaseOpen] = useState(false);
@@ -381,14 +373,12 @@ export function Landing() {
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [departmentId, setDepartmentId] = useState<string>(
     company.departments[0].id,
   );
   const activeDepartment = company.departments.find(
     (item) => item.id === departmentId,
   )!;
-  const menuRef = useRef<HTMLButtonElement>(null);
   const { root: teamRef, revealed: teamRevealed } =
     useRevealOnce<HTMLElement>();
   const { root: partnerRef, revealed: partnerRevealed } =
@@ -396,14 +386,6 @@ export function Landing() {
   const { root: resultsRef, revealed: resultsRevealed } =
     useRevealOnce<HTMLElement>();
   const location = useLocation();
-  useEffect(() => {
-    const media = window.matchMedia("(max-width: 640px)");
-    const update = () => {
-      if (!media.matches) setMenuOpen(false);
-    };
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
   useEffect(() => {
     document.title = "Young Unicorn — компания и наши бренды";
     return () => {
@@ -424,19 +406,7 @@ export function Landing() {
     });
     return () => cancelAnimationFrame(frame);
   }, [location.hash]);
-  useEffect(() => {
-    if (!menuOpen) return;
-    const close = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMenuOpen(false);
-        menuRef.current?.focus();
-      }
-    };
-    window.addEventListener("keydown", close);
-    return () => window.removeEventListener("keydown", close);
-  }, [menuOpen]);
   const jump = (id: string) => {
-    setMenuOpen(false);
     if (location.hash === `#${id}`)
       document.getElementById(id)?.scrollIntoView({
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -446,52 +416,7 @@ export function Landing() {
   };
   return (
     <div className="landing">
-      <header className="lp-header">
-        <div className="lp-header-inner">
-          <Link to="/" className="lp-home" aria-label="Young Unicorn — главная">
-            <CompanyBrand />
-          </Link>
-          <nav
-            id="landing-navigation"
-            className={`lp-navigation${menuOpen ? " is-open" : ""}`}
-            aria-label="О компании"
-          >
-            {navigation.map(([id, title]) => (
-              <Link key={id} to={`/#${id}`} onClick={() => jump(id)}>
-                {title}
-              </Link>
-            ))}
-            <Link
-              className="lp-mobile-login"
-              to={employeeRoute}
-              onClick={() => setMenuOpen(false)}
-            >
-              Сотрудникам <ArrowUpRight size={16} />
-            </Link>
-          </nav>
-          <nav className="yu-audience-nav" aria-label="Раздел сайта">
-            <Link to="/" aria-current="page">
-              Партнёрам
-            </Link>
-            <Link to={employeeRoute} className="lp-staff-link">
-              Сотрудникам
-              <span>
-                <ArrowUpRight size={16} />
-              </span>
-            </Link>
-          </nav>
-          <button
-            ref={menuRef}
-            className="lp-menu-toggle"
-            aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
-            aria-expanded={menuOpen}
-            aria-controls="landing-navigation"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X size={23} /> : <Menu size={23} />}
-          </button>
-        </div>
-      </header>
+      <PublicHeader />
       <main id="main-content" tabIndex={-1}>
         <section className="lp-hero lp-container" aria-labelledby="hero-title">
           <HeroFilm />
@@ -788,24 +713,6 @@ export function Landing() {
                 @kiyamova_alina_yuc
               </a>
             </div>
-          </div>
-          <div className="lp-footer-bottom">
-            <span>© {new Date().getFullYear()} Young Unicorn</span>
-            <button
-              aria-label="Вернуться наверх"
-              onClick={() =>
-                window.scrollTo({
-                  top: 0,
-                  behavior: window.matchMedia(
-                    "(prefers-reduced-motion: reduce)",
-                  ).matches
-                    ? "instant"
-                    : "smooth",
-                })
-              }
-            >
-              Наверх <ArrowUpRight size={14} />
-            </button>
           </div>
         </div>
       </footer>

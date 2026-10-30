@@ -46,6 +46,7 @@ export function CompanyMetric({
   const dismissed = useRef(false);
   const [pinned, setPinned] = useState(false);
   const [above, setAbove] = useState(false);
+  const [motionRun, setMotionRun] = useState(0);
   const id = useId();
   const note = notes[index];
   const position = () => {
@@ -61,6 +62,7 @@ export function CompanyMetric({
   };
   useEffect(() => {
     if (!active) setPinned(false);
+    else setMotionRun((current) => current + 1);
   }, [active]);
   useEffect(() => {
     if (!active) return;
@@ -82,7 +84,7 @@ export function CompanyMetric({
     <article
       ref={root}
       style={{ "--metric-delay": `${index * 100}ms` } as CSSProperties}
-      className={`lp-metric${"compact" in metric ? " lp-metric-compact" : ""}${active ? " is-expanded" : ""}`}
+      className={`lp-metric lp-metric-kind-${index}${"compact" in metric ? " lp-metric-compact" : ""}${active ? " is-expanded" : ""}${motionRun ? " has-motion" : ""}`}
       onPointerEnter={(event) => {
         if (
           event.pointerType === "mouse" &&
@@ -111,9 +113,11 @@ export function CompanyMetric({
         }
       }}
     >
-      <MetricMotion index={index} />
+      <MetricMotion key={motionRun} index={index} />
       <div className="lp-metric-number">
-        {metric.value}
+        <div className="lp-metric-value">
+          <span key={motionRun}>{metric.value}</span>
+        </div>
         <span>{metric.unit}</span>
       </div>
       <h3>{metric.label}</h3>

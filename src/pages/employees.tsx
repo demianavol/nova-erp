@@ -9,7 +9,8 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { CompanyBrand } from "../components/company-brand";
+import { useSiteTheme } from "../components/site-theme";
+import { PublicHeader } from "../components/public-header";
 import { company } from "../data/company";
 import { guideTopics } from "../data/employee-guide";
 import {
@@ -23,6 +24,7 @@ import "../employees.css";
 
 const groups = ["Компания", "Работа", "В команде"];
 export function Employees() {
+  useSiteTheme();
   const authenticated = useAuth((s) => s.authenticated);
   const erpRoute = authenticated ? "/erp" : "/login";
   const location = useLocation();
@@ -31,6 +33,9 @@ export function Employees() {
   const [topicGroup, setTopicGroup] = useState("Все");
   const article = useRef<HTMLElement>(null);
   const topic = guideTopics.find((item) => `#${item.id}` === location.hash);
+  const topicIndex = guideTopics.findIndex((item) => item.id === topic?.id);
+  const previousTopic = guideTopics[topicIndex - 1];
+  const nextTopic = guideTopics[topicIndex + 1];
 
   const normalized = query.trim().toLocaleLowerCase("ru");
   const matches = guideTopics.filter((item) =>
@@ -80,22 +85,7 @@ export function Employees() {
   };
   return (
     <div className="landing employee-guide">
-      <header className="lp-header">
-        <div className="lp-header-inner">
-          <Link to="/" className="lp-home" aria-label="Young Unicorn — главная">
-            <CompanyBrand />
-          </Link>
-          <nav className="yu-audience-nav" aria-label="Раздел сайта">
-            <Link to="/">Партнёрам</Link>
-            <Link to="/employees" aria-current="page" onClick={open}>
-              Сотрудникам
-            </Link>
-          </nav>
-          <Link to={erpRoute} className="eg-erp-link">
-            Войти в ERP <ArrowUpRight size={16} />
-          </Link>
-        </div>
-      </header>
+      <PublicHeader employee erpRoute={erpRoute} onGuideNavigate={open} />
       <main id="main-content" className="eg-content" tabIndex={-1}>
         <div className="eg-toolbar">
           <details className="eg-topics-menu" ref={menu}>
@@ -183,9 +173,20 @@ export function Employees() {
             tabIndex={-1}
             aria-labelledby="eg-article-title"
           >
-            <Link className="eg-breadcrumb" to="/employees">
-              <ArrowLeft size={14} /> Все темы
-            </Link>
+            <div className="eg-article-navigation">
+              <Link className="eg-breadcrumb" to="/employees">
+                <ArrowLeft size={14} /> Все темы
+              </Link>
+              {nextTopic && (
+                <Link
+                  className="eg-next-topic"
+                  to={`/employees#${nextTopic.id}`}
+                  onClick={open}
+                >
+                  Следующая тема <ArrowRight size={16} />
+                </Link>
+              )}
+            </div>
             <h1 id="eg-article-title">{topic.title}</h1>
             <p className="eg-intro">{topic.summary}</p>
             <GuideVisual key={`visual-${topic.id}`} id={topic.id} />
@@ -200,7 +201,13 @@ export function Employees() {
                     <Plus size={18} />
                   </summary>
                   <div className="eg-answer">
-                    {section.text && <p>{section.text}</p>}
+                    {section.text && (
+                      <div className="eg-prose">
+                        {section.text.split("\n").map((paragraph) => (
+                          <p key={paragraph}>{paragraph}</p>
+                        ))}
+                      </div>
+                    )}
                     {section.items && (
                       <ul>
                         {section.items.map((item) => (
@@ -212,6 +219,53 @@ export function Employees() {
                 </details>
               ))}
             </div>
+            <nav
+              className="eg-topic-pagination"
+              aria-label="Переход между темами"
+            >
+              {previousTopic ? (
+                <Link
+                  to={`/employees#${previousTopic.id}`}
+                  onClick={open}
+                  rel="prev"
+                >
+                  <ArrowLeft size={19} />
+                  <span>
+                    <small>Предыдущая тема</small>
+                    {previousTopic.title}
+                  </span>
+                </Link>
+              ) : (
+                <Link to="/employees">
+                  <ArrowLeft size={19} />
+                  <span>
+                    <small>Справочник</small>Все темы
+                  </span>
+                </Link>
+              )}
+              {nextTopic ? (
+                <Link
+                  to={`/employees#${nextTopic.id}`}
+                  onClick={open}
+                  rel="next"
+                >
+                  <span>
+                    <small>
+                      Следующая тема · {topicIndex + 2} из {guideTopics.length}
+                    </small>
+                    {nextTopic.title}
+                  </span>
+                  <ArrowRight size={19} />
+                </Link>
+              ) : (
+                <Link to="/employees">
+                  <span>
+                    <small>Конец справочника</small>Вернуться к справочнику
+                  </span>
+                  <ArrowRight size={19} />
+                </Link>
+              )}
+            </nav>
           </article>
         ) : (
           <>

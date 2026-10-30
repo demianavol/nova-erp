@@ -31,7 +31,11 @@ export function MetricMotion({ index }: { index: number }) {
           <g className="mm-shopping-bag">
             <path d="M31 21h34l3 29H28Z" />
             <path d="M39 24V16a9 9 0 0 1 18 0v8" />
-            <path d="m41 36 5 5 10-11" />
+            <path
+              className="mm-order-confirm"
+              pathLength="1"
+              d="m41 36 5 5 10-11"
+            />
           </g>
         </>
       )}

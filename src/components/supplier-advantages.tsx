@@ -27,11 +27,9 @@ const stages = [
 export function SupplierAdvantages() {
   const [position, setPosition] = useState(0);
   const [dragging, setDragging] = useState(false);
-  const [interacted, setInteracted] = useState(false);
   const selected = Math.round(position);
   const choose = (index: number) => {
     setPosition(index);
-    setInteracted(true);
   };
   return (
     <section
@@ -57,95 +55,101 @@ export function SupplierAdvantages() {
             </div>
           ))}
         </div>
-        <p className="lp-brand-instruction">
-          <MoveHorizontal size={17} aria-hidden="true" />
-          Передвиньте ползунок — посмотрите путь бренда
-        </p>
-        <div className={`lp-brand-scrubber${dragging ? " is-dragging" : ""}`}>
-          <div
-            className="lp-brand-rail"
-            aria-hidden="true"
-            style={{ "--stage-progress": `${position * 50}%` } as CSSProperties}
-          >
-            <span className="lp-brand-progress" />
-            <span className="lp-brand-thumb">
-              <MoveHorizontal size={15} />
-              {!interacted && (
-                <span className="lp-brand-drag-hint">Потяните</span>
-              )}
-            </span>
+        <div
+          className="lp-brand-controls"
+          role="group"
+          aria-label="Путь бренда"
+        >
+          <div className="lp-brand-control-heading">
+            <span>Выберите этап</span>
+            <span>{String(selected + 1).padStart(2, "0")} / 03</span>
           </div>
-          <input
-            className="lp-brand-range"
-            type="range"
-            min="0"
-            max="2"
-            step="0.01"
-            value={position}
-            aria-label="Этап развития бренда"
-            aria-valuetext={`${selected + 1} из 3 — ${stages[selected].title}`}
-            aria-describedby={`brand-stage-explanation-${selected}`}
-            onChange={(event) => {
-              setPosition(Number(event.target.value));
-              setInteracted(true);
-            }}
-            onPointerDown={() => {
-              setDragging(true);
-              setInteracted(true);
-            }}
-            onPointerUp={() => {
-              setDragging(false);
-              setPosition(Math.round(position));
-            }}
-            onPointerCancel={() => {
-              setDragging(false);
-              setPosition(Math.round(position));
-            }}
-            onBlur={() => {
-              setDragging(false);
-              setPosition(Math.round(position));
-            }}
-            onKeyDown={(event) => {
-              if (
-                ["ArrowLeft", "ArrowDown", "ArrowRight", "ArrowUp"].includes(
-                  event.key,
-                )
-              ) {
-                event.preventDefault();
-                choose(
-                  Math.min(
-                    2,
-                    Math.max(
-                      0,
-                      selected +
-                        (["ArrowLeft", "ArrowDown"].includes(event.key)
-                          ? -1
-                          : 1),
-                    ),
-                  ),
-                );
+          <div className={`lp-brand-scrubber${dragging ? " is-dragging" : ""}`}>
+            <div
+              className="lp-brand-rail"
+              aria-hidden="true"
+              style={
+                { "--stage-progress": `${position * 50}%` } as CSSProperties
               }
-            }}
-          />
-        </div>
-        <ol className="lp-brand-stages" aria-label="От продукта до покупателя">
-          {stages.map((stage, index) => (
-            <li
-              key={stage.title}
-              className={index === selected ? "is-selected" : ""}
             >
-              <h3>
-                <button
-                  type="button"
-                  aria-current={index === selected ? "step" : undefined}
-                  onClick={() => choose(index)}
-                >
-                  {stage.title}
-                </button>
-              </h3>
-            </li>
-          ))}
-        </ol>
+              <span className="lp-brand-progress" />
+              <span className="lp-brand-thumb">
+                <MoveHorizontal size={15} />
+              </span>
+            </div>
+            <input
+              className="lp-brand-range"
+              type="range"
+              min="0"
+              max="2"
+              step="0.01"
+              value={position}
+              aria-label="Этап развития бренда"
+              aria-valuetext={`${selected + 1} из 3 — ${stages[selected].title}`}
+              aria-describedby={`brand-stage-explanation-${selected}`}
+              onChange={(event) => {
+                setPosition(Number(event.target.value));
+              }}
+              onPointerDown={() => {
+                setDragging(true);
+              }}
+              onPointerUp={() => {
+                setDragging(false);
+                setPosition(Math.round(position));
+              }}
+              onPointerCancel={() => {
+                setDragging(false);
+                setPosition(Math.round(position));
+              }}
+              onBlur={() => {
+                setDragging(false);
+                setPosition(Math.round(position));
+              }}
+              onKeyDown={(event) => {
+                if (
+                  ["ArrowLeft", "ArrowDown", "ArrowRight", "ArrowUp"].includes(
+                    event.key,
+                  )
+                ) {
+                  event.preventDefault();
+                  choose(
+                    Math.min(
+                      2,
+                      Math.max(
+                        0,
+                        selected +
+                          (["ArrowLeft", "ArrowDown"].includes(event.key)
+                            ? -1
+                            : 1),
+                      ),
+                    ),
+                  );
+                }
+              }}
+            />
+          </div>
+          <ol
+            className="lp-brand-stages"
+            aria-label="От продукта до покупателя"
+          >
+            {stages.map((stage, index) => (
+              <li
+                key={stage.title}
+                className={index === selected ? "is-selected" : ""}
+              >
+                <h3>
+                  <button
+                    type="button"
+                    aria-current={index === selected ? "step" : undefined}
+                    onClick={() => choose(index)}
+                  >
+                    {stage.title}
+                  </button>
+                </h3>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
       <BrandProcessDemo selected={selected} />
     </section>

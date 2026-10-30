@@ -232,6 +232,205 @@
   font-weight: 450;
   white-space: nowrap;
 }
+.lp-metric-value {
+  position: relative;
+  line-height: 1.15;
+  transition: color 250ms ease;
+}
+.lp-metric-value > span {
+  display: block;
+  transform-origin: 50% 65%;
+}
+.lp-metric.is-expanded .lp-metric-value {
+  color: var(--yu-accent);
+}
+.lp-metric-kind-0.has-motion .lp-metric-value > span {
+  animation: metric-buyers-lift 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-metric-kind-1.has-motion .lp-metric-value > span {
+  animation: metric-orders-settle 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-metric-kind-2.has-motion .lp-metric-value > span {
+  animation: metric-brands-turn 750ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-metric-kind-3.has-motion .lp-metric-value > span {
+  animation: metric-growth-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-metric-kind-3 .lp-metric-value::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--yu-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lp-metric-kind-3.is-expanded .lp-metric-value::after {
+  transform: scaleX(1);
+}
+@keyframes metric-buyers-lift {
+  0% {
+    transform: translateY(7px);
+    opacity: 0.6;
+  }
+  55% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes metric-orders-settle {
+  0% {
+    transform: scale(0.95);
+  }
+  55% {
+    transform: scale(1.025);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes metric-brands-turn {
+  0% {
+    transform: perspective(400px) rotateY(-22deg);
+  }
+  60% {
+    transform: perspective(400px) rotateY(6deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes metric-growth-rise {
+  from {
+    transform: translate(-6px, 4px);
+  }
+  to {
+    transform: none;
+  }
+}
+/* Hover animations use distinct names so the entrance animation cannot consume them. */
+.lp-results .lp-metric.has-motion .mm-person {
+  animation: metric-people-arrive 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-results .lp-metric.has-motion .mm-person-right {
+  animation-delay: 90ms;
+}
+.lp-results .lp-metric.has-motion .mm-person-center {
+  animation-delay: 180ms;
+}
+.lp-results .lp-metric.has-motion .mm-shopping-bag {
+  animation: metric-bag-lift 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-results .lp-metric.has-motion .mm-order-confirm {
+  stroke-dasharray: 1;
+  animation: metric-check-draw 600ms ease 120ms both;
+}
+.lp-results .lp-metric.has-motion .mm-brand-one {
+  animation: metric-fan-left 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-results .lp-metric.has-motion .mm-brand-two {
+  animation: metric-fan-middle 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-results .lp-metric.has-motion .mm-brand-three {
+  animation: metric-fan-right 800ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-results .lp-metric.has-motion .mm-growth {
+  animation: metric-chart-draw 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-results .lp-metric.has-motion .mm-growth-tip,
+.lp-results .lp-metric.has-motion .mm-growth-point {
+  animation: metric-chart-point 350ms ease 500ms both;
+}
+@keyframes metric-people-arrive {
+  0% {
+    transform: translateY(9px);
+    opacity: 0.25;
+  }
+  65% {
+    transform: translateY(-2px);
+    opacity: 1;
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes metric-bag-lift {
+  0%,
+  100% {
+    transform: none;
+  }
+  45% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes metric-check-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes metric-fan-left {
+  0%,
+  100% {
+    transform: translate(-11px, 3px) rotate(-15deg);
+  }
+  45% {
+    transform: translate(-17px, 0) rotate(-24deg);
+  }
+}
+@keyframes metric-fan-middle {
+  0%,
+  100% {
+    transform: none;
+  }
+  45% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes metric-fan-right {
+  0%,
+  100% {
+    transform: translate(10px, 1px) rotate(12deg);
+  }
+  45% {
+    transform: translate(16px, 0) rotate(23deg);
+  }
+}
+@keyframes metric-chart-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes metric-chart-point {
+  from {
+    opacity: 0;
+    transform: translate(-4px, 4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-results .lp-metric.has-motion .lp-metric-value > span,
+  .lp-results .lp-metric.has-motion .lp-metric-motion * {
+    animation: none !important;
+  }
+  .lp-metric-kind-3 .lp-metric-value::after {
+    transition: none;
+  }
+}
 .lp-metric-number > span {
   font-family: "Inter Variable", sans-serif;
   font-size: 21px;
@@ -3209,32 +3408,6 @@
 .lp-network-hub {
   isolation: isolate;
 }
-.lp-hub-reservoir {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  overflow: hidden;
-  z-index: -1;
-}
-.lp-hub-fill {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--hub-fill);
-  background: linear-gradient(125deg, #6028ad, #a073e0);
-  transition: height 280ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.lp-hub-fill::before {
-  content: "";
-  position: absolute;
-  left: -10%;
-  width: 120%;
-  top: -7px;
-  height: 14px;
-  border-radius: 50%;
-  background: #b18bdc;
-}
 .lp-hub-logo {
   display: grid;
   place-items: center;
@@ -3245,21 +3418,6 @@
   border: 1px solid #ffffff80;
   z-index: 1;
   transition: background 350ms ease;
-}
-.lp-hub-progress {
-  position: absolute;
-  inset: -9px;
-  width: calc(100% + 18px);
-  height: calc(100% + 18px);
-  fill: none;
-  stroke: #8651c4;
-  stroke-width: 2.5;
-  transform: rotate(-90deg);
-  pointer-events: none;
-  overflow: visible;
-}
-.lp-hub-progress > circle {
-  transition: stroke-dasharray 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .lp-network-hub.is-complete .lp-hub-logo {
   background: transparent;
@@ -3355,8 +3513,6 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .lp-hub-fill,
-  .lp-hub-progress > circle,
   .lp-hub-logo {
     transition: none;
   }
@@ -3595,20 +3751,18 @@
 .lp-demo-scene {
   position: absolute;
   inset: 0;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(15px) scale(0.98);
-  transition:
-    opacity 600ms ease,
-    transform 750ms cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s 600ms;
-  pointer-events: none;
-}
-.lp-demo-scene.is-selected {
   opacity: 1;
   visibility: visible;
-  transform: none;
-  transition-delay: 0s;
+  pointer-events: none;
+  animation: lp-pane-arrive 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes lp-pane-arrive {
+  from {
+    transform: translateY(7px);
+  }
+  to {
+    transform: none;
+  }
 }
 .lp-demo-glass {
   position: absolute;
@@ -4485,4 +4639,170 @@
   .lp-team .lp-network-group .lp-department-buttons > button {
     position: relative;
   }
+}
+
+/* Three distinct categories, with enough space for their descriptions. */
+.lp-direction-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.lp-direction-grid .lp-direction-photo {
+  height: 520px;
+  width: 100%;
+  aspect-ratio: auto;
+}
+.lp-direction-grid .lp-direction-content {
+  left: 25px;
+  right: 25px;
+}
+.lp-direction-grid .lp-direction-heading > h3 {
+  font-size: 27px;
+  line-height: 1.2;
+}
+.lp-direction-grid .lp-direction-details p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+@media (max-width: 1100px) {
+  .lp-direction-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .lp-direction-photo-oralcare {
+    grid-column: 1/-1;
+  }
+  .lp-direction-grid .lp-direction-photo-oralcare {
+    height: 380px;
+  }
+  .lp-direction-photo-oralcare > img {
+    object-position: 50% 46%;
+  }
+}
+@media (max-width: 640px) {
+  .lp-direction-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .lp-direction-grid .lp-direction-photo,
+  .lp-direction-grid .lp-direction-photo-oralcare {
+    height: 480px;
+  }
+  .lp-direction-grid .lp-direction-content {
+    left: 22px;
+    right: 22px;
+  }
+  .lp-direction-grid .lp-direction-heading > h3 {
+    font-size: 27px;
+  }
+}
+
+/* Compact category captions leave the product photography visible. */
+.lp-direction-grid .lp-direction-status {
+  margin-top: 9px;
+}
+.lp-direction-grid .lp-direction-actions {
+  margin-top: 16px;
+}
+.lp-direction-grid .lp-direction-actions a {
+  margin-top: 0;
+}
+
+/* Department visits accumulate as seven quiet segments around the mark. */
+.lp-team .lp-network-hub {
+  background: #f9f8fc;
+  border: 0;
+  box-shadow: none;
+}
+.lp-team .lp-hub-logo {
+  background: transparent;
+  border: 0;
+}
+.lp-team .lp-network-hub.is-complete .lp-hub-logo img {
+  filter: none;
+}
+.lp-hub-segments {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+.lp-hub-segments > path {
+  stroke: #ded7e7;
+  transition:
+    stroke 280ms ease,
+    filter 280ms ease;
+}
+.lp-hub-segments > path.is-lit {
+  stroke: #9564c9;
+}
+.lp-network-hub.is-complete .lp-hub-segments > path {
+  stroke: #7945b5;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-hub-segments > path {
+    transition: none;
+  }
+}
+
+/* One scene is mounted at a time, and its reading surface stays opaque. */
+.lp-demo-glass-front {
+  background: linear-gradient(140deg, #fcfaff, #eee5fa);
+}
+.lp-direction-photo-fashion > img,
+.lp-direction-photo-fashion > video {
+  object-position: 80% 45%;
+}
+@media (max-width: 1100px) {
+  .lp-direction-grid .lp-direction-photo {
+    height: 480px;
+  }
+}
+@media (max-width: 640px) {
+  .lp-direction-grid .lp-direction-photo,
+  .lp-direction-grid .lp-direction-photo-oralcare {
+    height: 400px;
+  }
+}
+
+/* The stage selector is one compact control, aligned with its stage labels. */
+.lp-process-explanations {
+  min-height: 112px;
+}
+.lp-brand-controls {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--yu-line);
+}
+.lp-brand-control-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  color: var(--yu-muted);
+  font-size: 12px;
+}
+.lp-brand-control-heading > span:last-child {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  color: var(--yu-accent);
+}
+.lp-brand-controls .lp-brand-scrubber {
+  margin: 4px calc(100% / 6) 0;
+}
+.lp-brand-controls .lp-brand-rail {
+  left: 0;
+  right: 0;
+}
+.lp-brand-controls .lp-brand-scrubber:focus-within {
+  outline: none;
+}
+.lp-brand-controls
+  .lp-brand-scrubber:has(.lp-brand-range:focus-visible)
+  .lp-brand-thumb {
+  outline: 2px solid var(--yu-accent);
+  outline-offset: 4px;
 }

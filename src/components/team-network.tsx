@@ -10,9 +10,14 @@ const nodes = company.departments.map((item) => {
       ? 65 + peers.indexOf(item) * 85
       : 105 + peers.indexOf(item) * 95;
   const x = item.group === "front" ? 154 : 546;
+  const step = 360 / company.departments.length;
+  const angle = (value: number) => (value * Math.PI) / 180;
+  const start = angle(-90 + company.departments.indexOf(item) * step + 5);
+  const end = angle(-90 + (company.departments.indexOf(item) + 1) * step - 5);
   return {
     ...item,
     y,
+    arc: `M ${60 + 49 * Math.cos(start)} ${60 + 49 * Math.sin(start)} A 49 49 0 0 1 ${60 + 49 * Math.cos(end)} ${60 + 49 * Math.sin(end)}`,
     path: `M ${x} ${y} C ${item.group === "front" ? 240 : 460} ${y}, ${item.group === "front" ? 260 : 440} 200, 350 200`,
   };
 });
@@ -90,30 +95,22 @@ export function TeamNetwork({
         aria-valuemax={nodes.length}
         aria-valuenow={connected.length}
         aria-valuetext={`${connected.length} из ${nodes.length} отделов`}
-        style={
-          {
-            "--hub-fill": `${(connected.length / nodes.length) * 100}%`,
-          } as CSSProperties
-        }
       >
-        <div className="lp-hub-reservoir" aria-hidden="true">
-          <div className="lp-hub-fill" />
-        </div>
         <div className="lp-hub-logo" aria-hidden="true">
           <CompanyBrand compact />
         </div>
         <svg
-          className="lp-hub-progress"
+          className="lp-hub-segments"
           viewBox="0 0 120 120"
           aria-hidden="true"
         >
-          <circle
-            cx="60"
-            cy="60"
-            r="57"
-            pathLength="1"
-            style={{ strokeDasharray: `${connected.length / nodes.length} 1` }}
-          />
+          {nodes.map((node) => (
+            <path
+              key={node.id}
+              d={node.arc}
+              className={connected.includes(node.id) ? "is-lit" : undefined}
+            />
+          ))}
         </svg>
         {complete && (
           <svg

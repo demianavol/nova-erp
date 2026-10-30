@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowUpRight, ChevronDown, X } from "lucide-react";
 import { company } from "../data/company";
+import { ProductRating } from "./product-rating";
+import { marketplaceSnapshot } from "../data/product-evidence";
 import {
   catalogCategories,
   fashionProducts,
@@ -153,6 +155,7 @@ export function FashionShowcaseModal({
                       </div>
                       <div className="fsm-card-body">
                         <h3 className="fsm-card-title">{product.title}</h3>
+                        <ProductRating productId={product.id} />
                       </div>
                     </button>
                   ))}
@@ -162,6 +165,9 @@ export function FashionShowcaseModal({
             <footer className="fsm-footer">
               <span className="fsm-footer-note" role="status">
                 {countLabel(filtered.length)}
+                <span className="fsm-rating-source">
+                  Оценки Wildberries · {marketplaceSnapshot.dateLabel}
+                </span>
               </span>
               <a
                 href={company.partnerUrl}
@@ -209,6 +215,10 @@ export function FashionShowcaseModal({
                           <Dialog.Description>
                             {previewProduct.categoryLabel}
                           </Dialog.Description>
+                          <ProductRating productId={previewProduct.id} />
+                          <p className="fsm-rating-source">
+                            Снимок Wildberries · {marketplaceSnapshot.dateLabel}
+                          </p>
                         </div>
                       </>
                     )}

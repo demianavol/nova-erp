@@ -10,9 +10,9 @@ import {
   ArrowDown,
   ArrowUpRight,
   Menu,
-  Pause,
-  Play,
   Plus,
+  Star,
+  Heart,
   X,
 } from "lucide-react";
 import { CompanyBrand } from "../components/company-brand";
@@ -21,6 +21,13 @@ import { HeroFilm } from "../components/hero-film";
 import { CompanyMetric } from "../components/company-metric";
 import { SupplierAdvantages } from "../components/supplier-advantages";
 import { TeamNetwork } from "../components/team-network";
+import { ContactRequestModal } from "../components/contact-request-modal";
+import {
+  getProductEvidence,
+  marketplaceSnapshot,
+  ratingLabel,
+  ratingsLabel,
+} from "../data/product-evidence";
 import { company } from "../data/company";
 import "../landing.css";
 
@@ -365,6 +372,7 @@ export function Landing() {
   const employeeRoute = "/employees";
   const [playing, setPlaying] = useState(false);
   const [showcaseOpen, setShowcaseOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const [activeMetric, setActiveMetric] = useState<number | null>(null);
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -493,13 +501,23 @@ export function Landing() {
           <p className="lp-hero-introduction">
             Создаём и развиваем бренды в e-commerce
           </p>
-          <Link
-            to="/#about"
-            onClick={() => jump("about")}
-            className="lp-button lp-button-primary"
-          >
-            Познакомиться с компанией <ArrowDown size={17} />
-          </Link>
+          <div className="lp-hero-actions">
+            <a
+              href={company.partnerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="lp-button lp-button-primary"
+            >
+              Связаться с нами <ArrowUpRight size={17} />
+            </a>
+            <button
+              type="button"
+              className="lp-button lp-button-glass"
+              onClick={() => setContactOpen(true)}
+            >
+              Оставить контакт <ArrowUpRight size={17} />
+            </button>
+          </div>
         </section>
         <section
           ref={resultsRef}
@@ -561,22 +579,38 @@ export function Landing() {
               />
             ))}
           </div>
-          <div className="lp-visual-caption">
-            <span>Визуальная концепция направлений</span>
-            <button
-              className="lp-video-toggle"
-              type="button"
-              onClick={() => setPlaying(!playing)}
-              aria-pressed={!playing}
-              aria-label={
-                playing
-                  ? "Приостановить видео направлений"
-                  : "Включить видео направлений"
-              }
-            >
-              {playing ? <Pause size={12} /> : <Play size={12} />}{" "}
-              {playing ? "Пауза" : "Видео"}
-            </button>
+          <div
+            className="lp-product-evidence"
+            role="group"
+            aria-label={`Показатели Wildberries по снимку от ${marketplaceSnapshot.dateLabel}`}
+            title={`Wildberries · снимок ${marketplaceSnapshot.dateLabel}`}
+          >
+            <div>
+              <Star size={20} aria-hidden="true" />
+              <p>
+                <strong>
+                  {ratingLabel(
+                    getProductEvidence("shirt-burgundy-stripe").rating,
+                  )}{" "}
+                  из 5
+                </strong>
+                <span>
+                  {ratingsLabel(
+                    getProductEvidence("shirt-burgundy-stripe").ratings,
+                  )}{" "}
+                  у рубашки в полоску
+                </span>
+              </p>
+            </div>
+            <div>
+              <Heart size={20} aria-hidden="true" />
+              <p>
+                <strong>
+                  {marketplaceSnapshot.brandLikes.toLocaleString("ru-RU")}
+                </strong>
+                <span>отметок «Нравится» у Enmoone</span>
+              </p>
+            </div>
           </div>
         </section>
         <section
@@ -667,22 +701,14 @@ export function Landing() {
           aria-labelledby="partners-title"
         >
           <div className="lp-closing-intro">
-            <h2 id="partners-title">
-              Обсудим
-              <br />
-              сотрудничество
-            </h2>
-            <p>
-              Расскажите о вашем производстве — обсудим ассортимент, образцы и
-              условия
-            </p>
+            <h2 id="partners-title">На связи</h2>
             <a
               className="lp-closing-link"
               href={company.partnerUrl}
               target="_blank"
               rel="noopener noreferrer"
             >
-              Написать в Telegram <ArrowUpRight size={22} />
+              Обсудить сотрудничество <ArrowUpRight size={22} />
             </a>
             <span className="lp-closing-person">Алина · Young Unicorn</span>
           </div>
@@ -786,6 +812,10 @@ export function Landing() {
       <FashionShowcaseModal
         isOpen={showcaseOpen}
         onClose={() => setShowcaseOpen(false)}
+      />
+      <ContactRequestModal
+        open={contactOpen}
+        onClose={() => setContactOpen(false)}
       />
     </div>
   );

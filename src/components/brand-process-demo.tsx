@@ -8,6 +8,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { fashionProducts } from "../data/fashion-catalog";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 
 const photo = (index: number) =>
   `${import.meta.env.BASE_URL}brand/${fashionProducts[index].image}`;
@@ -18,8 +19,59 @@ const labels = [
 ];
 
 export function BrandProcessDemo({ selected }: { selected: number }) {
+  const arrowId = `process-arrow-${useId().replace(/:/g, "")}`;
+  const figure = useRef<HTMLElement>(null);
+  const topLabel = useRef<HTMLDivElement>(null);
+  const bottomLabel = useRef<HTMLDivElement>(null);
+  const [leaders, setLeaders] = useState({
+    width: 600,
+    height: 450,
+    top: "",
+    bottom: "",
+  });
+  useLayoutEffect(() => {
+    const root = figure.current,
+      top = topLabel.current,
+      bottom = bottomLabel.current;
+    const pane = root?.querySelector<HTMLElement>(".lp-demo-glass-front");
+    if (!root || !top || !bottom || !pane) return;
+    let frame = 0;
+    const measure = () => {
+      const box = root.getBoundingClientRect(),
+        first = top.getBoundingClientRect(),
+        last = bottom.getBoundingClientRect();
+      const x1 = first.right - box.left + 6,
+        y1 = first.top - box.top + first.height / 2;
+      const tx = pane.offsetLeft + pane.offsetWidth * 0.12,
+        ty = pane.offsetTop + 8;
+      const x2 = last.left - box.left - 7,
+        y2 = last.top - box.top + last.height / 2;
+      const bx = pane.offsetLeft + pane.offsetWidth * 0.78,
+        by = pane.offsetTop + pane.offsetHeight - 8;
+      const next = {
+        width: box.width,
+        height: box.height,
+        top: `M${x1} ${y1}Q${x1 + 28} ${ty - 35} ${tx} ${ty}`,
+        bottom: `M${x2} ${y2}Q${x2 - 28} ${by + 35} ${bx} ${by}`,
+      };
+      setLeaders((current) =>
+        JSON.stringify(current) === JSON.stringify(next) ? current : next,
+      );
+    };
+    const observer = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    });
+    [root, top, bottom, pane].forEach((element) => observer.observe(element));
+    measure();
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [selected]);
   return (
     <figure
+      ref={figure}
       className={`lp-process-demo lp-process-demo-${selected}`}
       aria-label={labels[selected]}
     >
@@ -104,32 +156,53 @@ export function BrandProcessDemo({ selected }: { selected: number }) {
               </div>
             )}
           </div>
-          <div className="lp-demo-annotation lp-demo-annotation-top">
-            <span>
-              {index === 0
-                ? "Проверяем идею"
-                : index === 1
-                  ? "Показываем продукт"
-                  : "Собираем отклик"}
-            </span>
-            <svg viewBox="0 0 100 48" aria-hidden="true">
-              <path d="M3 4C25 42 48 45 92 25m-11-3 11 3-4 11" />
-            </svg>
-          </div>
-          <div className="lp-demo-annotation lp-demo-annotation-bottom">
-            <svg viewBox="0 0 100 48" aria-hidden="true">
-              <path d="M97 44C75 6 52 3 8 23m11 3-11-3 4-11" />
-            </svg>
-            <span>
-              {index === 0
-                ? "Развиваем ассортимент"
-                : index === 1
-                  ? "Находим свою аудиторию"
-                  : "Улучшаем следующий продукт"}
-            </span>
-          </div>
         </div>
       ))}
+      <svg
+        className="lp-demo-leaders"
+        viewBox={`0 0 ${leaders.width} ${leaders.height}`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <marker
+            id={arrowId}
+            markerWidth="7"
+            markerHeight="7"
+            refX="6"
+            refY="3.5"
+            orient="auto"
+            markerUnits="userSpaceOnUse"
+          >
+            <path d="m1 1 5 2.5L1 6" />
+          </marker>
+        </defs>
+        <path d={leaders.top} markerEnd={`url(#${arrowId})`} />
+        <path d={leaders.bottom} markerEnd={`url(#${arrowId})`} />
+      </svg>
+      <div ref={topLabel} className="lp-demo-annotation lp-demo-annotation-top">
+        <span key={selected}>
+          {
+            ["Проверяем идею", "Показываем продукт", "Собираем отклик"][
+              selected
+            ]
+          }
+        </span>
+      </div>
+      <div
+        ref={bottomLabel}
+        className="lp-demo-annotation lp-demo-annotation-bottom"
+      >
+        <span key={selected}>
+          {
+            [
+              "Развиваем ассортимент",
+              "Находим свою аудиторию",
+              "Улучшаем следующий продукт",
+            ][selected]
+          }
+        </span>
+      </div>
       <figcaption>Схема работы с продуктом</figcaption>
     </figure>
   );

@@ -24,9 +24,9 @@ export function TeamNetwork({
   selectedId: string;
   onSelect: (id: string) => void;
 }) {
-  const [activated, setActivated] = useState<string[]>([]);
-  const [connected, setConnected] = useState<string[]>([]);
-  const started = useRef(new Set<string>());
+  const [connected, setConnected] = useState<string[]>([selectedId]);
+  const [travelling, setTravelling] = useState<string[]>([]);
+  const started = useRef(new Set<string>([selectedId]));
   const timers = useRef(new Set<number>());
   useEffect(
     () => () => {
@@ -39,17 +39,13 @@ export function TeamNetwork({
     onSelect(id);
     if (started.current.has(id)) return;
     started.current.add(id);
-    setActivated((current) => [...current, id]);
-    const arrive = () =>
-      setConnected((current) =>
-        current.includes(id) ? current : [...current, id],
-      );
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) arrive();
-    else {
+    setConnected((current) => [...current, id]);
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setTravelling((current) => [...current, id]);
       const timer = window.setTimeout(() => {
-        arrive();
+        setTravelling((current) => current.filter((item) => item !== id));
         timers.current.delete(timer);
-      }, 900);
+      }, 360);
       timers.current.add(timer);
     }
   };
@@ -68,25 +64,23 @@ export function TeamNetwork({
         {nodes.map((node) => (
           <path key={node.id} d={node.path} className="lp-network-line" />
         ))}
-        {activated.map((id) => (
+        {connected.map((id) => (
           <path
             key={id}
             d={nodes.find((node) => node.id === id)!.path}
-            className="lp-network-active lp-network-connected"
+            className={`lp-network-active lp-network-connected${!travelling.includes(id) ? " is-settled" : ""}`}
             pathLength="1"
           />
         ))}
-        {activated
-          .filter((id) => !connected.includes(id))
-          .map((id) => (
-            <circle key={id} r="3" className="lp-network-signal">
-              <animateMotion
-                path={nodes.find((node) => node.id === id)!.path}
-                dur="0.9s"
-                fill="freeze"
-              />
-            </circle>
-          ))}
+        {travelling.map((id) => (
+          <circle key={id} r="3" className="lp-network-signal">
+            <animateMotion
+              path={nodes.find((node) => node.id === id)!.path}
+              dur="0.36s"
+              fill="freeze"
+            />
+          </circle>
+        ))}
       </svg>
       <div
         className={`lp-network-hub${complete ? " is-complete" : ""}`}

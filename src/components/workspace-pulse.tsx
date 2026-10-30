@@ -66,7 +66,7 @@ export function WorkspacePulse({ project }: { project?: WorkspaceProject }) {
                 y1={118 + 108 * Math.sin(a)}
                 x2={120 + 113 * Math.cos(a)}
                 y2={118 + 113 * Math.sin(a)}
-                stroke="#ffffff20"
+                stroke="var(--border)"
                 strokeWidth="1"
               />
             );
@@ -105,7 +105,7 @@ export function WorkspacePulse({ project }: { project?: WorkspaceProject }) {
                 cx={120 + 94 * Math.cos(angle)}
                 cy={118 + 94 * Math.sin(angle)}
                 r="4"
-                fill="#e2d5ff"
+                fill="var(--primary)"
               />
             </>
           )}
@@ -143,7 +143,7 @@ export function WorkspacePulse({ project }: { project?: WorkspaceProject }) {
       <button
         onClick={() =>
           navigate(
-            "/tasks" +
+            "/erp/tasks" +
               (project ? "?project=" + encodeURIComponent(project.id) : ""),
           )
         }

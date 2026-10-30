@@ -143,7 +143,7 @@ export function TaskRow({ task }: { task: Task }) {
       </button>
       <button
         className="task-row-text"
-        onClick={() => navigate(`/tasks?open=${task.id}`)}
+        onClick={() => navigate(`/erp/tasks?open=${task.id}`)}
       >
         <strong>{task.title}</strong>
         <span>
@@ -209,11 +209,11 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
           description="Вся картина продаж. От первого контакта до повторной покупки."
           actions={
             <>
-              <Button variant="outline" onClick={() => navigate("/tasks")}>
+              <Button variant="outline" onClick={() => navigate("/erp/tasks")}>
                 <CalendarDays size={16} />
                 Задачи команды
               </Button>
-              <Button onClick={() => navigate("/sales/orders?create=1")}>
+              <Button onClick={() => navigate("/erp/sales/orders?create=1")}>
                 <Plus size={17} />
                 Новый заказ
               </Button>
@@ -301,7 +301,7 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
               title="Воронка в цифрах"
               description="Текущие активные сделки"
               action={
-                <TextLink onClick={() => navigate("/sales/pipeline")}>
+                <TextLink onClick={() => navigate("/erp/sales/pipeline")}>
                   Kanban
                 </TextLink>
               }
@@ -315,7 +315,7 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
                   <button
                     className="funnel-row"
                     key={stage}
-                    onClick={() => navigate(`/sales/pipeline?stage=${stage}`)}
+                    onClick={() => navigate(`/erp/sales/pipeline?stage=${stage}`)}
                   >
                     <span>
                       <i
@@ -372,7 +372,7 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
             title="Последние заказы"
             description="Новые покупки и их статус"
             action={
-              <TextLink onClick={() => navigate("/sales/orders")}>
+              <TextLink onClick={() => navigate("/erp/sales/orders")}>
                 Все заказы
               </TextLink>
             }
@@ -396,12 +396,12 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
                   return (
                     <tr
                       key={o.id}
-                      onClick={() => navigate(`/sales/orders?open=${o.id}`)}
+                      onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
                     >
                       <td>
                         <button
                           className="table-entity"
-                          onClick={() => navigate(`/sales/orders?open=${o.id}`)}
+                          onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
                         >
                           <span className="order-mini-icon">
                             <ShoppingBag size={15} />
@@ -473,7 +473,7 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
                   aria-label="Создать задачу"
                   onClick={() =>
                     navigate(
-                      "/tasks?create=1" +
+                      "/erp/tasks?create=1" +
                         (!sales && project
                           ? "&project=" + encodeURIComponent(project.id)
                           : ""),
@@ -494,7 +494,7 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
                 />
               )}
             </div>
-            <button className="all-tasks" onClick={() => navigate("/tasks")}>
+            <button className="all-tasks" onClick={() => navigate("/erp/tasks")}>
               Все задачи
               <ArrowRight size={15} />
             </button>

@@ -12,12 +12,21 @@ import { useAuth } from "./data/store";
 import { Layout } from "./components/layout";
 import { Login } from "./pages/login";
 import { Button, Empty } from "./components/ui";
+import { CompanyBrand } from "./components/company-brand";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/manrope";
 import "./styles.css";
 import "./typography.css";
 import "./refinements.css";
 import "./workspace.css";
+import "./brand.css";
+
+const Landing = lazy(() =>
+  import("./pages/landing").then((m) => ({ default: m.Landing })),
+);
+const Employees = lazy(() =>
+  import("./pages/employees").then((m) => ({ default: m.Employees })),
+);
 
 const Dashboard = lazy(() =>
   import("./pages/dashboard").then((m) => ({ default: m.Dashboard })),
@@ -99,6 +108,15 @@ function Protected() {
     />
   );
 }
+function LegacyERPRedirect() {
+  const location = useLocation();
+  return (
+    <Navigate
+      to={`/erp${location.pathname}${location.search}${location.hash}`}
+      replace
+    />
+  );
+}
 function App() {
   return (
     <ErrorBoundary>
@@ -116,14 +134,16 @@ function App() {
         <Suspense
           fallback={
             <div className="app-loading">
-              <span className="loading-symbol">N</span>
+              <CompanyBrand compact />
               <p>Собираем ваше пространство…</p>
             </div>
           }
         >
           <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/employees" element={<Employees />} />
             <Route path="/login" element={<Login />} />
-            <Route element={<Protected />}>
+            <Route path="/erp" element={<Protected />}>
               <Route index element={<Dashboard />} />
               <Route path="sales" element={<Dashboard sales />} />
               <Route path="sales/orders" element={<Orders />} />
@@ -133,12 +153,20 @@ function App() {
               <Route path="departments/finance" element={<FinancePage />} />
               <Route path="departments/:department" element={<Department />} />
               <Route path="settings" element={<Settings />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to="/erp" replace />} />
             </Route>
+            {["sales", "tasks", "departments", "settings"].map((path) => (
+              <Route
+                key={path}
+                path={`/${path}/*`}
+                element={<LegacyERPRedirect />}
+              />
+            ))}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </HashRouter>
-      <Toaster richColors position="bottom-right" theme="dark" closeButton />
+      <Toaster richColors position="bottom-right" theme="light" closeButton />
     </ErrorBoundary>
   );
 }

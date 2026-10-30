@@ -22,7 +22,7 @@ export function HomeTasks({
         <h2>Задачи команды</h2>
         <button
           aria-label="Создать задачу"
-          onClick={() => navigate("/tasks?create=1" + suffix)}
+          onClick={() => navigate("/erp/tasks?create=1" + suffix)}
         >
           <Plus size={17} />
         </button>
@@ -41,7 +41,7 @@ export function HomeTasks({
               </button>
               <button
                 className="home-task-content"
-                onClick={() => navigate(`/tasks?open=${task.id}${suffix}`)}
+                onClick={() => navigate(`/erp/tasks?open=${task.id}${suffix}`)}
               >
                 <strong>{task.title}</strong>
                 <span className="home-task-meta">
@@ -67,7 +67,7 @@ export function HomeTasks({
         className="home-tasks-all"
         onClick={() =>
           navigate(
-            "/tasks" +
+            "/erp/tasks" +
               (project ? "?project=" + encodeURIComponent(project.id) : ""),
           )
         }

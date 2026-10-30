@@ -167,7 +167,7 @@ export const useERP = create<Store>((set, get) => {
         {
           title: "Обновлены допущения финансовой модели",
           entityId: "finance",
-          route: "/departments/finance",
+          route: "/erp/departments/finance",
           type: "system",
         },
       );
@@ -185,7 +185,7 @@ export const useERP = create<Store>((set, get) => {
         {
           title: `${entityId ? "Обновлён" : "Добавлен"} клиент ${value.name}`,
           entityId: id,
-          route: `/sales/customers?open=${id}`,
+          route: `/erp/sales/customers?open=${id}`,
           type: "customer",
         },
       );
@@ -221,7 +221,7 @@ export const useERP = create<Store>((set, get) => {
         {
           title: entityId ? "Изменён заказ" : "Создан новый заказ",
           entityId: id,
-          route: `/sales/orders?open=${id}`,
+          route: `/erp/sales/orders?open=${id}`,
           type: "order",
         },
         true,
@@ -241,7 +241,7 @@ export const useERP = create<Store>((set, get) => {
         {
           title: `${entityId ? "Обновлена" : "Создана"} сделка «${value.title}»`,
           entityId: id,
-          route: `/sales/pipeline?open=${id}`,
+          route: `/erp/sales/pipeline?open=${id}`,
           type: "deal",
         },
         value.stage === "won",
@@ -264,7 +264,7 @@ export const useERP = create<Store>((set, get) => {
             id: uid("activity"),
             title: "Заказ создан из выигранной сделки",
             entityId: result,
-            route: `/sales/orders?open=${result}`,
+            route: `/erp/sales/orders?open=${result}`,
             type: "order",
             createdAt: new Date().toISOString(),
           });
@@ -272,7 +272,7 @@ export const useERP = create<Store>((set, get) => {
         {
           title: "Из выигранной сделки создан заказ",
           entityId: id,
-          route: `/sales/pipeline?open=${id}`,
+          route: `/erp/sales/pipeline?open=${id}`,
           type: "deal",
         },
         true,
@@ -292,7 +292,7 @@ export const useERP = create<Store>((set, get) => {
         {
           title: `${value.done ? "Завершена" : entityId ? "Обновлена" : "Создана"} задача «${value.title}»`,
           entityId: id,
-          route: `/tasks?open=${id}`,
+          route: `/erp/tasks?open=${id}`,
           type: "task",
         },
       );
@@ -323,8 +323,8 @@ export const useERP = create<Store>((set, get) => {
 });
 
 const preferencesSchema = z.object({
-  // Accept saved light preferences while keeping the interface dark-only.
-  theme: z.enum(["light", "dark"]).transform(() => "dark" as const),
+  // Migrate saved themes to the current light appearance.
+  theme: z.enum(["light", "dark"]).transform(() => "light" as const),
   collapsed: z.boolean(),
   name: z.string().trim().min(2).max(60),
   email: z.email(),
@@ -334,7 +334,7 @@ const preferencesSchema = z.object({
 });
 type Preferences = z.infer<typeof preferencesSchema>;
 const defaults: Preferences = {
-  theme: "dark",
+  theme: "light",
   collapsed: false,
   name: "Али Бабаев",
   email: "demo@nova.local",

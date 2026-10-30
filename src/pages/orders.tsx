@@ -102,7 +102,7 @@ export function Orders() {
               <Download size={16} />
               Экспорт CSV
             </Button>
-            <Button onClick={() => navigate("/sales/orders?create=1")}>
+            <Button onClick={() => navigate("/erp/sales/orders?create=1")}>
               <Plus size={17} />
               Новый заказ
             </Button>
@@ -307,12 +307,12 @@ export function Orders() {
                 return (
                   <tr
                     key={o.id}
-                    onClick={() => navigate(`/sales/orders?open=${o.id}`)}
+                    onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
                   >
                     <td>
                       <button
                         className="table-order-button"
-                        onClick={() => navigate(`/sales/orders?open=${o.id}`)}
+                        onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
                       >
                         <strong>{o.number}</strong>
                         <span>{dateLabel(o.createdAt, true)}</span>

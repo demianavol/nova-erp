@@ -43,36 +43,19 @@ import { orderTotal } from "../data/selectors";
 import { Avatar, Badge, Button, Dialog, Empty, Input, Menu } from "./ui";
 import { ProjectNavigation } from "./project-navigation";
 import { EntityDialogs } from "./entity-dialogs";
+import { CompanyBrand } from "./company-brand";
 
 export function Logo({ compact = false }: { compact?: boolean }) {
-  return (
-    <span className="brand">
-      <span className="brand-symbol">
-        <img
-          src={`${import.meta.env.BASE_URL}favicon.svg`}
-          width="36"
-          height="36"
-          alt=""
-          aria-hidden="true"
-        />
-      </span>
-      {!compact && (
-        <>
-          <strong>NOVA</strong>
-          <span className="brand-tag">ERP</span>
-        </>
-      )}
-    </span>
-  );
+  return <CompanyBrand compact={compact} />;
 }
 const nav = [
-  { to: "/", label: "Обзор", icon: LayoutDashboard, end: true },
-  { to: "/sales", label: "Продажи", icon: ShoppingBag, end: false },
-  { to: "/departments/marketing", label: "Маркетинг", icon: Megaphone },
-  { to: "/departments/purchasing", label: "Закупки", icon: Truck },
-  { to: "/departments/warehouse", label: "Склад", icon: Package },
-  { to: "/departments/finance", label: "Финансы", icon: Wallet },
-  { to: "/departments/team", label: "Команда", icon: Users },
+  { to: "/erp", label: "Обзор", icon: LayoutDashboard, end: true },
+  { to: "/erp/sales", label: "Продажи", icon: ShoppingBag, end: false },
+  { to: "/erp/departments/marketing", label: "Маркетинг", icon: Megaphone },
+  { to: "/erp/departments/purchasing", label: "Закупки", icon: Truck },
+  { to: "/erp/departments/warehouse", label: "Склад", icon: Package },
+  { to: "/erp/departments/finance", label: "Финансы", icon: Wallet },
+  { to: "/erp/departments/team", label: "Команда", icon: Users },
 ];
 function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
   const data = useERP((s) => s.data),
@@ -92,7 +75,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
             id: o.id,
             name: o.number,
             sub: `${data.customers.find((c) => c.id === o.customerId)?.name} · ${money(orderTotal(o))}`,
-            route: `/sales/orders?open=${o.id}`,
+            route: `/erp/sales/orders?open=${o.id}`,
             type: "Заказ",
             icon: ShoppingBag,
           })),
@@ -105,7 +88,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
             id: c.id,
             name: c.name,
             sub: c.email,
-            route: `/sales/customers?open=${c.id}`,
+            route: `/erp/sales/customers?open=${c.id}`,
             type: "Клиент",
             icon: Users,
           })),
@@ -116,7 +99,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
             id: d.id,
             name: d.title,
             sub: data.customers.find((c) => c.id === d.customerId)?.name,
-            route: `/sales/pipeline?open=${d.id}`,
+            route: `/erp/sales/pipeline?open=${d.id}`,
             type: "Сделка",
             icon: Target,
           })),
@@ -127,7 +110,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
             id: t.id,
             name: t.title,
             sub: "Задача команды",
-            route: `/tasks?open=${t.id}`,
+            route: `/erp/tasks?open=${t.id}`,
             type: "Задача",
             icon: ListTodo,
           })),
@@ -158,13 +141,21 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
             <div className="search-suggestions">
               <span>Быстрые переходы</span>
               {[
-                { title: "Аналитика продаж", route: "/sales", icon: Target },
+                {
+                  title: "Аналитика продаж",
+                  route: "/erp/sales",
+                  icon: Target,
+                },
                 {
                   title: "Все заказы",
-                  route: "/sales/orders",
+                  route: "/erp/sales/orders",
                   icon: ShoppingBag,
                 },
-                { title: "Задачи команды", route: "/tasks", icon: ListTodo },
+                {
+                  title: "Задачи команды",
+                  route: "/erp/tasks",
+                  icon: ListTodo,
+                },
               ].map((item) => (
                 <button
                   key={item.route}
@@ -237,7 +228,7 @@ export function Layout() {
     return () => media.removeEventListener("change", update);
   }, []);
   const unread = data.notifications.filter((n) => !n.read).length,
-    isSales = location.pathname.startsWith("/sales"),
+    isSales = location.pathname.startsWith("/erp/sales"),
     pageRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
@@ -294,11 +285,11 @@ export function Layout() {
       ? "Клиенты"
       : location.pathname.includes("pipeline")
         ? "Воронка продаж"
-        : location.pathname === "/sales"
+        : location.pathname === "/erp/sales"
           ? "Аналитика"
-          : location.pathname === "/tasks"
+          : location.pathname === "/erp/tasks"
             ? "Задачи"
-            : location.pathname === "/settings"
+            : location.pathname === "/erp/settings"
               ? "Настройки"
               : location.pathname.includes("departments")
                 ? nav.find((n) => n.to === location.pathname)?.label || "Отдел"
@@ -308,7 +299,11 @@ export function Layout() {
       className={cn("app-shell", preferences.collapsed && "sidebar-collapsed")}
     >
       <nav className="app-rail" aria-label="Быстрые переходы">
-        <Link to="/" className="rail-brand" aria-label="NOVA — обзор">
+        <Link
+          to="/erp"
+          className="rail-brand"
+          aria-label="Young Unicorn — обзор"
+        >
           <Logo compact />
         </Link>
         {preferences.collapsed && (
@@ -327,7 +322,7 @@ export function Layout() {
         <div className="rail-links">
           {[
             ...nav,
-            { to: "/tasks", label: "Задачи", icon: ListTodo, end: true },
+            { to: "/erp/tasks", label: "Задачи", icon: ListTodo, end: true },
           ].map((item) => (
             <NavLink
               key={item.to}
@@ -340,7 +335,7 @@ export function Layout() {
             </NavLink>
           ))}
         </div>
-        <NavLink to="/settings" aria-label="Настройки" title="Настройки">
+        <NavLink to="/erp/settings" aria-label="Настройки" title="Настройки">
           <Settings2 size={20} />
         </NavLink>
       </nav>
@@ -390,8 +385,13 @@ export function Layout() {
         <nav className="mobile-sections" aria-label="Разделы портала">
           {[
             ...nav,
-            { to: "/tasks", label: "Задачи", icon: ListTodo, end: true },
-            { to: "/settings", label: "Настройки", icon: Settings2, end: true },
+            { to: "/erp/tasks", label: "Задачи", icon: ListTodo, end: true },
+            {
+              to: "/erp/settings",
+              label: "Настройки",
+              icon: Settings2,
+              end: true,
+            },
           ].map((item) => (
             <NavLink
               key={item.to}
@@ -409,7 +409,7 @@ export function Layout() {
           {!preferences.promoHidden && (
             <button className="sidebar-intro" onClick={() => setHelp(true)}>
               <Sparkles size={14} />
-              Знакомство с NOVA
+              Знакомство с ERP
               <ArrowUpRight size={12} />
             </button>
           )}
@@ -422,7 +422,7 @@ export function Layout() {
           <div className="sidebar-profile">
             <Avatar name={preferences.name} />
             <button
-              onClick={() => navigate("/settings")}
+              onClick={() => navigate("/erp/settings")}
               title="Настройки профиля"
             >
               <strong>{preferences.name}</strong>
@@ -443,7 +443,7 @@ export function Layout() {
                 {
                   label: "Настройки профиля",
                   icon: <Settings2 size={15} />,
-                  onClick: () => navigate("/settings"),
+                  onClick: () => navigate("/erp/settings"),
                 },
                 { label: "Выйти", icon: <LogOut size={15} />, onClick: logout },
               ]}
@@ -463,7 +463,7 @@ export function Layout() {
             >
               <MenuIcon size={21} />
             </Button>
-            {location.pathname === "/" ? (
+            {location.pathname === "/erp" ? (
               <h1
                 className="topbar-greeting"
                 id="workspace-greeting"
@@ -515,17 +515,17 @@ export function Layout() {
                 {
                   label: "Новый заказ",
                   icon: <ShoppingBag size={15} />,
-                  onClick: () => navigate("/sales/orders?create=1"),
+                  onClick: () => navigate("/erp/sales/orders?create=1"),
                 },
                 {
                   label: "Новая задача",
                   icon: <ListTodo size={15} />,
-                  onClick: () => navigate("/tasks?create=1"),
+                  onClick: () => navigate("/erp/tasks?create=1"),
                 },
                 {
                   label: "Новая сделка",
                   icon: <Target size={15} />,
-                  onClick: () => navigate("/sales/pipeline?create=1"),
+                  onClick: () => navigate("/erp/sales/pipeline?create=1"),
                 },
               ]}
             />
@@ -550,9 +550,14 @@ export function Layout() {
               label={preferences.name}
               items={[
                 {
+                  label: "Сайт компании",
+                  icon: <ArrowUpRight size={15} />,
+                  onClick: () => navigate("/"),
+                },
+                {
                   label: "Профиль и настройки",
                   icon: <Settings2 size={15} />,
-                  onClick: () => navigate("/settings"),
+                  onClick: () => navigate("/erp/settings"),
                 },
                 {
                   label: "Выйти из аккаунта",
@@ -570,14 +575,14 @@ export function Layout() {
           className="page-content"
           id="main-content"
           aria-labelledby={
-            location.pathname === "/" ? "workspace-greeting" : undefined
+            location.pathname === "/erp" ? "workspace-greeting" : undefined
           }
         >
           {storageError && (
             <div role="alert" className="storage-warning">
               <AlertCircle size={18} />
               <span>{storageError}</span>
-              <button onClick={() => navigate("/settings")}>
+              <button onClick={() => navigate("/erp/settings")}>
                 Настройки
                 <ArrowUpRight size={13} />
               </button>
@@ -658,7 +663,7 @@ export function Layout() {
       <Dialog
         open={help}
         onOpenChange={setHelp}
-        title="Добро пожаловать в NOVA"
+        title="Рабочее пространство Young Unicorn"
         description="Короткий маршрут по вашей первой ERP"
       >
         <div className="help-body">
@@ -667,7 +672,7 @@ export function Layout() {
               <Sparkles size={23} />
             </span>
             <p>
-              Единое пространство для команды, клиентов и продаж FORM & HOME.
+              Единое пространство для команды, клиентов и продаж Young Unicorn.
             </p>
           </div>
           {[
@@ -675,19 +680,19 @@ export function Layout() {
               n: "01",
               title: "Посмотрите на бизнес целиком",
               text: "Обзор показывает выручку, заказы, задачи и события.",
-              route: "/",
+              route: "/erp",
             },
             {
               n: "02",
               title: "Пройдите путь клиента",
               text: "Создайте клиента, добавьте сделку и переведите её в заказ.",
-              route: "/sales/customers",
+              route: "/erp/sales/customers",
             },
             {
               n: "03",
               title: "Сфокусируйте команду",
               text: "Назначайте задачи, сроки и ответственных.",
-              route: "/tasks",
+              route: "/erp/tasks",
             },
           ].map((step) => (
             <button
@@ -716,17 +721,18 @@ export function Layout() {
       <Dialog
         open={company}
         onOpenChange={setCompany}
-        title="FORM & HOME"
-        description="Компания в вашем рабочем пространстве NOVA"
+        title="Young Unicorn"
+        description="Продукты, медиа и команда в одном пространстве"
       >
         <div className="dialog-body company-overview">
           <span className="company-label">
             <Building2 size={18} />
-            E-commerce · Товары для дома
+            E-commerce · Fashion · Self-care
           </span>
           <p>
-            Здесь указана компания, для которой открыта ERP. Все разделы,
-            сотрудники и показатели относятся к FORM & HOME.
+            Young Unicorn создаёт и развивает бренды в e-commerce. В этой
+            демоверсии ERP показаны примеры работы с командой, продажами и
+            финансами.
           </p>
           <div className="mini-stats">
             <div>
@@ -755,7 +761,7 @@ export function Layout() {
             variant="outline"
             onClick={() => {
               setCompany(false);
-              navigate("/departments/team");
+              navigate("/erp/departments/team");
             }}
           >
             Команда
@@ -764,7 +770,7 @@ export function Layout() {
           <Button
             onClick={() => {
               setCompany(false);
-              navigate("/departments/finance");
+              navigate("/erp/departments/finance");
             }}
           >
             Финансы компании

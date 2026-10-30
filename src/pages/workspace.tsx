@@ -81,7 +81,7 @@ export function Tasks() {
               "Ясные приоритеты. Общий фокус. Видимый результат."
         }
         actions={
-          <Button onClick={() => navigate("/tasks?create=1" + taskQuery)}>
+          <Button onClick={() => navigate("/erp/tasks?create=1" + taskQuery)}>
             <Plus size={17} />
             Создать задачу
           </Button>
@@ -202,7 +202,7 @@ export function Tasks() {
                 ) : (
                   <Button
                     variant="outline"
-                    onClick={() => navigate("/tasks?create=1")}
+                    onClick={() => navigate("/erp/tasks?create=1")}
                   >
                     <Plus size={15} />
                     Новая задача
@@ -269,7 +269,7 @@ const info: Record<
   },
   team: {
     description: "Люди, которые двигают бизнес вперёд.",
-    subtitle: "Команда FORM & HOME",
+    subtitle: "Команда Young Unicorn",
     icon: Users,
     color: "violet",
     stats: [],
@@ -285,7 +285,7 @@ export function Department() {
     return (
       <Empty
         title="Отдел не найден"
-        action={<Button onClick={() => navigate("/")}>На главную</Button>}
+        action={<Button onClick={() => navigate("/erp")}>На главную</Button>}
       />
     );
   const employees = data.employees.filter(
@@ -362,7 +362,9 @@ export function Department() {
         description={item.description}
         actions={
           <Button
-            onClick={() => navigate(`/tasks?create=1&department=${department}`)}
+            onClick={() =>
+              navigate(`/erp/tasks?create=1&department=${department}`)
+            }
           >
             <Plus size={17} />
             Новая задача
@@ -419,7 +421,7 @@ export function Department() {
                 size="icon"
                 aria-label="Создать задачу отдела"
                 onClick={() =>
-                  navigate(`/tasks?create=1&department=${department}`)
+                  navigate(`/erp/tasks?create=1&department=${department}`)
                 }
               >
                 <Plus size={17} />
@@ -569,7 +571,7 @@ export function Settings() {
                     preferences.update({ promoHidden: !e.target.checked })
                   }
                 />
-                Блок знакомства с NOVA в меню
+                Блок знакомства с ERP в меню
               </label>
               <p className="form-hint">
                 Скрытые блоки можно вернуть здесь в любой момент.

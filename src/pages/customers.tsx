@@ -48,7 +48,7 @@ export function Customers() {
         title="Клиенты"
         description="Люди и компании, с которыми растёт ваш бизнес."
         actions={
-          <Button onClick={() => navigate("/sales/customers?create=1")}>
+          <Button onClick={() => navigate("/erp/sales/customers?create=1")}>
             <Plus size={17} />
             Добавить клиента
           </Button>
@@ -155,13 +155,13 @@ export function Customers() {
                 return (
                   <tr
                     key={c.id}
-                    onClick={() => navigate(`/sales/customers?open=${c.id}`)}
+                    onClick={() => navigate(`/erp/sales/customers?open=${c.id}`)}
                   >
                     <td>
                       <button
                         className="table-customer"
                         onClick={() =>
-                          navigate(`/sales/customers?open=${c.id}`)
+                          navigate(`/erp/sales/customers?open=${c.id}`)
                         }
                       >
                         <Avatar

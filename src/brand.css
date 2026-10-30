@@ -1,0 +1,43 @@
+.yuc-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  color: #16151b;
+}
+.yuc-brand > img {
+  display: block;
+  width: 36px;
+  height: 42px;
+}
+.yuc-wordmark {
+  display: flex;
+  flex-direction: column;
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 12px;
+  line-height: 1.02;
+  letter-spacing: -0.55px;
+  font-weight: 850;
+}
+.rail-brand .yuc-brand > img {
+  width: 29px;
+  height: 34px;
+}
+.login-header .yuc-brand > img {
+  width: 40px;
+  height: 46px;
+}
+.login-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+.login-home-link:hover {
+  color: var(--primary);
+}
+.login-visual .login-big-symbol {
+  font-size: 100px;
+  letter-spacing: -7px;
+}

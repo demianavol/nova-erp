@@ -8,4 +8,7 @@ dist/
 !.env.example
 coverage/
 test-results/
+output/
+scratch/
+tmp/
 .DS_Store

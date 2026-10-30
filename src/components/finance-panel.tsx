@@ -128,7 +128,7 @@ export function FinancialChartPanel({ period }: { period: Period }) {
             ? "Оплаченные неотменённые заказы"
             : "Расчётная демо-модель · до налогов"}
         </span>
-        <button onClick={() => navigate("/departments/finance")}>
+        <button onClick={() => navigate("/erp/departments/finance")}>
           Расшифровка
           <ArrowUpRight size={12} />
         </button>

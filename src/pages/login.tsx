@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
   ArrowRight,
+  ArrowLeft,
   ArrowUpRight,
   Check,
   Eye,
@@ -32,13 +33,20 @@ export function Login() {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "", remember: true },
   });
-  const destination = (location.state as { from?: string } | null)?.from || "/";
+  const requested = (location.state as { from?: string } | null)?.from;
+  const destination =
+    requested && /^\/erp(?:[/?#]|$)/.test(requested) ? requested : "/erp";
   if (authenticated) return <Navigate to={destination} replace />;
   return (
     <div className="login-page">
       <div className="login-main">
         <header className="login-header">
-          <Logo />
+          <Link to="/" aria-label="Young Unicorn — главная">
+            <Logo />
+          </Link>
+          <Link to="/" className="login-home-link">
+            <ArrowLeft size={14} /> На сайт
+          </Link>
         </header>
         <div className="login-form-wrap">
           <Badge tone="violet">
@@ -49,7 +57,7 @@ export function Login() {
             С возвращением<span>.</span>
           </h1>
           <p className="login-description">
-            Войдите, чтобы быть в ритме вашего бизнеса.
+            Рабочее пространство команды Young Unicorn.
           </p>
           <form
             onSubmit={form.handleSubmit((values) => {
@@ -116,7 +124,7 @@ export function Login() {
           </form>
           <div className="login-divider">
             <span />
-            или познакомьтесь с NOVA
+            или откройте демоверсию
             <span />
           </div>
           <Button
@@ -140,14 +148,14 @@ export function Login() {
           </p>
         </div>
         <footer className="login-footer">
-          <span>© {new Date().getFullYear()} NOVA ERP</span>
+          <span>© {new Date().getFullYear()} Young Unicorn</span>
           <span>Создано для вашего роста</span>
         </footer>
       </div>
       <section className="login-visual">
         <div className="login-visual-top">
           <span className="visual-brand">
-            FORM & HOME
+            YOUNG UNICORN
             <span />
           </span>
           <Badge>ЕДИНАЯ ЭКОСИСТЕМА</Badge>
@@ -157,7 +165,7 @@ export function Login() {
             <div />
             <div />
             <div />
-            <span className="login-big-symbol">N</span>
+            <span className="login-big-symbol">YUC</span>
             <span className="login-orbit-chip orbit-chip-1">
               <span>✦</span>Продажи растут
             </span>

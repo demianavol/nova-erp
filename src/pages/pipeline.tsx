@@ -59,7 +59,7 @@ export function Pipeline() {
         title="Воронка продаж"
         description="Каждый контакт — возможность. Помогите ей стать результатом."
         actions={
-          <Button onClick={() => navigate("/sales/pipeline?create=1")}>
+          <Button onClick={() => navigate("/erp/sales/pipeline?create=1")}>
             <Plus size={17} />
             Новая сделка
           </Button>
@@ -154,7 +154,7 @@ export function Pipeline() {
                     size="icon"
                     aria-label={`Создать сделку: ${stageNames[stage]}`}
                     onClick={() =>
-                      navigate(`/sales/pipeline?create=1&initialStage=${stage}`)
+                      navigate(`/erp/sales/pipeline?create=1&initialStage=${stage}`)
                     }
                   >
                     <Plus size={16} />
@@ -196,7 +196,7 @@ export function Pipeline() {
                         <button
                           className="deal-title"
                           onClick={() =>
-                            navigate(`/sales/pipeline?open=${deal.id}`)
+                            navigate(`/erp/sales/pipeline?open=${deal.id}`)
                           }
                         >
                           {deal.title}
@@ -229,7 +229,7 @@ export function Pipeline() {
                           <button
                             className="deal-order-link"
                             onClick={() =>
-                              navigate(`/sales/pipeline?open=${deal.id}`)
+                              navigate(`/erp/sales/pipeline?open=${deal.id}`)
                             }
                           >
                             {deal.orderId

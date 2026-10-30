@@ -78,7 +78,7 @@ export function WorkspaceCalendar({ project }: { project?: WorkspaceProject }) {
         </span>
         <button
           aria-label="Добавить задачу на выбранную дату"
-          onClick={() => navigate(`/tasks?create=1&date=${selected}${suffix}`)}
+          onClick={() => navigate(`/erp/tasks?create=1&date=${selected}${suffix}`)}
         >
           <Plus size={14} />
         </button>
@@ -90,7 +90,7 @@ export function WorkspaceCalendar({ project }: { project?: WorkspaceProject }) {
             <button
               className={task.done ? "done" : ""}
               key={task.id}
-              onClick={() => navigate(`/tasks?open=${task.id}${suffix}`)}
+              onClick={() => navigate(`/erp/tasks?open=${task.id}${suffix}`)}
             >
               <span className={`agenda-priority priority-${task.priority}`} />
               <span>

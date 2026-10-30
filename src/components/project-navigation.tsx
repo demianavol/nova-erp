@@ -38,7 +38,7 @@ export function ProjectNavigation() {
             className={!project ? "project-all selected" : "project-all"}
             onClick={() => {
               workspace.selectProject(null);
-              navigate("/");
+              navigate("/erp");
             }}
           >
             <Layers3 size={14} />
@@ -66,7 +66,7 @@ export function ProjectNavigation() {
               aria-pressed={p.id === project?.id}
               onClick={() => {
                 workspace.selectProject(p.id);
-                navigate("/");
+                navigate("/erp");
               }}
             >
               <span>{p.name.slice(0, 1)}</span>
@@ -85,7 +85,7 @@ export function ProjectNavigation() {
           {project ? "Работа по проекту" : "Работа команды"}
         </div>
         <nav className="project-context" aria-label="Работа по проекту">
-          <button onClick={() => navigate("/")}>
+          <button onClick={() => navigate("/erp")}>
             <FolderKanban size={16} />
             Доска проекта
           </button>
@@ -94,7 +94,7 @@ export function ProjectNavigation() {
             Ответственные<span>{people.length}</span>
           </button>
           <NavLink
-            to={`/tasks?view=backlog${suffix}`}
+            to={`/erp/tasks?view=backlog${suffix}`}
             className={() =>
               location.search.includes("view=backlog") ? "selected" : ""
             }
@@ -109,7 +109,7 @@ export function ProjectNavigation() {
             </span>
           </NavLink>
           <NavLink
-            to={`/tasks?view=sprint${suffix}`}
+            to={`/erp/tasks?view=sprint${suffix}`}
             className={() =>
               location.search.includes("view=sprint") ? "selected" : ""
             }
@@ -124,7 +124,7 @@ export function ProjectNavigation() {
             </span>
           </NavLink>
         </nav>
-        {location.pathname.startsWith("/sales") && (
+        {location.pathname.startsWith("/erp/sales") && (
           <>
             <div className="project-section-label">Продажи</div>
             <nav
@@ -132,10 +132,10 @@ export function ProjectNavigation() {
               aria-label="Разделы продаж"
             >
               {[
-                ["/sales", "Аналитика"],
-                ["/sales/orders", "Заказы"],
-                ["/sales/customers", "Клиенты"],
-                ["/sales/pipeline", "Воронка"],
+                ["/erp/sales", "Аналитика"],
+                ["/erp/sales/orders", "Заказы"],
+                ["/erp/sales/customers", "Клиенты"],
+                ["/erp/sales/pipeline", "Воронка"],
               ].map(([to, label]) => (
                 <NavLink to={to} end key={to}>
                   {label}
@@ -157,7 +157,7 @@ export function ProjectNavigation() {
             try {
               workspace.addProject(name, employee);
               setCreating(false);
-              navigate("/");
+              navigate("/erp");
             } catch (err) {
               setError(
                 (err as Error).message.includes("Выберите")

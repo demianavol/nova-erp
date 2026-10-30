@@ -356,7 +356,7 @@ function CustomerForm({
                 <button
                   type="button"
                   key={o.id}
-                  onClick={() => navigate(`/sales/orders?open=${o.id}`)}
+                  onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
                 >
                   <ShoppingBag size={15} />
                   <span>{o.number}</span>
@@ -373,7 +373,7 @@ function CustomerForm({
                 <button
                   type="button"
                   key={d.id}
-                  onClick={() => navigate(`/sales/pipeline?open=${d.id}`)}
+                  onClick={() => navigate(`/erp/sales/pipeline?open=${d.id}`)}
                 >
                   <span>{d.title}</span>
                   <Badge tone="violet">{stageNames[d.stage]}</Badge>
@@ -581,7 +581,7 @@ function OrderForm({
               type="button"
               className="text-link"
               onClick={() =>
-                navigate(`/sales/customers?open=${entity.customerId}`)
+                navigate(`/erp/sales/customers?open=${entity.customerId}`)
               }
             >
               Открыть карточку клиента
@@ -764,7 +764,7 @@ function DealPanel({ entity, close, initialStage }: DealPanelProps) {
         </div>
         <button
           className="deal-customer-link"
-          onClick={() => navigate("/sales/customers?open=" + customer.id)}
+          onClick={() => navigate("/erp/sales/customers?open=" + customer.id)}
         >
           <Avatar name={customer.name} />
           <div>
@@ -814,7 +814,7 @@ function DealPanel({ entity, close, initialStage }: DealPanelProps) {
               onClick={() => {
                 try {
                   const orderId = entity.orderId || convertDeal(entity.id);
-                  navigate("/sales/orders?open=" + orderId);
+                  navigate("/erp/sales/orders?open=" + orderId);
                 } catch (error) {
                   toast.error((error as Error).message);
                 }
@@ -966,7 +966,7 @@ export function EntityDialogs() {
       ? "customer"
       : location.pathname.includes("pipeline")
         ? "deal"
-        : location.pathname === "/tasks"
+        : location.pathname === "/erp/tasks"
           ? "task"
           : null;
   const close = () => {

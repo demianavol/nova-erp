@@ -79,7 +79,7 @@ export function HomeDealBoard() {
           </span>
         </div>
         <div>
-          <TextLink onClick={() => navigate("/sales/pipeline")}>
+          <TextLink onClick={() => navigate("/erp/sales/pipeline")}>
             Вся воронка
           </TextLink>
           <div className="board-paging">
@@ -102,7 +102,7 @@ export function HomeDealBoard() {
             size="sm"
             onClick={() =>
               navigate(
-                "/sales/pipeline?create=1" +
+                "/erp/sales/pipeline?create=1" +
                   (project ? "&project=" + encodeURIComponent(project.id) : ""),
               )
             }
@@ -134,7 +134,7 @@ export function HomeDealBoard() {
                 <span>{deals.length}</span>
                 <button
                   aria-label={`Открыть этап: ${stageNames[stage]}`}
-                  onClick={() => navigate(`/sales/pipeline?stage=${stage}`)}
+                  onClick={() => navigate(`/erp/sales/pipeline?stage=${stage}`)}
                 >
                   <MoreHorizontal size={16} />
                 </button>
@@ -150,7 +150,7 @@ export function HomeDealBoard() {
                   <button
                     className="home-deal"
                     key={deal.id}
-                    onClick={() => navigate(`/sales/pipeline?open=${deal.id}`)}
+                    onClick={() => navigate(`/erp/sales/pipeline?open=${deal.id}`)}
                   >
                     <span className="home-deal-title">{deal.title}</span>
                     <span className="home-deal-people-date">

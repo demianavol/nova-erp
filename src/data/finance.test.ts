@@ -139,7 +139,7 @@ describe("Управленческая финансовая модель", () =>
   });
 });
 describe("Совместимость настроек интерфейса", () => {
-  it("меняет исходный демо-профиль на руководителя, сохраняя тему и навигацию", () => {
+  it("меняет исходный демо-профиль на руководителя, сохраняя навигацию и применяя светлую тему", () => {
     const prefs = migratePreferences({
       theme: "dark",
       collapsed: true,
@@ -150,7 +150,7 @@ describe("Совместимость настроек интерфейса", () 
     expect(prefs).toMatchObject({
       name: "Али Бабаев",
       role: "Руководитель компании",
-      theme: "dark",
+      theme: "light",
       collapsed: true,
       welcomeHidden: false,
       promoHidden: false,
@@ -168,7 +168,7 @@ describe("Совместимость настроек интерфейса", () 
         promoHidden: true,
       }),
     ).toMatchObject({
-      theme: "dark",
+      theme: "light",
       name: "Ирина Иванова",
       email: "test@example.com",
       role: "Директор",
@@ -177,12 +177,12 @@ describe("Совместимость настроек интерфейса", () 
       promoHidden: true,
     });
   });
-  it("не возвращает светлую тему при обновлении старых настроек", () => {
+  it("переводит старые тёмные настройки в светлую тему", () => {
     const original = usePreferences.getState();
     try {
-      original.update({ theme: "light", collapsed: true, promoHidden: true });
+      original.update({ theme: "dark", collapsed: true, promoHidden: true });
       expect(usePreferences.getState()).toMatchObject({
-        theme: "dark",
+        theme: "light",
         collapsed: true,
         promoHidden: true,
         name: original.name,

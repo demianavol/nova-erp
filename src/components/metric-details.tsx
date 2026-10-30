@@ -169,7 +169,7 @@ export function MetricDetails({
                 closed.slice(0, 8).map((d) => (
                   <button
                     key={d.id}
-                    onClick={() => go(`/sales/pipeline?open=${d.id}`)}
+                    onClick={() => go(`/erp/sales/pipeline?open=${d.id}`)}
                   >
                     <span>{d.title}</span>
                     <Badge tone={d.stage === "won" ? "green" : "neutral"}>
@@ -210,7 +210,7 @@ export function MetricDetails({
                 orders.slice(0, 8).map((o) => (
                   <button
                     key={o.id}
-                    onClick={() => go(`/sales/orders?open=${o.id}`)}
+                    onClick={() => go(`/erp/sales/orders?open=${o.id}`)}
                   >
                     <ShoppingBag size={15} />
                     <div>
@@ -244,10 +244,10 @@ export function MetricDetails({
           onClick={() =>
             go(
               financial
-                ? "/departments/finance"
+                ? "/erp/departments/finance"
                 : metric === "conversion"
-                  ? "/sales/pipeline"
-                  : `/sales/orders?from=${period.from}&to=${period.to}`,
+                  ? "/erp/sales/pipeline"
+                  : `/erp/sales/orders?from=${period.from}&to=${period.to}`,
             )
           }
         >

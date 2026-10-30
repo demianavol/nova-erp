@@ -125,9 +125,7 @@
 }
 .kpi-interactive:hover {
   border-color: color-mix(in srgb, var(--primary) 55%, var(--border));
-  box-shadow:
-    inset 0 1px 0 #ffffff0a,
-    0 6px 22px #9254ee20;
+  box-shadow: var(--shadow);
   transform: translateY(-2px);
 }
 .kpi-interactive:focus-visible {
@@ -147,16 +145,16 @@
   z-index: 4;
   width: 29px;
   height: 29px;
-  border: 1px solid #ffffff20;
-  color: #e1d6ef;
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: #ffffff0b;
+  background: var(--card);
 }
 .dismiss-banner:hover {
-  background: #ffffff25;
-  color: white;
+  background: var(--violet-bg);
+  color: var(--primary);
 }
 .sidebar-promo > .promo-dismiss {
   position: absolute;
@@ -242,7 +240,7 @@
   background: var(--blue-bg);
 }
 .department-pink {
-  color: #c18aa7;
+  color: var(--pink);
   background: color-mix(in srgb, #bc759c 13%, var(--card));
 }
 .employee-chip {
@@ -332,7 +330,7 @@
   color: var(--blue);
 }
 .nav-link[href*="finance"] > svg {
-  color: #b894bf;
+  color: var(--muted-foreground);
 }
 .nav-link[href*="team"] > svg {
   color: var(--primary);
@@ -365,7 +363,7 @@
 }
 .finance-mini-card > span > svg {
   margin-left: auto;
-  color: #b0a4cf;
+  color: var(--muted-foreground);
 }
 .finance-mini-card > span > i {
   width: 5px;

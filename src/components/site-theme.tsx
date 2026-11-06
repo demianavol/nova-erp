@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { Moon, Sun } from "lucide-react";
 import "../site-theme.css";
 
@@ -36,6 +37,7 @@ export function useSiteTheme() {
 }
 export function SiteThemeToggle() {
   const [theme, setTheme] = useState<Theme>(readTheme);
+  const activeReveal = useRef<ViewTransition | null>(null);
   useEffect(() => {
     const update = () => setTheme(readTheme());
     const media = matchMedia("(prefers-color-scheme: dark)");
@@ -43,6 +45,7 @@ export function SiteThemeToggle() {
     window.addEventListener("storage", update);
     media.addEventListener("change", update);
     return () => {
+      activeReveal.current?.skipTransition();
       window.removeEventListener(eventName, update);
       window.removeEventListener("storage", update);
       media.removeEventListener("change", update);
@@ -55,16 +58,52 @@ export function SiteThemeToggle() {
       aria-label={
         theme === "light" ? "Включить тёмную тему" : "Включить светлую тему"
       }
-      onClick={() => {
-        const next = theme === "light" ? "dark" : "light";
-        try {
-          localStorage.setItem(key, next);
-        } catch {
-          sessionTheme = next;
+      onClick={(event) => {
+        const root = document.documentElement;
+        const next = readTheme() === "light" ? "dark" : "light";
+        const apply = () => {
+          try {
+            localStorage.setItem(key, next);
+            sessionTheme = undefined;
+          } catch {
+            sessionTheme = next;
+          }
+          root.dataset.siteTheme = next;
+          setTheme(next);
+          window.dispatchEvent(new Event(eventName));
+        };
+
+        activeReveal.current?.skipTransition();
+        if (
+          !document.startViewTransition ||
+          !matchMedia("(prefers-reduced-motion: no-preference)").matches
+        ) {
+          apply();
+          return;
         }
-        document.documentElement.dataset.siteTheme = next;
-        setTheme(next);
-        window.dispatchEvent(new Event(eventName));
+
+        const { left, top, width, height } =
+          event.currentTarget.getBoundingClientRect();
+        const x = left + width / 2;
+        const y = top + height / 2;
+        const radius = Math.hypot(
+          Math.max(x, root.clientWidth - x),
+          Math.max(y, root.clientHeight - y),
+        );
+        root.style.setProperty("--theme-reveal-origin", `${x}px ${y}px`);
+        root.style.setProperty("--theme-reveal-radius", `${radius}px`);
+        root.dataset.siteThemeReveal = "";
+        const transition = document.startViewTransition(() => flushSync(apply));
+        activeReveal.current = transition;
+        const finish = () => {
+          if (activeReveal.current !== transition) return;
+          activeReveal.current = null;
+          delete root.dataset.siteThemeReveal;
+          root.style.removeProperty("--theme-reveal-origin");
+          root.style.removeProperty("--theme-reveal-radius");
+        };
+        void transition.ready.catch(() => {});
+        void transition.finished.then(finish, finish);
       }}
     >
       {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}

@@ -15,6 +15,8 @@ export function HeroFilm() {
   const canvas = useRef<HTMLCanvasElement>(null);
   const retry = useRef<() => void>(() => {});
   const [staticMode, setStaticMode] = useState(true);
+  const [posterLoaded, setPosterLoaded] = useState(false);
+  const [posterPainted, setPosterPainted] = useState(false);
   const [light, setLight] = useState(true);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -53,7 +55,16 @@ export function HeroFilm() {
     };
   }, []);
 
-  const animated = !staticMode && !failed;
+  useEffect(() => {
+    if (!posterLoaded) return;
+    // Let the browser paint the hero before initializing either WebGL effect.
+    let frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => setPosterPainted(true));
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [posterLoaded]);
+
+  const animated = posterPainted && !staticMode && !failed;
   useEffect(() => {
     const element = video.current;
     const surface = canvas.current;
@@ -69,15 +80,20 @@ export function HeroFilm() {
     let handle = 0;
     let decodedFrame = -1;
     let revealed = false;
+    const page = document.documentElement;
+    let themeRevealing = page.hasAttribute("data-site-theme-reveal");
     const hasVideoCallback =
       typeof element.requestVideoFrameCallback === "function";
-    const active = () => alive && visible && !document.hidden;
+    const active = () =>
+      alive && visible && !document.hidden && !themeRevealing;
     const draw = (mediaTime: number) => {
       if (!active() || element.readyState < 2) return;
-      renderer.draw(
+      const result = renderer.draw(
         mediaTime,
         document.documentElement.dataset.siteTheme !== "dark",
       );
+      if (result === "failed") setFailed(true);
+      if (result !== "drawn") return;
       if (!revealed) {
         revealed = true;
         setReady(true);
@@ -133,6 +149,13 @@ export function HeroFilm() {
       sync();
     });
     intersection.observe(hero);
+    const themeObserver = new MutationObserver(() => {
+      themeRevealing = page.hasAttribute("data-site-theme-reveal");
+      sync();
+    });
+    themeObserver.observe(page, {
+      attributeFilter: ["data-site-theme-reveal"],
+    });
     const resize = new ResizeObserver(([entry]) => {
       const width = entry.contentRect.width;
       const height = entry.contentRect.height;
@@ -166,6 +189,7 @@ export function HeroFilm() {
       alive = false;
       stop();
       intersection.disconnect();
+      themeObserver.disconnect();
       resize.disconnect();
       hero.removeEventListener("pointerdown", gesture);
       element.removeEventListener("playing", next);
@@ -184,7 +208,7 @@ export function HeroFilm() {
   return (
     <>
       <div className="lp-hero-atmosphere" aria-hidden="true">
-        {animated && (
+        {animated && (ready || blocked) && (
           <Suspense fallback={null}>
             <LiquidEther
               colors={light ? lightPalette : darkPalette}
@@ -215,6 +239,8 @@ export function HeroFilm() {
           height={432}
           alt=""
           fetchPriority="high"
+          onLoad={() => setPosterLoaded(true)}
+          onError={() => setPosterLoaded(true)}
         />
         {animated && (
           <>

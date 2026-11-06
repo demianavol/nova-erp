@@ -1,204 +1,332 @@
-import { useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
-  ArrowRight,
   ArrowLeft,
-  ArrowUpRight,
-  Check,
+  ArrowRight,
+  Bookmark,
+  Building2,
   Eye,
   EyeOff,
   LockKeyhole,
   Mail,
-  ShieldCheck,
-  Sparkles,
+  MessageSquare,
+  Send,
+  UserRound,
 } from "lucide-react";
 import { useAuth } from "../data/store";
-import { Logo } from "../components/layout";
-import { Badge, Button, Field, Input } from "../components/ui";
+import { erpAccessMailto, erpAccessSchema } from "../data/erp-access";
+import { CompanyBrand } from "../components/company-brand";
+import { TechTitleLine, useTechTitleMotion } from "../components/hero-title";
+import { OfficeBackdrop } from "../components/office-backdrop";
+import { SiteThemeToggle, useSiteTheme } from "../components/site-theme";
+import { Button, Field, Input, Textarea } from "../components/ui";
+import "../login.css";
 
+const demoEmail = "demo@nova.local";
+const demoPassword = "Demo2026!";
 const loginSchema = z.object({
-  email: z.email("Введите корректный email"),
+  email: z.string().trim().pipe(z.email("Введите корректный email")),
   password: z.string().min(1, "Введите пароль"),
   remember: z.boolean(),
 });
-export function Login() {
-  const { authenticated, login } = useAuth();
-  const location = useLocation();
-  const [visible, setVisible] = useState(false),
-    [error, setError] = useState("");
+
+function SignInForm({ requestLink }: { requestLink: ReactNode }) {
+  const login = useAuth((state) => state.login);
+  const [visible, setVisible] = useState(false);
+  const [error, setError] = useState("");
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "", remember: true },
   });
+  const { errors } = form.formState;
+
+  return (
+    <>
+      <form
+        className="office-form"
+        noValidate
+        onChange={() => setError("")}
+        onSubmit={form.handleSubmit(({ email, password, remember }) => {
+          if (email.toLowerCase() !== demoEmail || password !== demoPassword) {
+            setError("Проверьте email и пароль или откройте демоверсию");
+            return;
+          }
+          login(remember);
+        })}
+      >
+        <Field label="Рабочий email" error={errors.email?.message}>
+          <span className="office-input">
+            <Mail size={16} aria-hidden="true" />
+            <Input
+              type="email"
+              autoComplete="username"
+              placeholder="name@company.ru"
+              aria-invalid={!!errors.email}
+              {...form.register("email")}
+            />
+          </span>
+        </Field>
+        <div className="office-password">
+          <Field label="Пароль" error={errors.password?.message}>
+            <span className="office-input">
+              <LockKeyhole size={16} aria-hidden="true" />
+              <Input
+                type={visible ? "text" : "password"}
+                autoComplete="current-password"
+                placeholder=" "
+                aria-invalid={!!errors.password}
+                {...form.register("password")}
+              />
+            </span>
+          </Field>
+          <button
+            type="button"
+            aria-label={visible ? "Скрыть пароль" : "Показать пароль"}
+            onClick={() => setVisible(!visible)}
+          >
+            {visible ? <EyeOff size={17} /> : <Eye size={17} />}
+          </button>
+        </div>
+        <label className="office-remember">
+          <input
+            className="sr-only"
+            type="checkbox"
+            {...form.register("remember")}
+          />
+          <Bookmark
+            className="office-remember-mark"
+            size={17}
+            aria-hidden="true"
+          />
+          Запомнить меня
+        </label>
+        {error && (
+          <p className="office-error" role="alert">
+            {error}
+          </p>
+        )}
+        <Button type="submit" className="office-submit">
+          Войти в ERP <ArrowRight size={17} aria-hidden="true" />
+        </Button>
+      </form>
+      <div className="office-switch office-sign-in-links">
+        {requestLink}
+        <button type="button" onClick={() => login(form.getValues("remember"))}>
+          Открыть демоверсию
+        </button>
+      </div>
+    </>
+  );
+}
+
+const requestFields = [
+  {
+    name: "name",
+    label: "Фамилия и имя",
+    placeholder: "Анна Иванова",
+    icon: UserRound,
+    maxLength: 80,
+    autoComplete: "name",
+  },
+  {
+    name: "department",
+    label: "Отдел или руководитель",
+    placeholder: "Например, отдел продаж",
+    icon: Building2,
+    maxLength: 120,
+  },
+  {
+    name: "contact",
+    label: "Telegram или телефон",
+    placeholder: "@username или номер",
+    icon: Send,
+    maxLength: 48,
+  },
+] as const;
+
+function AccessRequestForm() {
+  const [prepared, setPrepared] = useState(false);
+  const form = useForm<z.infer<typeof erpAccessSchema>>({
+    resolver: zodResolver(erpAccessSchema),
+    defaultValues: { name: "", department: "", contact: "", note: "" },
+  });
+  const { errors } = form.formState;
+
+  return (
+    <form
+      className="office-form"
+      noValidate
+      onChange={() => setPrepared(false)}
+      onSubmit={form.handleSubmit((values) => {
+        setPrepared(true);
+        window.location.href = erpAccessMailto(values);
+      })}
+    >
+      {requestFields.map(({ name, label, icon: Icon, ...input }) => (
+        <Field key={name} label={label} error={errors[name]?.message}>
+          <span className="office-input">
+            <Icon size={16} aria-hidden="true" />
+            <Input
+              aria-invalid={!!errors[name]}
+              {...input}
+              {...form.register(name)}
+            />
+          </span>
+        </Field>
+      ))}
+      <Field label="Комментарий (необязательно)" error={errors.note?.message}>
+        <span className="office-input">
+          <MessageSquare size={16} aria-hidden="true" />
+          <Textarea
+            placeholder="К какому разделу нужен доступ"
+            rows={2}
+            maxLength={300}
+            aria-invalid={!!errors.note}
+            {...form.register("note")}
+          />
+        </span>
+      </Field>
+      <div>
+        <Button type="submit" className="office-submit">
+          Открыть письмо <ArrowRight size={17} aria-hidden="true" />
+        </Button>
+        <p className="office-mail-note" role="status">
+          {prepared ? "Отправьте заявку из почтового приложения" : ""}
+        </p>
+      </div>
+    </form>
+  );
+}
+
+export function Login() {
+  const authenticated = useAuth((state) => state.authenticated);
+  const location = useLocation();
+  const search = new URLSearchParams(location.search);
+  const requestMode = search.get("mode") === "request";
+  const previousMode = useRef(requestMode);
+  const signInHeading = useRef<HTMLHeadingElement>(null);
+  const requestHeading = useRef<HTMLHeadingElement>(null);
+  const title = {
+    motion: useTechTitleMotion(true),
+    fontWeight: 800,
+    intro: "none",
+    nativeMetrics: true,
+    clickKick: false,
+  } as const;
+
+  useSiteTheme();
+  useEffect(() => {
+    if (previousMode.current !== requestMode) {
+      previousMode.current = requestMode;
+      const heading = requestMode ? requestHeading : signInHeading;
+      heading.current?.focus({ preventScroll: true });
+    }
+  }, [requestMode]);
+
   const requested = (location.state as { from?: string } | null)?.from;
   const destination =
     requested && /^\/erp(?:[/?#]|$)/.test(requested) ? requested : "/erp";
   if (authenticated) return <Navigate to={destination} replace />;
+
+  const signInSearch = new URLSearchParams(search);
+  signInSearch.delete("mode");
+  search.set("mode", "request");
+
+  const requestLink = (
+    <Link
+      to={{ search: search.toString(), hash: location.hash }}
+      state={location.state}
+    >
+      Запросить доступ
+    </Link>
+  );
+
   return (
-    <div className="login-page">
-      <div className="login-main">
-        <header className="login-header">
-          <Link to="/" aria-label="Young Unicorn — главная">
-            <Logo />
+    <div className="office-gate">
+      <OfficeBackdrop />
+      <div className="office-frame">
+        <header className="office-header">
+          <Link
+            className="office-brand"
+            to="/"
+            aria-label="Young Unicorn — главная"
+          >
+            <span className="office-brand-mark" aria-hidden="true">
+              <CompanyBrand compact /> YUC
+            </span>
+            <span className="office-brand-label">Digital Office</span>
           </Link>
-          <Link to="/" className="login-home-link">
-            <ArrowLeft size={14} /> На сайт
-          </Link>
+          <div className="office-nav">
+            <Link className="office-home" to="/">
+              <ArrowLeft size={15} aria-hidden="true" /> На сайт
+            </Link>
+            <SiteThemeToggle />
+          </div>
         </header>
-        <div className="login-form-wrap">
-          <Badge tone="violet">
-            <span className="live-dot" />
-            ВАШЕ РАБОЧЕЕ ПРОСТРАНСТВО
-          </Badge>
-          <h1>
-            С возвращением<span>.</span>
-          </h1>
-          <p className="login-description">
-            Рабочее пространство команды Young Unicorn.
-          </p>
-          <form
-            onSubmit={form.handleSubmit((values) => {
-              if (
-                values.email.toLowerCase() !== "demo@nova.local" ||
-                values.password !== "Demo2026!"
-              ) {
-                setError(
-                  "Неверный email или пароль. Используйте демо-аккаунт ниже.",
-                );
-                return;
-              }
-              setError("");
-              login(values.remember);
-            })}
-          >
-            <Field
-              label="Рабочий email"
-              error={form.formState.errors.email?.message}
-            >
-              <div className="input-with-icon">
-                <Mail size={17} />
-                <Input
-                  autoComplete="username"
-                  placeholder="name@company.ru"
-                  {...form.register("email")}
-                />
-              </div>
-            </Field>
-            <Field
-              label="Пароль"
-              error={form.formState.errors.password?.message}
-            >
-              <div className="input-with-icon">
-                <LockKeyhole size={17} />
-                <Input
-                  type={visible ? "text" : "password"}
-                  autoComplete="current-password"
-                  placeholder="Введите пароль"
-                  {...form.register("password")}
-                />
-                <button
-                  type="button"
-                  aria-label={visible ? "Скрыть пароль" : "Показать пароль"}
-                  onClick={() => setVisible(!visible)}
+        <main className="office-main" id="main-content" tabIndex={-1}>
+          <div className="office-intro">
+            <p className="office-kicker">Рабочее пространство</p>
+            <h1>
+              <TechTitleLine text="Ваш рабочий день" {...title} />
+              <br />
+              <TechTitleLine text="начинается" {...title} />{" "}
+              <TechTitleLine
+                text="здесь"
+                {...title}
+                className="office-title-accent"
+              />
+            </h1>
+          </div>
+          <div className="office-card-stage" data-request={requestMode}>
+            <div className="office-card-turn">
+              <section
+                className="office-card"
+                aria-labelledby="office-sign-in-title"
+                inert={requestMode}
+                aria-hidden={requestMode || undefined}
+              >
+                <h2 id="office-sign-in-title" ref={signInHeading} tabIndex={-1}>
+                  Вход в ERP
+                </h2>
+                <SignInForm requestLink={requestLink} />
+              </section>
+              <section
+                className="office-card office-card-back"
+                aria-labelledby="office-request-title"
+                inert={!requestMode}
+                aria-hidden={!requestMode || undefined}
+              >
+                <h2
+                  id="office-request-title"
+                  ref={requestHeading}
+                  tabIndex={-1}
                 >
-                  {visible ? <EyeOff size={17} /> : <Eye size={17} />}
-                </button>
-              </div>
-            </Field>
-            <label className="checkbox-label">
-              <input type="checkbox" {...form.register("remember")} />
-              Запомнить меня
-            </label>
-            {error && (
-              <div className="login-error" role="alert">
-                {error}
-              </div>
-            )}
-            <Button type="submit" className="login-submit">
-              Войти в пространство
-              <ArrowRight size={17} />
-            </Button>
-          </form>
-          <div className="login-divider">
-            <span />
-            или откройте демоверсию
-            <span />
+                  Запросить доступ
+                </h2>
+                <p className="office-card-description">
+                  Заявку нужно отправить по почте
+                </p>
+                <AccessRequestForm />
+                <div className="office-switch office-request-back">
+                  <Link
+                    to={{
+                      search: signInSearch.toString(),
+                      hash: location.hash,
+                    }}
+                    state={location.state}
+                  >
+                    <ArrowLeft size={14} aria-hidden="true" />
+                    Вернуться ко входу
+                  </Link>
+                </div>
+              </section>
+            </div>
           </div>
-          <Button
-            variant="outline"
-            className="demo-login"
-            onClick={() => login(form.getValues("remember"))}
-          >
-            <Sparkles size={17} />
-            Войти в демо-аккаунт
-            <ArrowUpRight size={17} />
-          </Button>
-          <div className="demo-credentials">
-            <span>Демо-доступ</span>
-            <code>demo@nova.local</code>
-            <i>·</i>
-            <code>Demo2026!</code>
-          </div>
-          <p className="login-local-note">
-            <ShieldCheck size={14} />
-            Демонстрационный вход · Данные сохраняются в браузере
-          </p>
-        </div>
-        <footer className="login-footer">
-          <span>© {new Date().getFullYear()} Young Unicorn</span>
-          <span>Создано для вашего роста</span>
-        </footer>
+        </main>
       </div>
-      <section className="login-visual">
-        <div className="login-visual-top">
-          <span className="visual-brand">
-            YOUNG UNICORN
-            <span />
-          </span>
-          <Badge>ЕДИНАЯ ЭКОСИСТЕМА</Badge>
-        </div>
-        <div className="login-visual-content">
-          <div className="login-orbits" aria-hidden="true">
-            <div />
-            <div />
-            <div />
-            <span className="login-big-symbol">YUC</span>
-            <span className="login-orbit-chip orbit-chip-1">
-              <span>✦</span>Продажи растут
-            </span>
-            <span className="login-orbit-chip orbit-chip-2">
-              <span>
-                <Check size={16} />
-              </span>
-              Команда в одном ритме
-            </span>
-            <span className="login-orbit-chip orbit-chip-3">
-              + ясность в каждом решении
-            </span>
-          </div>
-          <div className="login-visual-copy">
-            <span className="eyebrow">МЕНЬШЕ РУТИНЫ. БОЛЬШЕ ВОЗМОЖНОСТЕЙ.</span>
-            <h2>
-              Большая картина.
-              <br />В каждой детали.
-            </h2>
-            <p>
-              Команда, клиенты и продажи —<br />в одном продуманном
-              пространстве.
-            </p>
-          </div>
-        </div>
-        <div className="login-visual-bottom">
-          <span>
-            <i />
-            Всё связано. Всё под контролем.
-          </span>
-          <span>✦</span>
-        </div>
-      </section>
     </div>
   );
 }

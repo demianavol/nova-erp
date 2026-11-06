@@ -2,6 +2,7 @@ import { useId, type Ref } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { CompanyBrand } from "./company-brand";
+import { ErpEntryLink } from "./erp-entry-link";
 import { company } from "../data/company";
 import "../company-footer.css";
 
@@ -93,10 +94,10 @@ export function CompanyFooter({
                     </Link>
                   ))}
                   {group.staff && (
-                    <Link to="/erp/employees" className="company-footer-staff">
+                    <ErpEntryLink className="company-footer-staff">
                       Сотрудникам
                       <ArrowUpRight size={12} aria-hidden="true" />
-                    </Link>
+                    </ErpEntryLink>
                   )}
                 </div>
               </div>

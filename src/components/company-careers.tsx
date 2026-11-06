@@ -22,6 +22,7 @@ import {
 } from "../data/career-orbit";
 import { CareersAtmosphere } from "./careers-atmosphere";
 import { CareerBadge, preloadCareerBadge } from "./career-badge";
+import { useNearViewport } from "./use-near-viewport";
 import "../company-careers.css";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
@@ -66,6 +67,7 @@ export function CompanyCareers() {
   const dotRef = useRef<SVGCircleElement>(null);
   const ringRef = useRef<SVGCircleElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
+  const near = useNearViewport(pinRef);
   const orbitRef = useRef<HTMLDivElement>(null);
   const badgeTrigger = useRef<HTMLButtonElement>(null);
   const alignedScrollY = useRef<number | null>(null);
@@ -173,6 +175,7 @@ export function CompanyCareers() {
   }, [updateTarget]);
 
   useLayoutEffect(() => {
+    if (!near) return;
     const path = pathRef.current;
     const root = orbitRef.current;
     const svg = path?.ownerSVGElement;
@@ -200,9 +203,10 @@ export function CompanyCareers() {
     const resize = new ResizeObserver(measure);
     resize.observe(svg);
     return () => resize.disconnect();
-  }, []);
+  }, [near]);
 
   useEffect(() => {
+    if (!near) return;
     drawProgress(orbit.current.displayed, false);
     let measureFrame = 0;
     let lastScrollY = window.scrollY;
@@ -250,7 +254,7 @@ export function CompanyCareers() {
       cancelAnimationFrame(animation.current);
       animation.current = 0;
     };
-  }, [drawProgress, updateTarget]);
+  }, [near, drawProgress, updateTarget]);
 
   const select = (index: number) => {
     orbit.current.selection = index;

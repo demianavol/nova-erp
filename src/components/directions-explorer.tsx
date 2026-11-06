@@ -1,10 +1,16 @@
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, FlaskConical } from "lucide-react";
 import { company } from "../data/company";
-import { BrandExplorerModal } from "./brand-explorer-modal";
 import { useExplorerRoute } from "./brand-explorer-route";
+import { useNearViewport } from "./use-near-viewport";
 import "../directions-explorer.css";
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}brand/${name}`;
+const BrandExplorerModal = lazy(() =>
+  import("./brand-explorer-modal").then((m) => ({
+    default: m.BrandExplorerModal,
+  })),
+);
 
 const directionHints: Record<string, string> = {
   fashion: "Коллекция Enmoone · 18 моделей в каталоге",
@@ -14,9 +20,17 @@ const directionHints: Record<string, string> = {
 
 export function DirectionsExplorer() {
   const { position, go, close, open } = useExplorerRoute();
+  const section = useRef<HTMLElement>(null);
+  const near = useNearViewport(section);
+  const [hasOpened, setHasOpened] = useState(false);
+  useEffect(() => {
+    if (open) setHasOpened(true);
+  }, [open]);
+
   return (
     <>
       <section
+        ref={section}
         className="directions-explorer lp-directions lp-container"
         id="directions"
         aria-labelledby="directions-title"
@@ -42,11 +56,11 @@ export function DirectionsExplorer() {
                 >
                   <span className="explorer-direction-visual">
                     <img
-                      src={asset(item.image)}
+                      src={near ? asset(item.image) : undefined}
                       alt={item.alt}
                       width="1536"
                       height="1024"
-                      loading="lazy"
+                      decoding="async"
                     />
                   </span>
                   <span className="explorer-direction-index">
@@ -82,12 +96,16 @@ export function DirectionsExplorer() {
           </div>
         </div>
       </section>
-      <BrandExplorerModal
-        position={position}
-        open={open}
-        go={go}
-        close={close}
-      />
+      {(open || hasOpened) && (
+        <Suspense fallback={null}>
+          <BrandExplorerModal
+            position={position}
+            open={open}
+            go={go}
+            close={close}
+          />
+        </Suspense>
+      )}
     </>
   );
 }

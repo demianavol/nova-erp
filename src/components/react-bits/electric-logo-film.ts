@@ -65,8 +65,14 @@ export function createElectricLogoFilm(
   canvas: HTMLCanvasElement,
   video: HTMLVideoElement,
 ) {
-  const gl = canvas.getContext("webgl2", { alpha: true, antialias: false });
+  const gl = canvas.getContext("webgl2", {
+    alpha: true,
+    antialias: false,
+    depth: false,
+    stencil: false,
+  });
   if (!gl) return;
+  const parallel = gl.getExtension("KHR_parallel_shader_compile");
   const program = gl.createProgram();
   const texture = gl.createTexture();
   const dispose = () => {
@@ -88,30 +94,31 @@ export function createElectricLogoFilm(
     }
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
-    const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-    if (compiled) gl.attachShader(program, shader);
+    gl.attachShader(program, shader);
     gl.deleteShader(shader);
-    if (!compiled) {
-      dispose();
-      return;
-    }
   }
   gl.linkProgram(program);
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    dispose();
-    return;
-  }
-  gl.useProgram(program);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  const phase = gl.getUniformLocation(program, "phase");
-  const lightTheme = gl.getUniformLocation(program, "lightTheme");
+  let phase: WebGLUniformLocation | null = null;
+  let lightTheme: WebGLUniformLocation | null = null;
   let uploaded = false;
   return {
     draw(mediaTime: number, light: boolean) {
+      if (!uploaded) {
+        if (
+          parallel &&
+          !gl.getProgramParameter(program, parallel.COMPLETION_STATUS_KHR)
+        )
+          return "pending";
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return "failed";
+        gl.useProgram(program);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        phase = gl.getUniformLocation(program, "phase");
+        lightTheme = gl.getUniformLocation(program, "lightTheme");
+      }
       if (uploaded)
         gl.texSubImage2D(
           gl.TEXTURE_2D,
@@ -136,6 +143,7 @@ export function createElectricLogoFilm(
       gl.uniform1f(phase, (mediaTime / video.duration) * 2 * Math.PI);
       gl.uniform1i(lightTheme, Number(light));
       gl.drawArrays(gl.TRIANGLES, 0, 3);
+      return "drawn";
     },
     dispose,
   };

@@ -1,0 +1,22 @@
+.hero-tech-line {
+  position: relative;
+}
+
+.hero-tech-effect {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-tech-line:has(.tech-text[data-ready]) > .hero-tech-native {
+  opacity: 0;
+}
+
+@media print {
+  .hero-tech-effect {
+    display: none;
+  }
+
+  .hero-tech-line:has(.tech-text[data-ready]) > .hero-tech-native {
+    opacity: 1;
+  }
+}

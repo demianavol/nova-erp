@@ -116,7 +116,7 @@ function PrincipleCard({
             className="cp-card-icon-img"
             width={96}
             height={96}
-            loading="eager"
+            loading="lazy"
             decoding="async"
           />
         </picture>

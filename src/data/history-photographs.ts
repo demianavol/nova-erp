@@ -39,7 +39,7 @@ const examples = [
   ],
   [
     "2026",
-    "oralcare-editorial.png",
+    "oralcare-editorial.webp",
     "Визуальная концепция oral care",
     "center",
   ],

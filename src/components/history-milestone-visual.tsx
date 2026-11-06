@@ -6,13 +6,18 @@ import {
 
 const visuals = Object.values(historyMilestoneVisuals);
 
-// PNG artwork adapter. A future GLB renderer can replace this inner stack while
-// retaining the pointer controller, accessible label and surrounding layout.
-function HistoryMilestonePngStack({ visual }: { visual: Visual }) {
+function HistoryMilestoneStack({
+  visual,
+  loadArtwork,
+}: {
+  visual: Visual;
+  loadArtwork: boolean;
+}) {
   const root = useRef<HTMLSpanElement>(null);
   const animations = useRef<Animation[]>([]);
 
   useLayoutEffect(() => {
+    if (!loadArtwork) return;
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const layers = [...root.current!.querySelectorAll("img")];
     const update = () => {
@@ -57,7 +62,7 @@ function HistoryMilestonePngStack({ visual }: { visual: Visual }) {
     update();
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
-  }, [visual.asset]);
+  }, [loadArtwork, visual.asset]);
 
   useLayoutEffect(
     () => () => animations.current.forEach((animation) => animation.cancel()),
@@ -70,11 +75,13 @@ function HistoryMilestonePngStack({ visual }: { visual: Visual }) {
         <img
           key={item.asset}
           data-asset={item.asset}
-          src={`${import.meta.env.BASE_URL}${item.asset}`}
+          src={
+            loadArtwork ? `${import.meta.env.BASE_URL}${item.asset}` : undefined
+          }
           alt=""
           width="1254"
           height="1254"
-          decoding="sync"
+          decoding="async"
           draggable="false"
         />
       ))}
@@ -85,9 +92,11 @@ function HistoryMilestonePngStack({ visual }: { visual: Visual }) {
 export function HistoryMilestoneVisual({
   visual,
   interactionArea,
+  loadArtwork,
 }: {
   visual: Visual;
   interactionArea?: RefObject<HTMLDivElement | null>;
+  loadArtwork: boolean;
 }) {
   const root = useRef<HTMLSpanElement>(null);
   const object = useRef<HTMLSpanElement>(null);
@@ -178,14 +187,16 @@ export function HistoryMilestoneVisual({
       aria-label={`Визуальная метафора: ${visual.label}`}
     >
       <span ref={object} className="journey-emblem-object">
-        <HistoryMilestonePngStack visual={visual} />
-        <span
-          className="journey-emblem-reflection"
-          aria-hidden="true"
-          style={{
-            maskImage: `url("${import.meta.env.BASE_URL}${visual.asset}")`,
-          }}
-        />
+        <HistoryMilestoneStack visual={visual} loadArtwork={loadArtwork} />
+        {loadArtwork && (
+          <span
+            className="journey-emblem-reflection"
+            aria-hidden="true"
+            style={{
+              maskImage: `url("${import.meta.env.BASE_URL}${visual.asset}")`,
+            }}
+          />
+        )}
       </span>
     </span>
   );

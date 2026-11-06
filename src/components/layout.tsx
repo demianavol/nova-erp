@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Link,
+  Navigate,
   NavLink,
   Outlet,
   useLocation,
@@ -38,6 +39,7 @@ import {
   Package,
   AlertCircle,
 } from "lucide-react";
+import { Toaster } from "sonner";
 import { useAuth, useERP, usePreferences } from "../data/store";
 import { cn, dateLabel, money, today } from "../lib/utils";
 import { orderTotal } from "../data/selectors";
@@ -45,6 +47,8 @@ import { Avatar, Badge, Button, Dialog, Empty, Input, Menu } from "./ui";
 import { ProjectNavigation } from "./project-navigation";
 import { EntityDialogs } from "./entity-dialogs";
 import { CompanyBrand } from "./company-brand";
+import "../refinements.css";
+import "../workspace.css";
 
 export function Logo({ compact = false }: { compact?: boolean }) {
   return <CompanyBrand compact={compact} />;
@@ -205,7 +209,24 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
   );
 }
 
-export function Layout() {
+export function ProtectedLayout() {
+  const authenticated = useAuth((s) => s.authenticated);
+  const location = useLocation();
+  return authenticated ? (
+    <>
+      <Layout />
+      <Toaster richColors position="bottom-right" theme="light" closeButton />
+    </>
+  ) : (
+    <Navigate
+      to="/login"
+      state={{ from: location.pathname + location.search + location.hash }}
+      replace
+    />
+  );
+}
+
+function Layout() {
   const preferences = usePreferences(),
     { data, storageError, readNotification } = useERP(),
     logout = useAuth((s) => s.logout);

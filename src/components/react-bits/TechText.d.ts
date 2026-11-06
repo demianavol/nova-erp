@@ -1,8 +1,10 @@
-import type { ComponentType } from "react";
+import type { ComponentType, RefObject } from "react";
 
 declare const TechText: ComponentType<{
   text: string;
   inline?: boolean;
+  nativeMetrics?: boolean;
+  pointerTarget?: RefObject<HTMLElement | null>;
   fontWeight?: number;
   letterSpacing?: number;
   align?: "left" | "center" | "right";

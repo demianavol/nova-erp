@@ -32,6 +32,7 @@ import {
   Handshake,
 } from "lucide-react";
 import { CompanyBrand } from "./company-brand";
+import { ErpEntryLink } from "./erp-entry-link";
 import { SiteThemeToggle } from "./site-theme";
 import "../public-header.css";
 
@@ -281,9 +282,9 @@ export function PublicHeader() {
         </nav>
 
         <div className="yu-header-actions">
-          <Link to="/erp/employees" className="yu-erp-entry">
+          <ErpEntryLink className="yu-erp-entry">
             Войти в ERP <ArrowUpRight size={15} aria-hidden="true" />
-          </Link>
+          </ErpEntryLink>
           <SiteThemeToggle />
 
           <Dropdown.Root open={mobileOpen} onOpenChange={setMobileOpen}>

@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef } from "react";
+import { useNearViewport } from "./use-near-viewport";
 
-const sculptureUrl = `${import.meta.env.BASE_URL}media/history-icons/lavender_glass_unicorn_token.png`;
+const sculptureUrl = `${import.meta.env.BASE_URL}media/history-icons/lavender_glass_unicorn_token.webp`;
 const clamp = (value: number, limit: number) =>
   Math.max(-limit, Math.min(limit, value));
 const axes = ["x", "y", "z"] as const;
@@ -8,6 +9,7 @@ const axes = ["x", "y", "z"] as const;
 export function PrinciplesSculpture({ alt }: { alt: string }) {
   const surfaceRef = useRef<HTMLButtonElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const near = useNearViewport(stageRef);
   const hintId = useId();
 
   useEffect(() => {
@@ -203,13 +205,16 @@ export function PrinciplesSculpture({ alt }: { alt: string }) {
               width={260}
               height={260}
               draggable={false}
+              loading="lazy"
               decoding="async"
             />
-            <span
-              className="cp-sculpture-sheen"
-              aria-hidden="true"
-              style={{ maskImage: `url("${sculptureUrl}")` }}
-            />
+            {near && (
+              <span
+                className="cp-sculpture-sheen"
+                aria-hidden="true"
+                style={{ maskImage: `url("${sculptureUrl}")` }}
+              />
+            )}
           </span>
         </span>
       </button>

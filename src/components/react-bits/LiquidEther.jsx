@@ -233,31 +233,26 @@ const compile = (gl, type, source) => {
   if (!shader) return null;
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error(gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-    return null;
-  }
   return shader;
 };
 
-const link = (gl, fragmentSource) => {
-  const vertex = compile(gl, gl.VERTEX_SHADER, VERTEX);
+const link = (gl, vertex, fragmentSource) => {
   const fragment = compile(gl, gl.FRAGMENT_SHADER, fragmentSource);
-  const program = vertex && fragment ? gl.createProgram() : null;
-  if (!vertex || !fragment || !program) {
-    if (vertex) gl.deleteShader(vertex);
+  const program = fragment ? gl.createProgram() : null;
+  if (!fragment || !program) {
     if (fragment) gl.deleteShader(fragment);
     return null;
   }
   gl.attachShader(program, vertex);
   gl.attachShader(program, fragment);
   gl.linkProgram(program);
-  gl.deleteShader(vertex);
   gl.deleteShader(fragment);
+  return { program, uniforms: null };
+};
+
+const readUniforms = (gl, program) => {
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
     console.error(gl.getProgramInfoLog(program));
-    gl.deleteProgram(program);
     return null;
   }
   const uniforms = {};
@@ -266,7 +261,7 @@ const link = (gl, fragmentSource) => {
     const info = gl.getActiveUniform(program, index);
     if (info) uniforms[info.name] = gl.getUniformLocation(program, info.name);
   }
-  return { program, uniforms };
+  return uniforms;
 };
 
 const LiquidEther = ({
@@ -340,16 +335,24 @@ const LiquidEther = ({
     if (!gl) return;
     if (!gl.getExtension('EXT_color_buffer_float') && !gl.getExtension('EXT_color_buffer_half_float')) return;
 
+    const parallel = gl.getExtension('KHR_parallel_shader_compile');
+    const vertex = compile(gl, gl.VERTEX_SHADER, VERTEX);
+    if (!vertex) return;
     const programs = {
-      splat: link(gl, SPLAT),
-      smooth: link(gl, SMOOTH),
-      divergence: link(gl, DIVERGENCE),
-      pressure: link(gl, PRESSURE),
-      project: link(gl, PROJECT),
-      advect: link(gl, ADVECT),
-      display: link(gl, DISPLAY)
+      splat: link(gl, vertex, SPLAT),
+      smooth: link(gl, vertex, SMOOTH),
+      divergence: link(gl, vertex, DIVERGENCE),
+      pressure: link(gl, vertex, PRESSURE),
+      project: link(gl, vertex, PROJECT),
+      advect: link(gl, vertex, ADVECT),
+      display: link(gl, vertex, DISPLAY)
     };
-    if (Object.values(programs).some(entry => !entry)) return;
+    gl.deleteShader(vertex);
+    const entries = Object.values(programs);
+    if (entries.some(entry => !entry)) {
+      entries.forEach(entry => { if (entry) gl.deleteProgram(entry.program); });
+      return;
+    }
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const vao = gl.createVertexArray();
@@ -378,6 +381,8 @@ const LiquidEther = ({
     let last = 0;
     let visible = false;
     let pageVisible = document.visibilityState !== 'hidden';
+    const page = document.documentElement;
+    let themeRevealing = page.hasAttribute('data-site-theme-reveal');
     let lost = false;
     let paletteKey = '';
 
@@ -574,9 +579,28 @@ const LiquidEther = ({
     };
 
     let nextStep = 0;
+    let linked = false;
     const frame = now => {
       raf = 0;
-      if (lost || !visible || !pageVisible) return;
+      if (lost || !visible || !pageVisible || themeRevealing) return;
+      if (!linked) {
+        if (
+          parallel &&
+          entries.some(entry => !gl.getProgramParameter(entry.program, parallel.COMPLETION_STATUS_KHR))
+        ) {
+          raf = requestAnimationFrame(frame);
+          return;
+        }
+        for (const entry of entries) {
+          entry.uniforms = readUniforms(gl, entry.program);
+          if (!entry.uniforms) {
+            lost = true;
+            return;
+          }
+        }
+        linked = true;
+        last = now;
+      }
       if (now < nextStep) {
         raf = requestAnimationFrame(frame);
         return;
@@ -640,7 +664,7 @@ const LiquidEther = ({
     };
 
     const wake = () => {
-      if (raf || lost || !visible || !pageVisible) return;
+      if (raf || lost || !visible || !pageVisible || themeRevealing) return;
       last = performance.now();
       nextStep = last;
       raf = requestAnimationFrame(frame);
@@ -761,7 +785,7 @@ const LiquidEther = ({
     intersection.observe(container);
 
     const updateActivity = () => {
-      if (visible && pageVisible) wake();
+      if (visible && pageVisible && !themeRevealing) wake();
       else {
         cancelAnimationFrame(raf);
         raf = 0;
@@ -774,6 +798,11 @@ const LiquidEther = ({
       updateActivity();
     };
     document.addEventListener('visibilitychange', onVisibility);
+    const themeObserver = new MutationObserver(() => {
+      themeRevealing = page.hasAttribute('data-site-theme-reveal');
+      updateActivity();
+    });
+    themeObserver.observe(page, { attributeFilter: ['data-site-theme-reveal'] });
 
     resize();
     wake();
@@ -783,6 +812,7 @@ const LiquidEther = ({
       wakeRef.current = null;
       resizeObserver.disconnect();
       intersection.disconnect();
+      themeObserver.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointerup', onPointerUp);
@@ -795,7 +825,7 @@ const LiquidEther = ({
         dropTargets();
         gl.deleteTexture(paletteTexture);
         gl.deleteVertexArray(vao);
-        Object.values(programs).forEach(entry => gl.deleteProgram(entry.program));
+        entries.forEach(entry => gl.deleteProgram(entry.program));
       }
     };
   }, [generation]);

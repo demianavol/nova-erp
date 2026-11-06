@@ -7,20 +7,20 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { Toaster } from "sonner";
-import { useAuth } from "./data/store";
-import { Layout } from "./components/layout";
-import { Login } from "./pages/login";
-import { Button, Empty } from "./components/ui";
+import { Inbox } from "lucide-react";
 import { CompanyBrand } from "./components/company-brand";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/manrope";
 import "./styles.css";
 import "./typography.css";
-import "./refinements.css";
-import "./workspace.css";
 import "./brand.css";
 
+const Login = lazy(() =>
+  import("./pages/login").then((m) => ({ default: m.Login })),
+);
+const Protected = lazy(() =>
+  import("./components/layout").then((m) => ({ default: m.ProtectedLayout })),
+);
 const Landing = lazy(() =>
   import("./pages/landing").then((m) => ({ default: m.Landing })),
 );
@@ -64,49 +64,43 @@ class ErrorBoundary extends Component<
   render() {
     return this.state.failed ? (
       <div className="fatal-error">
-        <Empty
-          title="Не удалось открыть страницу"
-          description="Перезагрузите приложение. Если ошибка повторится, восстановите демоданные."
-          action={
-            <>
-              <Button onClick={() => window.location.reload()}>
-                Перезагрузить
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  try {
-                    localStorage.removeItem("nova-erp-data-v1");
-                  } catch {
-                    /* Reload also works without storage. */
-                  }
-                  window.location.href = window.location.pathname;
-                  window.location.reload();
-                }}
-              >
-                Восстановить демоданные
-              </Button>
-            </>
-          }
-        />
+        <div className="empty-state">
+          <span>
+            <Inbox size={26} aria-hidden="true" />
+          </span>
+          <h3>Не удалось открыть страницу</h3>
+          <p>
+            Перезагрузите приложение. Если ошибка повторится, восстановите
+            демоданные.
+          </p>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => window.location.reload()}
+          >
+            Перезагрузить
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline"
+            onClick={() => {
+              try {
+                localStorage.removeItem("nova-erp-data-v1");
+              } catch {
+                /* Reload also works without storage. */
+              }
+              window.location.href = window.location.pathname;
+              window.location.reload();
+            }}
+          >
+            Восстановить демоданные
+          </button>
+        </div>
       </div>
     ) : (
       this.props.children
     );
   }
-}
-function Protected() {
-  const authenticated = useAuth((s) => s.authenticated),
-    location = useLocation();
-  return authenticated ? (
-    <Layout />
-  ) : (
-    <Navigate
-      to="/login"
-      state={{ from: location.pathname + location.search + location.hash }}
-      replace
-    />
-  );
 }
 function LegacyERPRedirect() {
   const location = useLocation();
@@ -167,7 +161,6 @@ function App() {
           </Routes>
         </Suspense>
       </HashRouter>
-      <Toaster richColors position="bottom-right" theme="light" closeButton />
     </ErrorBoundary>
   );
 }

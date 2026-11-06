@@ -62,6 +62,8 @@ const TechText = ({
   introDuration = 2,
   guides = false,
   inline = false,
+  nativeMetrics = false,
+  pointerTarget,
   className = '',
   style
 }) => {
@@ -77,6 +79,7 @@ const TechText = ({
       fontWeight,
       fontSize,
       inline,
+      nativeMetrics,
       letterSpacing,
       color,
       accentColor,
@@ -110,6 +113,7 @@ const TechText = ({
     const scratch = document.createElement('canvas');
     const scratchCtx = scratch.getContext('2d');
     if (!container || !canvas || !ctx || !scratchCtx) return undefined;
+    const surface = pointerTarget?.current ?? container;
 
     const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
     let width = 1;
@@ -132,7 +136,7 @@ const TechText = ({
     let introClock = 0;
     let introKind = '';
     let introducing = false;
-    let fontsReady = !document.fonts;
+    let fontsReady = !document.fonts || document.fonts.status === 'loaded';
     let guideAlpha = 0;
     const kicks = [];
     const press = { x: 0, y: 0, time: 0, index: -1 };
@@ -205,6 +209,7 @@ const TechText = ({
         family(s),
         s.fontWeight,
         s.fontSize,
+        s.nativeMetrics,
         s.letterSpacing,
         s.align,
         ink,
@@ -221,14 +226,17 @@ const TechText = ({
       const wanted = fontFor(s, 64);
       if (document.fonts && wanted !== requestedFont) {
         requestedFont = wanted;
-        document.fonts.load(wanted, s.text).then(refreshFonts, refreshFonts);
+        if (!document.fonts.check(wanted, s.text)) {
+          document.fonts.load(wanted, s.text).then(refreshFonts, refreshFonts);
+        }
       }
 
       const probe = scratchCtx;
       const fontSize = s.inline ? parseFloat(getComputedStyle(container).fontSize) : s.fontSize;
       setFont(probe, s, fontSize);
       let m = probe.measureText(s.text);
-      const fit = Math.min(
+      const matchNative = s.inline && s.nativeMetrics && Number.isFinite(m.fontBoundingBoxAscent);
+      const fit = matchNative ? 1 : Math.min(
         1,
         (width * (s.inline ? 1 : 0.9)) / Math.max(m.actualBoundingBoxLeft + m.actualBoundingBoxRight, 1),
         (height * (s.inline ? 0.94 : 0.66)) / Math.max(m.actualBoundingBoxAscent + m.actualBoundingBoxDescent, 1)
@@ -241,8 +249,12 @@ const TechText = ({
       const margin = s.inline ? 0 : width * 0.05;
       const start =
         s.align === 'left' ? margin : s.align === 'right' ? width - margin - inkWidth : (width - inkWidth) / 2;
-      const x = start + m.actualBoundingBoxLeft;
-      const baseline = (height - inkHeight) / 2 + m.actualBoundingBoxAscent;
+      const x = matchNative
+        ? parseFloat(getComputedStyle(container).getPropertyValue('--tech-text-gutter')) || 0
+        : start + m.actualBoundingBoxLeft;
+      const baseline = matchNative
+        ? (height + m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) / 2
+        : (height - inkHeight) / 2 + m.actualBoundingBoxAscent;
       const xHeight = baseline - probe.measureText('x').actualBoundingBoxAscent;
       const capHeight = baseline - probe.measureText('H').actualBoundingBoxAscent;
       const ascender = baseline - probe.measureText('d').actualBoundingBoxAscent;
@@ -812,7 +824,7 @@ const TechText = ({
         dragging >= 0 ? 'grabbing' : hovering && s.draggable ? 'grab' : hovering && s.clickKick ? 'pointer' : '';
       if (nextCursor !== cursor) {
         cursor = nextCursor;
-        container.style.cursor = nextCursor;
+        surface.style.cursor = nextCursor;
       }
 
       ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -882,9 +894,17 @@ const TechText = ({
     wakeRef.current = wake;
 
     const resize = () => {
-      width = Math.max(1, container.clientWidth);
-      height = Math.max(1, container.clientHeight);
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const nextWidth = Math.max(1, container.clientWidth);
+      const nextHeight = Math.max(1, container.clientHeight);
+      const nextDpr = Math.min(window.devicePixelRatio || 1, 2);
+      if (
+        width === nextWidth && height === nextHeight && dpr === nextDpr &&
+        canvas.width === Math.round(width * dpr) &&
+        canvas.height === Math.round(height * dpr)
+      ) return;
+      width = nextWidth;
+      height = nextHeight;
+      dpr = nextDpr;
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
       layoutKey = '';
@@ -920,15 +940,15 @@ const TechText = ({
         dragging = index;
         grab.x = pointer.x - glyphs[index].offset.x;
         grab.y = pointer.y - glyphs[index].offset.y;
-        container.setPointerCapture?.(e.pointerId);
+        surface.setPointerCapture?.(e.pointerId);
       }
       wake();
     };
     const onUp = e => {
       if (dragging >= 0) {
         dragging = -1;
-        container.releasePointerCapture?.(e.pointerId);
-        const rect = container.getBoundingClientRect();
+        surface.releasePointerCapture?.(e.pointerId);
+        const rect = surface.getBoundingClientRect();
         pointer.inside =
           e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
       }
@@ -946,12 +966,12 @@ const TechText = ({
       wake();
     };
 
-    container.addEventListener('pointermove', onMove, { passive: true });
-    container.addEventListener('pointerenter', onMove, { passive: true });
-    container.addEventListener('pointerdown', onDown, { passive: true });
-    container.addEventListener('pointerup', onUp, { passive: true });
-    container.addEventListener('pointercancel', onUp, { passive: true });
-    container.addEventListener('pointerleave', onLeave, { passive: true });
+    surface.addEventListener('pointermove', onMove, { passive: true });
+    surface.addEventListener('pointerenter', onMove, { passive: true });
+    surface.addEventListener('pointerdown', onDown, { passive: true });
+    surface.addEventListener('pointerup', onUp, { passive: true });
+    surface.addEventListener('pointercancel', onUp, { passive: true });
+    surface.addEventListener('pointerleave', onLeave, { passive: true });
 
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
@@ -960,13 +980,18 @@ const TechText = ({
       wake();
     });
     intersectionObserver.observe(container);
-    const themeObserver = new MutationObserver(wake);
+    const themeObserver = new MutationObserver(records => {
+      if (visible && !document.hidden && records.some(record => record.attributeName === 'data-site-theme')) {
+        cancelAnimationFrame(raf);
+        tick(performance.now());
+      } else wake();
+    });
     for (const node of [document.documentElement, document.body]) {
-      if (node) themeObserver.observe(node, { attributes: true, attributeFilter: ['class', 'style', 'data-theme'] });
+      if (node) themeObserver.observe(node, { attributes: true, attributeFilter: ['class', 'style', 'data-theme', 'data-site-theme'] });
     }
     const schemeQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
     schemeQuery?.addEventListener?.('change', wake);
-    if (document.fonts) document.fonts.ready.then(fontsLoaded, fontsLoaded);
+    if (!fontsReady) document.fonts.ready.then(fontsLoaded, fontsLoaded);
 
     document.addEventListener('visibilitychange', wake);
     resize();
@@ -981,13 +1006,13 @@ const TechText = ({
       intersectionObserver.disconnect();
       themeObserver.disconnect();
       schemeQuery?.removeEventListener?.('change', wake);
-      container.style.cursor = '';
-      container.removeEventListener('pointermove', onMove);
-      container.removeEventListener('pointerenter', onMove);
-      container.removeEventListener('pointerdown', onDown);
-      container.removeEventListener('pointerup', onUp);
-      container.removeEventListener('pointercancel', onUp);
-      container.removeEventListener('pointerleave', onLeave);
+      surface.style.cursor = '';
+      surface.removeEventListener('pointermove', onMove);
+      surface.removeEventListener('pointerenter', onMove);
+      surface.removeEventListener('pointerdown', onDown);
+      surface.removeEventListener('pointerup', onUp);
+      surface.removeEventListener('pointercancel', onUp);
+      surface.removeEventListener('pointerleave', onLeave);
     };
   }, []);
 

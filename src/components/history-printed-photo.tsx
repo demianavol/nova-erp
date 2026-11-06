@@ -1,8 +1,7 @@
-import { useEffect, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import {
-  historyPhotographs,
   type HistoryPhotograph,
   type HistoryPhotoVariant,
   type HistoryPhotoPlacement,
@@ -23,16 +22,6 @@ export function HistoryPrintedPhoto({
   placement?: HistoryPhotoPlacement;
   visible?: boolean;
 }) {
-  useEffect(() => {
-    // Warm the seven small preview images before fast timeline navigation.
-    Object.values(historyPhotographs).forEach((photo) => {
-      if (!photo.asset || photo.verification === "pending") return;
-      const image = new Image();
-      image.decoding = "async";
-      image.src = `${import.meta.env.BASE_URL}${photo.asset}`;
-      void image.decode().catch(() => {});
-    });
-  }, []);
   const verified = photograph.verification === "verified" && !!photograph.asset;
   const example = photograph.verification === "example";
   const hasImage = !!photograph.asset && (verified || example);
@@ -45,6 +34,8 @@ export function HistoryPrintedPhoto({
           alt={photograph.alt}
           width="640"
           height="480"
+          loading="lazy"
+          decoding="async"
           style={{ objectPosition: photograph.position ?? "center" }}
         />
       ) : (

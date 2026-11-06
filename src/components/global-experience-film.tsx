@@ -156,15 +156,18 @@ export function GlobalExperienceFilm({
       >
         <img
           className="ge-film-poster"
-          src={asset(
-            theme === "light"
-              ? "flags-native-light-poster.webp"
-              : "flags-isolated-dark-poster.webp",
-          )}
+          src={
+            near
+              ? asset(
+                  theme === "light"
+                    ? "flags-native-light-poster.webp"
+                    : "flags-isolated-dark-poster.webp",
+                )
+              : undefined
+          }
           width={896}
           height={720}
           alt=""
-          loading="lazy"
           decoding="async"
         />
         <canvas ref={canvas} className="ge-film-canvas" aria-hidden="true" />

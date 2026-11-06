@@ -3,8 +3,10 @@ import { flushSync } from "react-dom";
 import { Play } from "lucide-react";
 import { companyHistoryInfographic as steps } from "../data/company-journey";
 import { historyMedia } from "../data/history-media";
+import { historyPhotographs } from "../data/history-photographs";
 import { HistoryMilestoneVisual } from "./history-milestone-visual";
 import { HistoryPrintedPhoto } from "./history-printed-photo";
+import { useNearViewport } from "./use-near-viewport";
 import "../company-history.css";
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}media/${name}`;
@@ -13,6 +15,7 @@ const curve = "M 60 410 C 400 420 730 300 1140 65";
 export function CompanyHistory() {
   const root = useRef<HTMLDivElement>(null);
   const pin = useRef<HTMLDivElement>(null);
+  const near = useNearViewport(pin);
   const path = useRef<SVGPathElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const moving = useRef<SVGCircleElement>(null);
@@ -23,6 +26,16 @@ export function CompanyHistory() {
   );
   const [videoBlocked, setVideoBlocked] = useState(false);
   const [videoMoving, setVideoMoving] = useState(false);
+  useEffect(() => {
+    if (!near) return;
+    for (const photo of Object.values(historyPhotographs)) {
+      if (!photo.asset || photo.verification === "pending") continue;
+      const image = new Image();
+      image.decoding = "async";
+      image.src = `${import.meta.env.BASE_URL}${photo.asset}`;
+      void image.decode().catch(() => {});
+    }
+  }, [near]);
   useEffect(() => {
     const observer = new MutationObserver(() =>
       setDark(document.documentElement.dataset.siteTheme === "dark"),
@@ -86,6 +99,7 @@ export function CompanyHistory() {
     }
   };
   useEffect(() => {
+    if (!near) return;
     const recalculate = () => {
       if (!path.current) return;
       const length = path.current.getTotalLength();
@@ -105,7 +119,7 @@ export function CompanyHistory() {
       observer.disconnect();
       cancelAnimationFrame(animation.current);
     };
-  }, []);
+  }, [near]);
   const show = (value: number) => {
     cancelAnimationFrame(animation.current);
     animation.current = 0;
@@ -113,7 +127,7 @@ export function CompanyHistory() {
   };
   useEffect(() => {
     const element = root.current;
-    if (!element) return;
+    if (!element || !near) return;
     if (reduced) {
       cancelAnimationFrame(animation.current);
       animation.current = 0;
@@ -157,7 +171,7 @@ export function CompanyHistory() {
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
     };
-  }, [reduced]);
+  }, [near, reduced]);
   useEffect(() => {
     const element = video.current;
     const surface = pin.current;
@@ -207,7 +221,7 @@ export function CompanyHistory() {
       window.removeEventListener("pageshow", update);
       document.removeEventListener("visibilitychange", update);
     };
-  }, [reduced, dark]);
+  }, [near, reduced, dark]);
   const select = (index: number) => {
     manual.current = { value: index, base: progress.current };
     cancelAnimationFrame(animation.current);
@@ -274,13 +288,12 @@ export function CompanyHistory() {
           <h2 id="about-title">Наш путь</h2>
         </header>
         <div className="journey-film" aria-hidden="true">
-          {!reduced ? (
+          {near && !reduced ? (
             <video
               key={media.video}
               ref={video}
               src={asset(media.video!)}
               poster={asset(poster)}
-              autoPlay
               muted
               loop
               playsInline
@@ -296,7 +309,7 @@ export function CompanyHistory() {
               }}
             />
           ) : (
-            <img src={asset(poster)} alt="" />
+            <img src={asset(poster)} alt="" loading="lazy" decoding="async" />
           )}
         </div>
         {videoBlocked && !reduced && (
@@ -319,6 +332,7 @@ export function CompanyHistory() {
           <HistoryMilestoneVisual
             visual={current.milestoneVisual}
             interactionArea={pin}
+            loadArtwork={near}
           />
         </div>
         <div className="journey-copy-shell">

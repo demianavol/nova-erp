@@ -1,0 +1,6433 @@
+{
+  "layouts": [
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "active": "growth",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 159.125,
+            "y": 367.5625,
+            "width": 220,
+            "height": 99.1875,
+            "top": 367.5625,
+            "right": 379.125,
+            "bottom": 466.75,
+            "left": 159.125
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 449.1875,
+            "y": 342.78125,
+            "width": 220,
+            "height": 62,
+            "top": 342.78125,
+            "right": 669.1875,
+            "bottom": 404.78125,
+            "left": 449.1875
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 656.859375,
+            "y": 481.453125,
+            "width": 220,
+            "height": 62,
+            "top": 481.453125,
+            "right": 876.859375,
+            "bottom": 543.453125,
+            "left": 656.859375
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 574.453125,
+            "y": 592.078125,
+            "width": 220,
+            "height": 62,
+            "top": 592.078125,
+            "right": 794.453125,
+            "bottom": 654.078125,
+            "left": 574.453125
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 284.390625,
+            "y": 654.046875,
+            "width": 220,
+            "height": 62,
+            "top": 654.046875,
+            "right": 504.390625,
+            "bottom": 716.046875,
+            "left": 284.390625
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 76.71875,
+            "y": 515.375,
+            "width": 220,
+            "height": 62,
+            "top": 515.375,
+            "right": 296.71875,
+            "bottom": 577.375,
+            "left": 76.71875
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 540,
+        "height": 164.84375,
+        "top": 110.578125,
+        "right": 620,
+        "bottom": 275.421875,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 803.421875,
+        "width": 760,
+        "height": 46,
+        "top": 803.421875,
+        "right": 840,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 760,
+        "top": 100,
+        "right": 1360,
+        "bottom": 860,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 1280,
+        "height": 738.84375,
+        "top": 110.578125,
+        "right": 1360,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "active": "impact",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 159.125,
+            "y": 404.75,
+            "width": 220,
+            "height": 62,
+            "top": 404.75,
+            "right": 379.125,
+            "bottom": 466.75,
+            "left": 159.125
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 449.1875,
+            "y": 305.59375,
+            "width": 220,
+            "height": 99.1875,
+            "top": 305.59375,
+            "right": 669.1875,
+            "bottom": 404.78125,
+            "left": 449.1875
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 656.859375,
+            "y": 481.453125,
+            "width": 220,
+            "height": 62,
+            "top": 481.453125,
+            "right": 876.859375,
+            "bottom": 543.453125,
+            "left": 656.859375
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 574.453125,
+            "y": 592.078125,
+            "width": 220,
+            "height": 62,
+            "top": 592.078125,
+            "right": 794.453125,
+            "bottom": 654.078125,
+            "left": 574.453125
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 284.390625,
+            "y": 654.046875,
+            "width": 220,
+            "height": 62,
+            "top": 654.046875,
+            "right": 504.390625,
+            "bottom": 716.046875,
+            "left": 284.390625
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 76.71875,
+            "y": 515.375,
+            "width": 220,
+            "height": 62,
+            "top": 515.375,
+            "right": 296.71875,
+            "bottom": 577.375,
+            "left": 76.71875
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 540,
+        "height": 164.84375,
+        "top": 110.578125,
+        "right": 620,
+        "bottom": 275.421875,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 803.421875,
+        "width": 760,
+        "height": 46,
+        "top": 803.421875,
+        "right": 840,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 760,
+        "top": 100,
+        "right": 1360,
+        "bottom": 860,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 1280,
+        "height": 738.84375,
+        "top": 110.578125,
+        "right": 1360,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "active": "team",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 159.125,
+            "y": 404.75,
+            "width": 220,
+            "height": 62,
+            "top": 404.75,
+            "right": 379.125,
+            "bottom": 466.75,
+            "left": 159.125
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 449.1875,
+            "y": 342.78125,
+            "width": 220,
+            "height": 62,
+            "top": 342.78125,
+            "right": 669.1875,
+            "bottom": 404.78125,
+            "left": 449.1875
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 656.859375,
+            "y": 481.453125,
+            "width": 220,
+            "height": 99.1875,
+            "top": 481.453125,
+            "right": 876.859375,
+            "bottom": 580.640625,
+            "left": 656.859375
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 574.453125,
+            "y": 592.078125,
+            "width": 220,
+            "height": 62,
+            "top": 592.078125,
+            "right": 794.453125,
+            "bottom": 654.078125,
+            "left": 574.453125
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 284.390625,
+            "y": 654.046875,
+            "width": 220,
+            "height": 62,
+            "top": 654.046875,
+            "right": 504.390625,
+            "bottom": 716.046875,
+            "left": 284.390625
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 76.71875,
+            "y": 515.375,
+            "width": 220,
+            "height": 62,
+            "top": 515.375,
+            "right": 296.71875,
+            "bottom": 577.375,
+            "left": 76.71875
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 540,
+        "height": 164.84375,
+        "top": 110.578125,
+        "right": 620,
+        "bottom": 275.421875,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 803.421875,
+        "width": 760,
+        "height": 46,
+        "top": 803.421875,
+        "right": 840,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 760,
+        "top": 100,
+        "right": 1360,
+        "bottom": 860,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 1280,
+        "height": 738.84375,
+        "top": 110.578125,
+        "right": 1360,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "active": "projects",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 159.125,
+            "y": 404.75,
+            "width": 220,
+            "height": 62,
+            "top": 404.75,
+            "right": 379.125,
+            "bottom": 466.75,
+            "left": 159.125
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 449.1875,
+            "y": 342.78125,
+            "width": 220,
+            "height": 62,
+            "top": 342.78125,
+            "right": 669.1875,
+            "bottom": 404.78125,
+            "left": 449.1875
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 656.859375,
+            "y": 481.453125,
+            "width": 220,
+            "height": 62,
+            "top": 481.453125,
+            "right": 876.859375,
+            "bottom": 543.453125,
+            "left": 656.859375
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 574.453125,
+            "y": 592.078125,
+            "width": 220,
+            "height": 81.1875,
+            "top": 592.078125,
+            "right": 794.453125,
+            "bottom": 673.265625,
+            "left": 574.453125
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 284.390625,
+            "y": 654.046875,
+            "width": 220,
+            "height": 62,
+            "top": 654.046875,
+            "right": 504.390625,
+            "bottom": 716.046875,
+            "left": 284.390625
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 76.71875,
+            "y": 515.375,
+            "width": 220,
+            "height": 62,
+            "top": 515.375,
+            "right": 296.71875,
+            "bottom": 577.375,
+            "left": 76.71875
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 540,
+        "height": 164.84375,
+        "top": 110.578125,
+        "right": 620,
+        "bottom": 275.421875,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 803.421875,
+        "width": 760,
+        "height": 46,
+        "top": 803.421875,
+        "right": 840,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 760,
+        "top": 100,
+        "right": 1360,
+        "bottom": 860,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 1280,
+        "height": 738.84375,
+        "top": 110.578125,
+        "right": 1360,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "active": "freedom",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 159.125,
+            "y": 404.75,
+            "width": 220,
+            "height": 62,
+            "top": 404.75,
+            "right": 379.125,
+            "bottom": 466.75,
+            "left": 159.125
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 449.1875,
+            "y": 342.78125,
+            "width": 220,
+            "height": 62,
+            "top": 342.78125,
+            "right": 669.1875,
+            "bottom": 404.78125,
+            "left": 449.1875
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 656.859375,
+            "y": 481.453125,
+            "width": 220,
+            "height": 62,
+            "top": 481.453125,
+            "right": 876.859375,
+            "bottom": 543.453125,
+            "left": 656.859375
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 574.453125,
+            "y": 592.078125,
+            "width": 220,
+            "height": 62,
+            "top": 592.078125,
+            "right": 794.453125,
+            "bottom": 654.078125,
+            "left": 574.453125
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 284.390625,
+            "y": 654.046875,
+            "width": 220,
+            "height": 99.1875,
+            "top": 654.046875,
+            "right": 504.390625,
+            "bottom": 753.234375,
+            "left": 284.390625
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 76.71875,
+            "y": 515.375,
+            "width": 220,
+            "height": 62,
+            "top": 515.375,
+            "right": 296.71875,
+            "bottom": 577.375,
+            "left": 76.71875
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 540,
+        "height": 164.84375,
+        "top": 110.578125,
+        "right": 620,
+        "bottom": 275.421875,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 803.421875,
+        "width": 760,
+        "height": 46,
+        "top": 803.421875,
+        "right": 840,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 760,
+        "top": 100,
+        "right": 1360,
+        "bottom": 860,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 1280,
+        "height": 738.84375,
+        "top": 110.578125,
+        "right": 1360,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "active": "learning",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 159.125,
+            "y": 404.75,
+            "width": 220,
+            "height": 62,
+            "top": 404.75,
+            "right": 379.125,
+            "bottom": 466.75,
+            "left": 159.125
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 449.1875,
+            "y": 342.78125,
+            "width": 220,
+            "height": 62,
+            "top": 342.78125,
+            "right": 669.1875,
+            "bottom": 404.78125,
+            "left": 449.1875
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 656.859375,
+            "y": 481.453125,
+            "width": 220,
+            "height": 62,
+            "top": 481.453125,
+            "right": 876.859375,
+            "bottom": 543.453125,
+            "left": 656.859375
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 574.453125,
+            "y": 592.078125,
+            "width": 220,
+            "height": 62,
+            "top": 592.078125,
+            "right": 794.453125,
+            "bottom": 654.078125,
+            "left": 574.453125
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 284.390625,
+            "y": 654.046875,
+            "width": 220,
+            "height": 62,
+            "top": 654.046875,
+            "right": 504.390625,
+            "bottom": 716.046875,
+            "left": 284.390625
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 76.71875,
+            "y": 478.1875,
+            "width": 220,
+            "height": 99.1875,
+            "top": 478.1875,
+            "right": 296.71875,
+            "bottom": 577.375,
+            "left": 76.71875
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 540,
+        "height": 164.84375,
+        "top": 110.578125,
+        "right": 620,
+        "bottom": 275.421875,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 803.421875,
+        "width": 760,
+        "height": 46,
+        "top": 803.421875,
+        "right": 840,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 760,
+        "top": 100,
+        "right": 1360,
+        "bottom": 860,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 1280,
+        "height": 738.84375,
+        "top": 110.578125,
+        "right": 1360,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1024,
+      "height": 700,
+      "theme": "dark",
+      "active": "growth",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 90.703125,
+            "y": 288.90625,
+            "width": 180,
+            "height": 85.15625,
+            "top": 288.90625,
+            "right": 270.703125,
+            "bottom": 374.0625,
+            "left": 90.703125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.010859760485203651
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 318.78125,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 498.78125,
+            "bottom": 319.375,
+            "left": 318.78125
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.011098118832251203
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 482.078125,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 662.078125,
+            "bottom": 438.3125,
+            "left": 482.078125
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.00026341488489833864
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 417.28125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 597.28125,
+            "bottom": 535.921875,
+            "left": 417.28125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.004840409128291867
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 189.203125,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 369.203125,
+            "bottom": 590.609375,
+            "left": 189.203125
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004602050781272737
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 25.90625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 205.90625,
+            "bottom": 471.671875,
+            "left": 25.90625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.015367849249585674
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 960,
+        "height": 576,
+        "top": 100,
+        "right": 992,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 960,
+        "height": 578,
+        "top": 99,
+        "right": 992,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1024,
+      "height": 700,
+      "theme": "dark",
+      "active": "impact",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 90.703125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 270.703125,
+            "bottom": 374.0625,
+            "left": 90.703125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.010859760485203651
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 318.78125,
+            "y": 234.21875,
+            "width": 180,
+            "height": 85.15625,
+            "top": 234.21875,
+            "right": 498.78125,
+            "bottom": 319.375,
+            "left": 318.78125
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.011098118832251203
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 482.078125,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 662.078125,
+            "bottom": 438.3125,
+            "left": 482.078125
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.00026341488489833864
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 417.28125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 597.28125,
+            "bottom": 535.921875,
+            "left": 417.28125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.004840409128291867
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 189.203125,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 369.203125,
+            "bottom": 590.609375,
+            "left": 189.203125
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004602050781272737
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 25.90625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 205.90625,
+            "bottom": 471.671875,
+            "left": 25.90625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.015367849249585674
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 960,
+        "height": 576,
+        "top": 100,
+        "right": 992,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 960,
+        "height": 578,
+        "top": 99,
+        "right": 992,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1024,
+      "height": 700,
+      "theme": "dark",
+      "active": "team",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 90.703125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 270.703125,
+            "bottom": 374.0625,
+            "left": 90.703125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.010859760485203651
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 318.78125,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 498.78125,
+            "bottom": 319.375,
+            "left": 318.78125
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.011098118832251203
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 482.078125,
+            "y": 390.3125,
+            "width": 180,
+            "height": 85.15625,
+            "top": 390.3125,
+            "right": 662.078125,
+            "bottom": 475.46875,
+            "left": 482.078125
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.00026341488489833864
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 417.28125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 597.28125,
+            "bottom": 535.921875,
+            "left": 417.28125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.004840409128291867
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 189.203125,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 369.203125,
+            "bottom": 590.609375,
+            "left": 189.203125
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004602050781272737
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 25.90625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 205.90625,
+            "bottom": 471.671875,
+            "left": 25.90625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.015367849249585674
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 960,
+        "height": 576,
+        "top": 100,
+        "right": 992,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 960,
+        "height": 578,
+        "top": 99,
+        "right": 992,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1024,
+      "height": 700,
+      "theme": "dark",
+      "active": "projects",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 90.703125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 270.703125,
+            "bottom": 374.0625,
+            "left": 90.703125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.010859760485203651
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 318.78125,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 498.78125,
+            "bottom": 319.375,
+            "left": 318.78125
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.011098118832251203
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 482.078125,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 662.078125,
+            "bottom": 438.3125,
+            "left": 482.078125
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.00026341488489833864
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 417.28125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 70.46875,
+            "top": 487.921875,
+            "right": 597.28125,
+            "bottom": 558.390625,
+            "left": 417.28125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.004840409128291867
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 189.203125,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 369.203125,
+            "bottom": 590.609375,
+            "left": 189.203125
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004602050781272737
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 25.90625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 205.90625,
+            "bottom": 471.671875,
+            "left": 25.90625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.015367849249585674
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 960,
+        "height": 576,
+        "top": 100,
+        "right": 992,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 960,
+        "height": 578,
+        "top": 99,
+        "right": 992,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1024,
+      "height": 700,
+      "theme": "dark",
+      "active": "freedom",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 90.703125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 270.703125,
+            "bottom": 374.0625,
+            "left": 90.703125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.010859760485203651
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 318.78125,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 498.78125,
+            "bottom": 319.375,
+            "left": 318.78125
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.011098118832251203
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 482.078125,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 662.078125,
+            "bottom": 438.3125,
+            "left": 482.078125
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.00026341488489833864
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 417.28125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 597.28125,
+            "bottom": 535.921875,
+            "left": 417.28125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.004840409128291867
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 189.203125,
+            "y": 542.609375,
+            "width": 180,
+            "height": 85.15625,
+            "top": 542.609375,
+            "right": 369.203125,
+            "bottom": 627.765625,
+            "left": 189.203125
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004602050781272737
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 25.90625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 205.90625,
+            "bottom": 471.671875,
+            "left": 25.90625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.015367849249585674
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 960,
+        "height": 576,
+        "top": 100,
+        "right": 992,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 960,
+        "height": 578,
+        "top": 99,
+        "right": 992,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1024,
+      "height": 700,
+      "theme": "dark",
+      "active": "learning",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 90.703125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 270.703125,
+            "bottom": 374.0625,
+            "left": 90.703125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.010859760485203651
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 318.78125,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 498.78125,
+            "bottom": 319.375,
+            "left": 318.78125
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.011098118832251203
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 482.078125,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 662.078125,
+            "bottom": 438.3125,
+            "left": 482.078125
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.00026341488489833864
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 417.28125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 597.28125,
+            "bottom": 535.921875,
+            "left": 417.28125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.004840409128291867
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 189.203125,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 369.203125,
+            "bottom": 590.609375,
+            "left": 189.203125
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004602050781272737
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 25.90625,
+            "y": 386.515625,
+            "width": 180,
+            "height": 85.15625,
+            "top": 386.515625,
+            "right": 205.90625,
+            "bottom": 471.671875,
+            "left": 25.90625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.015367849249585674
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 960,
+        "height": 576,
+        "top": 100,
+        "right": 992,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 960,
+        "height": 578,
+        "top": 99,
+        "right": 992,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 961,
+      "height": 700,
+      "theme": "dark",
+      "active": "growth",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 80.953125,
+            "y": 288.90625,
+            "width": 180,
+            "height": 85.15625,
+            "top": 288.90625,
+            "right": 260.953125,
+            "bottom": 374.0625,
+            "left": 80.953125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.0007597490360922166
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 294.0625,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 474.0625,
+            "bottom": 319.375,
+            "left": 294.0625
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.0009632926237941319
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 446.625,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 626.625,
+            "bottom": 438.3125,
+            "left": 446.625
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.008039455664857087
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 386.078125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 566.078125,
+            "bottom": 535.921875,
+            "left": 386.078125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.014935487195032238
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 172.96875,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 352.96875,
+            "bottom": 590.609375,
+            "left": 172.96875
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.014731943607330322
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 20.40625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 200.40625,
+            "bottom": 471.671875,
+            "left": 20.40625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0075913973544743385
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 897,
+        "height": 576,
+        "top": 100,
+        "right": 929,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 897,
+        "height": 578,
+        "top": 99,
+        "right": 929,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 961,
+      "height": 700,
+      "theme": "dark",
+      "active": "impact",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 80.953125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 260.953125,
+            "bottom": 374.0625,
+            "left": 80.953125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.0007597490360922166
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 294.0625,
+            "y": 234.21875,
+            "width": 180,
+            "height": 85.15625,
+            "top": 234.21875,
+            "right": 474.0625,
+            "bottom": 319.375,
+            "left": 294.0625
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.0009632926237941319
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 446.625,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 626.625,
+            "bottom": 438.3125,
+            "left": 446.625
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.008039455664857087
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 386.078125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 566.078125,
+            "bottom": 535.921875,
+            "left": 386.078125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.014935487195032238
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 172.96875,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 352.96875,
+            "bottom": 590.609375,
+            "left": 172.96875
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.014731943607330322
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 20.40625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 200.40625,
+            "bottom": 471.671875,
+            "left": 20.40625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0075913973544743385
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 897,
+        "height": 576,
+        "top": 100,
+        "right": 929,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 897,
+        "height": 578,
+        "top": 99,
+        "right": 929,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 961,
+      "height": 700,
+      "theme": "dark",
+      "active": "team",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 80.953125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 260.953125,
+            "bottom": 374.0625,
+            "left": 80.953125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.0007597490360922166
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 294.0625,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 474.0625,
+            "bottom": 319.375,
+            "left": 294.0625
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.0009632926237941319
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 446.625,
+            "y": 390.3125,
+            "width": 180,
+            "height": 85.15625,
+            "top": 390.3125,
+            "right": 626.625,
+            "bottom": 475.46875,
+            "left": 446.625
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.008039455664857087
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 386.078125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 566.078125,
+            "bottom": 535.921875,
+            "left": 386.078125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.014935487195032238
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 172.96875,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 352.96875,
+            "bottom": 590.609375,
+            "left": 172.96875
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.014731943607330322
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 20.40625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 200.40625,
+            "bottom": 471.671875,
+            "left": 20.40625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0075913973544743385
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 897,
+        "height": 576,
+        "top": 100,
+        "right": 929,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 897,
+        "height": 578,
+        "top": 99,
+        "right": 929,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 961,
+      "height": 700,
+      "theme": "dark",
+      "active": "projects",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 80.953125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 260.953125,
+            "bottom": 374.0625,
+            "left": 80.953125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.0007597490360922166
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 294.0625,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 474.0625,
+            "bottom": 319.375,
+            "left": 294.0625
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.0009632926237941319
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 446.625,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 626.625,
+            "bottom": 438.3125,
+            "left": 446.625
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.008039455664857087
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 386.078125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 70.46875,
+            "top": 487.921875,
+            "right": 566.078125,
+            "bottom": 558.390625,
+            "left": 386.078125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.014935487195032238
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 172.96875,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 352.96875,
+            "bottom": 590.609375,
+            "left": 172.96875
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.014731943607330322
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 20.40625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 200.40625,
+            "bottom": 471.671875,
+            "left": 20.40625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0075913973544743385
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 897,
+        "height": 576,
+        "top": 100,
+        "right": 929,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 897,
+        "height": 578,
+        "top": 99,
+        "right": 929,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 961,
+      "height": 700,
+      "theme": "dark",
+      "active": "freedom",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 80.953125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 260.953125,
+            "bottom": 374.0625,
+            "left": 80.953125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.0007597490360922166
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 294.0625,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 474.0625,
+            "bottom": 319.375,
+            "left": 294.0625
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.0009632926237941319
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 446.625,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 626.625,
+            "bottom": 438.3125,
+            "left": 446.625
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.008039455664857087
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 386.078125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 566.078125,
+            "bottom": 535.921875,
+            "left": 386.078125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.014935487195032238
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 172.96875,
+            "y": 542.609375,
+            "width": 180,
+            "height": 85.15625,
+            "top": 542.609375,
+            "right": 352.96875,
+            "bottom": 627.765625,
+            "left": 172.96875
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.014731943607330322
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 20.40625,
+            "y": 423.671875,
+            "width": 180,
+            "height": 48,
+            "top": 423.671875,
+            "right": 200.40625,
+            "bottom": 471.671875,
+            "left": 20.40625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0075913973544743385
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 897,
+        "height": 576,
+        "top": 100,
+        "right": 929,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 897,
+        "height": 578,
+        "top": 99,
+        "right": 929,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 961,
+      "height": 700,
+      "theme": "dark",
+      "active": "learning",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 80.953125,
+            "y": 326.0625,
+            "width": 180,
+            "height": 48,
+            "top": 326.0625,
+            "right": 260.953125,
+            "bottom": 374.0625,
+            "left": 80.953125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.0007597490360922166
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 294.0625,
+            "y": 271.375,
+            "width": 180,
+            "height": 48,
+            "top": 271.375,
+            "right": 474.0625,
+            "bottom": 319.375,
+            "left": 294.0625
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.0009632926237941319
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 446.625,
+            "y": 390.3125,
+            "width": 180,
+            "height": 48,
+            "top": 390.3125,
+            "right": 626.625,
+            "bottom": 438.3125,
+            "left": 446.625
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.008039455664857087
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 386.078125,
+            "y": 487.921875,
+            "width": 180,
+            "height": 48,
+            "top": 487.921875,
+            "right": 566.078125,
+            "bottom": 535.921875,
+            "left": 386.078125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.014935487195032238
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 172.96875,
+            "y": 542.609375,
+            "width": 180,
+            "height": 48,
+            "top": 542.609375,
+            "right": 352.96875,
+            "bottom": 590.609375,
+            "left": 172.96875
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.014731943607330322
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 20.40625,
+            "y": 386.515625,
+            "width": 180,
+            "height": 85.15625,
+            "top": 386.515625,
+            "right": 200.40625,
+            "bottom": 471.671875,
+            "left": 20.40625
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0075913973544743385
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 99,
+        "width": 540,
+        "height": 124,
+        "top": 99,
+        "right": 572,
+        "bottom": 223,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 631,
+        "width": 760,
+        "height": 46,
+        "top": 631,
+        "right": 792,
+        "bottom": 677,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 100,
+        "width": 897,
+        "height": 576,
+        "top": 100,
+        "right": 929,
+        "bottom": 676,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 99,
+        "width": 897,
+        "height": 578,
+        "top": 99,
+        "right": 929,
+        "bottom": 677,
+        "left": 32
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 768,
+      "theme": "dark",
+      "active": "growth",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 174.125,
+            "y": 322.90625,
+            "width": 190,
+            "height": 85.15625,
+            "top": 322.90625,
+            "right": 364.125,
+            "bottom": 408.0625,
+            "left": 174.125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 464.1875,
+            "y": 305.375,
+            "width": 190,
+            "height": 48,
+            "top": 305.375,
+            "right": 654.1875,
+            "bottom": 353.375,
+            "left": 464.1875
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 671.859375,
+            "y": 424.3125,
+            "width": 190,
+            "height": 48,
+            "top": 424.3125,
+            "right": 861.859375,
+            "bottom": 472.3125,
+            "left": 671.859375
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 589.453125,
+            "y": 521.921875,
+            "width": 190,
+            "height": 48,
+            "top": 521.921875,
+            "right": 779.453125,
+            "bottom": 569.921875,
+            "left": 589.453125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 299.390625,
+            "y": 576.609375,
+            "width": 190,
+            "height": 48,
+            "top": 576.609375,
+            "right": 489.390625,
+            "bottom": 624.609375,
+            "left": 299.390625
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 91.71875,
+            "y": 457.671875,
+            "width": 190,
+            "height": 48,
+            "top": 457.671875,
+            "right": 281.71875,
+            "bottom": 505.671875,
+            "left": 91.71875
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 133,
+        "width": 540,
+        "height": 124,
+        "top": 133,
+        "right": 620,
+        "bottom": 257,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 665,
+        "width": 760,
+        "height": 46,
+        "top": 665,
+        "right": 840,
+        "bottom": 711,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 644,
+        "top": 100,
+        "right": 1360,
+        "bottom": 744,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 133,
+        "width": 1280,
+        "height": 578,
+        "top": 133,
+        "right": 1360,
+        "bottom": 711,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 768,
+      "theme": "dark",
+      "active": "impact",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 174.125,
+            "y": 360.0625,
+            "width": 190,
+            "height": 48,
+            "top": 360.0625,
+            "right": 364.125,
+            "bottom": 408.0625,
+            "left": 174.125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 464.1875,
+            "y": 268.21875,
+            "width": 190,
+            "height": 85.15625,
+            "top": 268.21875,
+            "right": 654.1875,
+            "bottom": 353.375,
+            "left": 464.1875
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 671.859375,
+            "y": 424.3125,
+            "width": 190,
+            "height": 48,
+            "top": 424.3125,
+            "right": 861.859375,
+            "bottom": 472.3125,
+            "left": 671.859375
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 589.453125,
+            "y": 521.921875,
+            "width": 190,
+            "height": 48,
+            "top": 521.921875,
+            "right": 779.453125,
+            "bottom": 569.921875,
+            "left": 589.453125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 299.390625,
+            "y": 576.609375,
+            "width": 190,
+            "height": 48,
+            "top": 576.609375,
+            "right": 489.390625,
+            "bottom": 624.609375,
+            "left": 299.390625
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 91.71875,
+            "y": 457.671875,
+            "width": 190,
+            "height": 48,
+            "top": 457.671875,
+            "right": 281.71875,
+            "bottom": 505.671875,
+            "left": 91.71875
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 133,
+        "width": 540,
+        "height": 124,
+        "top": 133,
+        "right": 620,
+        "bottom": 257,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 665,
+        "width": 760,
+        "height": 46,
+        "top": 665,
+        "right": 840,
+        "bottom": 711,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 644,
+        "top": 100,
+        "right": 1360,
+        "bottom": 744,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 133,
+        "width": 1280,
+        "height": 578,
+        "top": 133,
+        "right": 1360,
+        "bottom": 711,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 768,
+      "theme": "dark",
+      "active": "team",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 174.125,
+            "y": 360.0625,
+            "width": 190,
+            "height": 48,
+            "top": 360.0625,
+            "right": 364.125,
+            "bottom": 408.0625,
+            "left": 174.125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 464.1875,
+            "y": 305.375,
+            "width": 190,
+            "height": 48,
+            "top": 305.375,
+            "right": 654.1875,
+            "bottom": 353.375,
+            "left": 464.1875
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 671.859375,
+            "y": 424.3125,
+            "width": 190,
+            "height": 85.15625,
+            "top": 424.3125,
+            "right": 861.859375,
+            "bottom": 509.46875,
+            "left": 671.859375
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 589.453125,
+            "y": 521.921875,
+            "width": 190,
+            "height": 48,
+            "top": 521.921875,
+            "right": 779.453125,
+            "bottom": 569.921875,
+            "left": 589.453125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 299.390625,
+            "y": 576.609375,
+            "width": 190,
+            "height": 48,
+            "top": 576.609375,
+            "right": 489.390625,
+            "bottom": 624.609375,
+            "left": 299.390625
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 91.71875,
+            "y": 457.671875,
+            "width": 190,
+            "height": 48,
+            "top": 457.671875,
+            "right": 281.71875,
+            "bottom": 505.671875,
+            "left": 91.71875
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 133,
+        "width": 540,
+        "height": 124,
+        "top": 133,
+        "right": 620,
+        "bottom": 257,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 665,
+        "width": 760,
+        "height": 46,
+        "top": 665,
+        "right": 840,
+        "bottom": 711,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 644,
+        "top": 100,
+        "right": 1360,
+        "bottom": 744,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 133,
+        "width": 1280,
+        "height": 578,
+        "top": 133,
+        "right": 1360,
+        "bottom": 711,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 768,
+      "theme": "dark",
+      "active": "projects",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 174.125,
+            "y": 360.0625,
+            "width": 190,
+            "height": 48,
+            "top": 360.0625,
+            "right": 364.125,
+            "bottom": 408.0625,
+            "left": 174.125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 464.1875,
+            "y": 305.375,
+            "width": 190,
+            "height": 48,
+            "top": 305.375,
+            "right": 654.1875,
+            "bottom": 353.375,
+            "left": 464.1875
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 671.859375,
+            "y": 424.3125,
+            "width": 190,
+            "height": 48,
+            "top": 424.3125,
+            "right": 861.859375,
+            "bottom": 472.3125,
+            "left": 671.859375
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 589.453125,
+            "y": 521.921875,
+            "width": 190,
+            "height": 70.46875,
+            "top": 521.921875,
+            "right": 779.453125,
+            "bottom": 592.390625,
+            "left": 589.453125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 299.390625,
+            "y": 576.609375,
+            "width": 190,
+            "height": 48,
+            "top": 576.609375,
+            "right": 489.390625,
+            "bottom": 624.609375,
+            "left": 299.390625
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 91.71875,
+            "y": 457.671875,
+            "width": 190,
+            "height": 48,
+            "top": 457.671875,
+            "right": 281.71875,
+            "bottom": 505.671875,
+            "left": 91.71875
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 133,
+        "width": 540,
+        "height": 124,
+        "top": 133,
+        "right": 620,
+        "bottom": 257,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 665,
+        "width": 760,
+        "height": 46,
+        "top": 665,
+        "right": 840,
+        "bottom": 711,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 644,
+        "top": 100,
+        "right": 1360,
+        "bottom": 744,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 133,
+        "width": 1280,
+        "height": 578,
+        "top": 133,
+        "right": 1360,
+        "bottom": 711,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 768,
+      "theme": "dark",
+      "active": "freedom",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 174.125,
+            "y": 360.0625,
+            "width": 190,
+            "height": 48,
+            "top": 360.0625,
+            "right": 364.125,
+            "bottom": 408.0625,
+            "left": 174.125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 464.1875,
+            "y": 305.375,
+            "width": 190,
+            "height": 48,
+            "top": 305.375,
+            "right": 654.1875,
+            "bottom": 353.375,
+            "left": 464.1875
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 671.859375,
+            "y": 424.3125,
+            "width": 190,
+            "height": 48,
+            "top": 424.3125,
+            "right": 861.859375,
+            "bottom": 472.3125,
+            "left": 671.859375
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 589.453125,
+            "y": 521.921875,
+            "width": 190,
+            "height": 48,
+            "top": 521.921875,
+            "right": 779.453125,
+            "bottom": 569.921875,
+            "left": 589.453125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 299.390625,
+            "y": 576.609375,
+            "width": 190,
+            "height": 85.15625,
+            "top": 576.609375,
+            "right": 489.390625,
+            "bottom": 661.765625,
+            "left": 299.390625
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 91.71875,
+            "y": 457.671875,
+            "width": 190,
+            "height": 48,
+            "top": 457.671875,
+            "right": 281.71875,
+            "bottom": 505.671875,
+            "left": 91.71875
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 133,
+        "width": 540,
+        "height": 124,
+        "top": 133,
+        "right": 620,
+        "bottom": 257,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 665,
+        "width": 760,
+        "height": 46,
+        "top": 665,
+        "right": 840,
+        "bottom": 711,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 644,
+        "top": 100,
+        "right": 1360,
+        "bottom": 744,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 133,
+        "width": 1280,
+        "height": 578,
+        "top": 133,
+        "right": 1360,
+        "bottom": 711,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 768,
+      "theme": "dark",
+      "active": "learning",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 174.125,
+            "y": 360.0625,
+            "width": 190,
+            "height": 48,
+            "top": 360.0625,
+            "right": 364.125,
+            "bottom": 408.0625,
+            "left": 174.125
+          },
+          "gap": 14.00018310546875,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 464.1875,
+            "y": 305.375,
+            "width": 190,
+            "height": 48,
+            "top": 305.375,
+            "right": 654.1875,
+            "bottom": 353.375,
+            "left": 464.1875
+          },
+          "gap": 14.009462858501252,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 671.859375,
+            "y": 424.3125,
+            "width": 190,
+            "height": 48,
+            "top": 424.3125,
+            "right": 861.859375,
+            "bottom": 472.3125,
+            "left": 671.859375
+          },
+          "gap": 13.990738316586146,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 589.453125,
+            "y": 521.921875,
+            "width": 190,
+            "height": 48,
+            "top": 521.921875,
+            "right": 779.453125,
+            "bottom": 569.921875,
+            "left": 589.453125
+          },
+          "gap": 13.984570151881144,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 299.390625,
+            "y": 576.609375,
+            "width": 190,
+            "height": 48,
+            "top": 576.609375,
+            "right": 489.390625,
+            "bottom": 624.609375,
+            "left": 299.390625
+          },
+          "gap": 13.993849904913645,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 91.71875,
+            "y": 420.515625,
+            "width": 190,
+            "height": 85.15625,
+            "top": 420.515625,
+            "right": 281.71875,
+            "bottom": 505.671875,
+            "left": 91.71875
+          },
+          "gap": 14.006333200555105,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 133,
+        "width": 540,
+        "height": 124,
+        "top": 133,
+        "right": 620,
+        "bottom": 257,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 665,
+        "width": 760,
+        "height": 46,
+        "top": 665,
+        "right": 840,
+        "bottom": 711,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 644,
+        "top": 100,
+        "right": 1360,
+        "bottom": 744,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 133,
+        "width": 1280,
+        "height": 578,
+        "top": 133,
+        "right": 1360,
+        "bottom": 711,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 641,
+      "height": 900,
+      "theme": "dark",
+      "active": "growth",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 79.5,
+            "y": 713.0625,
+            "width": 180,
+            "height": 87.15625,
+            "top": 713.0625,
+            "right": 259.5,
+            "bottom": 800.21875,
+            "left": 79.5
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.012771164743526242
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 290.40625,
+            "y": 688.25,
+            "width": 180,
+            "height": 50,
+            "top": 688.25,
+            "right": 470.40625,
+            "bottom": 738.25,
+            "left": 290.40625
+          },
+          "gap": 14.00968290630135,
+          "centerOffset": 0.005905231676592848
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 441.390625,
+            "y": 814.921875,
+            "width": 180,
+            "height": 50,
+            "top": 814.921875,
+            "right": 621.390625,
+            "bottom": 864.921875,
+            "left": 441.390625
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.008782236199635918
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 381.484375,
+            "y": 925.546875,
+            "width": 180,
+            "height": 50,
+            "top": 925.546875,
+            "right": 561.484375,
+            "bottom": 975.546875,
+            "left": 381.484375
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.0029233430561248497
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 170.578125,
+            "y": 987.515625,
+            "width": 180,
+            "height": 50,
+            "top": 987.515625,
+            "right": 350.578125,
+            "bottom": 1037.515625,
+            "left": 170.578125
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.0097892761230014
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 19.59375,
+            "y": 860.84375,
+            "width": 180,
+            "height": 50,
+            "top": 860.84375,
+            "right": 199.59375,
+            "bottom": 910.84375,
+            "left": 19.59375
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.00684855611700641
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 136.671875,
+        "width": 540,
+        "height": 137.21875,
+        "top": 136.671875,
+        "right": 572,
+        "bottom": 273.890625,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 1136.890625,
+        "width": 577,
+        "height": 46,
+        "top": 1136.890625,
+        "right": 609,
+        "bottom": 1182.890625,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 136.671875,
+        "width": 577,
+        "height": 1046.21875,
+        "top": 136.671875,
+        "right": 609,
+        "bottom": 1182.890625,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 136.671875,
+        "width": 577,
+        "height": 1046.21875,
+        "top": 136.671875,
+        "right": 609,
+        "bottom": 1182.890625,
+        "left": 32
+      },
+      "sticky": false,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 641,
+      "height": 900,
+      "theme": "dark",
+      "active": "impact",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 79.5,
+            "y": 750.21875,
+            "width": 180,
+            "height": 50,
+            "top": 750.21875,
+            "right": 259.5,
+            "bottom": 800.21875,
+            "left": 79.5
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.012771164743526242
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 290.40625,
+            "y": 651.09375,
+            "width": 180,
+            "height": 87.15625,
+            "top": 651.09375,
+            "right": 470.40625,
+            "bottom": 738.25,
+            "left": 290.40625
+          },
+          "gap": 14.00968290630135,
+          "centerOffset": 0.005905231676592848
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 441.390625,
+            "y": 814.921875,
+            "width": 180,
+            "height": 50,
+            "top": 814.921875,
+            "right": 621.390625,
+            "bottom": 864.921875,
+            "left": 441.390625
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.008782236199635918
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 381.484375,
+            "y": 925.546875,
+            "width": 180,
+            "height": 50,
+            "top": 925.546875,
+            "right": 561.484375,
+            "bottom": 975.546875,
+            "left": 381.484375
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.0029233430561248497
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 170.578125,
+            "y": 987.515625,
+            "width": 180,
+            "height": 50,
+            "top": 987.515625,
+            "right": 350.578125,
+            "bottom": 1037.515625,
+            "left": 170.578125
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.0097892761230014
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 19.59375,
+            "y": 860.84375,
+            "width": 180,
+            "height": 50,
+            "top": 860.84375,
+            "right": 199.59375,
+            "bottom": 910.84375,
+            "left": 19.59375
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.00684855611700641
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": 136.671875,
+        "width": 540,
+        "height": 137.21875,
+        "top": 136.671875,
+        "right": 572,
+        "bottom": 273.890625,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 1136.890625,
+        "width": 577,
+        "height": 46,
+        "top": 1136.890625,
+        "right": 609,
+        "bottom": 1182.890625,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": 136.671875,
+        "width": 577,
+        "height": 1046.21875,
+        "top": 136.671875,
+        "right": 609,
+        "bottom": 1182.890625,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": 136.671875,
+        "width": 577,
+        "height": 1046.21875,
+        "top": 136.671875,
+        "right": 609,
+        "bottom": 1182.890625,
+        "left": 32
+      },
+      "sticky": false,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 641,
+      "height": 900,
+      "theme": "dark",
+      "active": "team",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 79.5,
+            "y": 360.21875,
+            "width": 180,
+            "height": 50,
+            "top": 360.21875,
+            "right": 259.5,
+            "bottom": 410.21875,
+            "left": 79.5
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.012771164743526242
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 290.40625,
+            "y": 298.25,
+            "width": 180,
+            "height": 50,
+            "top": 298.25,
+            "right": 470.40625,
+            "bottom": 348.25,
+            "left": 290.40625
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.005905231676592848
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 441.390625,
+            "y": 424.921875,
+            "width": 180,
+            "height": 87.15625,
+            "top": 424.921875,
+            "right": 621.390625,
+            "bottom": 512.078125,
+            "left": 441.390625
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.008782236199635918
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 381.484375,
+            "y": 535.546875,
+            "width": 180,
+            "height": 50,
+            "top": 535.546875,
+            "right": 561.484375,
+            "bottom": 585.546875,
+            "left": 381.484375
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.0029233430561248497
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 170.578125,
+            "y": 597.515625,
+            "width": 180,
+            "height": 50,
+            "top": 597.515625,
+            "right": 350.578125,
+            "bottom": 647.515625,
+            "left": 170.578125
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.0097892761230014
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 19.59375,
+            "y": 470.84375,
+            "width": 180,
+            "height": 50,
+            "top": 470.84375,
+            "right": 199.59375,
+            "bottom": 520.84375,
+            "left": 19.59375
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.00684855611700641
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 540,
+        "height": 137.21875,
+        "top": -253.328125,
+        "right": 572,
+        "bottom": -116.109375,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 746.890625,
+        "width": 577,
+        "height": 46,
+        "top": 746.890625,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 577,
+        "height": 1046.21875,
+        "top": -253.328125,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 577,
+        "height": 1046.21875,
+        "top": -253.328125,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "sticky": false,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 641,
+      "height": 900,
+      "theme": "dark",
+      "active": "projects",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 79.5,
+            "y": 360.21875,
+            "width": 180,
+            "height": 50,
+            "top": 360.21875,
+            "right": 259.5,
+            "bottom": 410.21875,
+            "left": 79.5
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.012771164743526242
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 290.40625,
+            "y": 298.25,
+            "width": 180,
+            "height": 50,
+            "top": 298.25,
+            "right": 470.40625,
+            "bottom": 348.25,
+            "left": 290.40625
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.005905231676592848
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 441.390625,
+            "y": 424.921875,
+            "width": 180,
+            "height": 50,
+            "top": 424.921875,
+            "right": 621.390625,
+            "bottom": 474.921875,
+            "left": 441.390625
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.008782236199635918
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 381.484375,
+            "y": 535.546875,
+            "width": 180,
+            "height": 72.46875,
+            "top": 535.546875,
+            "right": 561.484375,
+            "bottom": 608.015625,
+            "left": 381.484375
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.0029233430561248497
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 170.578125,
+            "y": 597.515625,
+            "width": 180,
+            "height": 50,
+            "top": 597.515625,
+            "right": 350.578125,
+            "bottom": 647.515625,
+            "left": 170.578125
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.0097892761230014
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 19.59375,
+            "y": 470.84375,
+            "width": 180,
+            "height": 50,
+            "top": 470.84375,
+            "right": 199.59375,
+            "bottom": 520.84375,
+            "left": 19.59375
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.00684855611700641
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 540,
+        "height": 137.21875,
+        "top": -253.328125,
+        "right": 572,
+        "bottom": -116.109375,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 746.890625,
+        "width": 577,
+        "height": 46,
+        "top": 746.890625,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 577,
+        "height": 1046.21875,
+        "top": -253.328125,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 577,
+        "height": 1046.21875,
+        "top": -253.328125,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "sticky": false,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 641,
+      "height": 900,
+      "theme": "dark",
+      "active": "freedom",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 79.5,
+            "y": 360.21875,
+            "width": 180,
+            "height": 50,
+            "top": 360.21875,
+            "right": 259.5,
+            "bottom": 410.21875,
+            "left": 79.5
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.012771164743526242
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 290.40625,
+            "y": 298.25,
+            "width": 180,
+            "height": 50,
+            "top": 298.25,
+            "right": 470.40625,
+            "bottom": 348.25,
+            "left": 290.40625
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.005905231676592848
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 441.390625,
+            "y": 424.921875,
+            "width": 180,
+            "height": 50,
+            "top": 424.921875,
+            "right": 621.390625,
+            "bottom": 474.921875,
+            "left": 441.390625
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.008782236199635918
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 381.484375,
+            "y": 535.546875,
+            "width": 180,
+            "height": 50,
+            "top": 535.546875,
+            "right": 561.484375,
+            "bottom": 585.546875,
+            "left": 381.484375
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.0029233430561248497
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 170.578125,
+            "y": 597.515625,
+            "width": 180,
+            "height": 87.15625,
+            "top": 597.515625,
+            "right": 350.578125,
+            "bottom": 684.671875,
+            "left": 170.578125
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.0097892761230014
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 19.59375,
+            "y": 470.84375,
+            "width": 180,
+            "height": 50,
+            "top": 470.84375,
+            "right": 199.59375,
+            "bottom": 520.84375,
+            "left": 19.59375
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.00684855611700641
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 540,
+        "height": 137.21875,
+        "top": -253.328125,
+        "right": 572,
+        "bottom": -116.109375,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 746.890625,
+        "width": 577,
+        "height": 46,
+        "top": 746.890625,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 577,
+        "height": 1046.21875,
+        "top": -253.328125,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 577,
+        "height": 1046.21875,
+        "top": -253.328125,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "sticky": false,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 641,
+      "height": 900,
+      "theme": "dark",
+      "active": "learning",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 79.5,
+            "y": 360.21875,
+            "width": 180,
+            "height": 50,
+            "top": 360.21875,
+            "right": 259.5,
+            "bottom": 410.21875,
+            "left": 79.5
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.012771164743526242
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 290.40625,
+            "y": 298.25,
+            "width": 180,
+            "height": 50,
+            "top": 298.25,
+            "right": 470.40625,
+            "bottom": 348.25,
+            "left": 290.40625
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.005905231676592848
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 441.390625,
+            "y": 424.921875,
+            "width": 180,
+            "height": 50,
+            "top": 424.921875,
+            "right": 621.390625,
+            "bottom": 474.921875,
+            "left": 441.390625
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.008782236199635918
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 381.484375,
+            "y": 535.546875,
+            "width": 180,
+            "height": 50,
+            "top": 535.546875,
+            "right": 561.484375,
+            "bottom": 585.546875,
+            "left": 381.484375
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.0029233430561248497
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 170.578125,
+            "y": 597.515625,
+            "width": 180,
+            "height": 50,
+            "top": 597.515625,
+            "right": 350.578125,
+            "bottom": 647.515625,
+            "left": 170.578125
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.0097892761230014
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 19.59375,
+            "y": 433.6875,
+            "width": 180,
+            "height": 87.15625,
+            "top": 433.6875,
+            "right": 199.59375,
+            "bottom": 520.84375,
+            "left": 19.59375
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.00684855611700641
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 540,
+        "height": 137.21875,
+        "top": -253.328125,
+        "right": 572,
+        "bottom": -116.109375,
+        "left": 32
+      },
+      "actions": {
+        "x": 32,
+        "y": 746.890625,
+        "width": 577,
+        "height": 46,
+        "top": 746.890625,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "pin": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 577,
+        "height": 1046.21875,
+        "top": -253.328125,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "stage": {
+        "x": 32,
+        "y": -253.328125,
+        "width": 577,
+        "height": 1046.21875,
+        "top": -253.328125,
+        "right": 609,
+        "bottom": 792.890625,
+        "left": 32
+      },
+      "sticky": false,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "active": "growth",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 587.625,
+            "width": 354,
+            "height": 96,
+            "top": 587.625,
+            "right": 372,
+            "bottom": 683.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 693.625,
+            "width": 354,
+            "height": 96,
+            "top": 693.625,
+            "right": 372,
+            "bottom": 789.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 799.625,
+            "width": 354,
+            "height": 96,
+            "top": 799.625,
+            "right": 372,
+            "bottom": 895.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 905.625,
+            "width": 354,
+            "height": 96,
+            "top": 905.625,
+            "right": 372,
+            "bottom": 1001.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 1011.625,
+            "width": 354,
+            "height": 96,
+            "top": 1011.625,
+            "right": 372,
+            "bottom": 1107.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 1117.625,
+            "width": 354,
+            "height": 96,
+            "top": 1117.625,
+            "right": 372,
+            "bottom": 1213.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": 132.96875,
+        "width": 354,
+        "height": 158.65625,
+        "top": 132.96875,
+        "right": 372,
+        "bottom": 291.625,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 1237.625,
+        "width": 354,
+        "height": 108,
+        "top": 1237.625,
+        "right": 372,
+        "bottom": 1345.625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": 132.96875,
+        "width": 354,
+        "height": 1212.65625,
+        "top": 132.96875,
+        "right": 372,
+        "bottom": 1345.625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": 132.96875,
+        "width": 354,
+        "height": 1212.65625,
+        "top": 132.96875,
+        "right": 372,
+        "bottom": 1345.625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "active": "impact",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 587.625,
+            "width": 354,
+            "height": 96,
+            "top": 587.625,
+            "right": 372,
+            "bottom": 683.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 693.625,
+            "width": 354,
+            "height": 96,
+            "top": 693.625,
+            "right": 372,
+            "bottom": 789.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 799.625,
+            "width": 354,
+            "height": 96,
+            "top": 799.625,
+            "right": 372,
+            "bottom": 895.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 905.625,
+            "width": 354,
+            "height": 96,
+            "top": 905.625,
+            "right": 372,
+            "bottom": 1001.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 1011.625,
+            "width": 354,
+            "height": 96,
+            "top": 1011.625,
+            "right": 372,
+            "bottom": 1107.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 1117.625,
+            "width": 354,
+            "height": 96,
+            "top": 1117.625,
+            "right": 372,
+            "bottom": 1213.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": 132.96875,
+        "width": 354,
+        "height": 158.65625,
+        "top": 132.96875,
+        "right": 372,
+        "bottom": 291.625,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 1237.625,
+        "width": 354,
+        "height": 108,
+        "top": 1237.625,
+        "right": 372,
+        "bottom": 1345.625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": 132.96875,
+        "width": 354,
+        "height": 1212.65625,
+        "top": 132.96875,
+        "right": 372,
+        "bottom": 1345.625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": 132.96875,
+        "width": 354,
+        "height": 1212.65625,
+        "top": 132.96875,
+        "right": 372,
+        "bottom": 1345.625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "active": "team",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 536.625,
+            "width": 354,
+            "height": 96,
+            "top": 536.625,
+            "right": 372,
+            "bottom": 632.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 642.625,
+            "width": 354,
+            "height": 96,
+            "top": 642.625,
+            "right": 372,
+            "bottom": 738.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 748.625,
+            "width": 354,
+            "height": 96,
+            "top": 748.625,
+            "right": 372,
+            "bottom": 844.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 854.625,
+            "width": 354,
+            "height": 96,
+            "top": 854.625,
+            "right": 372,
+            "bottom": 950.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 960.625,
+            "width": 354,
+            "height": 96,
+            "top": 960.625,
+            "right": 372,
+            "bottom": 1056.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 1066.625,
+            "width": 354,
+            "height": 96,
+            "top": 1066.625,
+            "right": 372,
+            "bottom": 1162.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": 81.96875,
+        "width": 354,
+        "height": 158.65625,
+        "top": 81.96875,
+        "right": 372,
+        "bottom": 240.625,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 1186.625,
+        "width": 354,
+        "height": 108,
+        "top": 1186.625,
+        "right": 372,
+        "bottom": 1294.625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": 81.96875,
+        "width": 354,
+        "height": 1212.65625,
+        "top": 81.96875,
+        "right": 372,
+        "bottom": 1294.625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": 81.96875,
+        "width": 354,
+        "height": 1212.65625,
+        "top": 81.96875,
+        "right": 372,
+        "bottom": 1294.625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "active": "projects",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 55.625,
+            "width": 354,
+            "height": 96,
+            "top": 55.625,
+            "right": 372,
+            "bottom": 151.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 161.625,
+            "width": 354,
+            "height": 96,
+            "top": 161.625,
+            "right": 372,
+            "bottom": 257.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 267.625,
+            "width": 354,
+            "height": 96,
+            "top": 267.625,
+            "right": 372,
+            "bottom": 363.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 373.625,
+            "width": 354,
+            "height": 96,
+            "top": 373.625,
+            "right": 372,
+            "bottom": 469.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 479.625,
+            "width": 354,
+            "height": 96,
+            "top": 479.625,
+            "right": 372,
+            "bottom": 575.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 585.625,
+            "width": 354,
+            "height": 96,
+            "top": 585.625,
+            "right": 372,
+            "bottom": 681.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": -399.03125,
+        "width": 354,
+        "height": 158.65625,
+        "top": -399.03125,
+        "right": 372,
+        "bottom": -240.375,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 705.625,
+        "width": 354,
+        "height": 108,
+        "top": 705.625,
+        "right": 372,
+        "bottom": 813.625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": -399.03125,
+        "width": 354,
+        "height": 1212.65625,
+        "top": -399.03125,
+        "right": 372,
+        "bottom": 813.625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": -399.03125,
+        "width": 354,
+        "height": 1212.65625,
+        "top": -399.03125,
+        "right": 372,
+        "bottom": 813.625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "active": "freedom",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 55.625,
+            "width": 354,
+            "height": 96,
+            "top": 55.625,
+            "right": 372,
+            "bottom": 151.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 161.625,
+            "width": 354,
+            "height": 96,
+            "top": 161.625,
+            "right": 372,
+            "bottom": 257.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 267.625,
+            "width": 354,
+            "height": 96,
+            "top": 267.625,
+            "right": 372,
+            "bottom": 363.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 373.625,
+            "width": 354,
+            "height": 96,
+            "top": 373.625,
+            "right": 372,
+            "bottom": 469.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 479.625,
+            "width": 354,
+            "height": 96,
+            "top": 479.625,
+            "right": 372,
+            "bottom": 575.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 585.625,
+            "width": 354,
+            "height": 96,
+            "top": 585.625,
+            "right": 372,
+            "bottom": 681.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": -399.03125,
+        "width": 354,
+        "height": 158.65625,
+        "top": -399.03125,
+        "right": 372,
+        "bottom": -240.375,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 705.625,
+        "width": 354,
+        "height": 108,
+        "top": 705.625,
+        "right": 372,
+        "bottom": 813.625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": -399.03125,
+        "width": 354,
+        "height": 1212.65625,
+        "top": -399.03125,
+        "right": 372,
+        "bottom": 813.625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": -399.03125,
+        "width": 354,
+        "height": 1212.65625,
+        "top": -399.03125,
+        "right": 372,
+        "bottom": 813.625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "active": "learning",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 55.625,
+            "width": 354,
+            "height": 96,
+            "top": 55.625,
+            "right": 372,
+            "bottom": 151.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 161.625,
+            "width": 354,
+            "height": 96,
+            "top": 161.625,
+            "right": 372,
+            "bottom": 257.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 267.625,
+            "width": 354,
+            "height": 96,
+            "top": 267.625,
+            "right": 372,
+            "bottom": 363.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 373.625,
+            "width": 354,
+            "height": 96,
+            "top": 373.625,
+            "right": 372,
+            "bottom": 469.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 479.625,
+            "width": 354,
+            "height": 96,
+            "top": 479.625,
+            "right": 372,
+            "bottom": 575.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 585.625,
+            "width": 354,
+            "height": 96,
+            "top": 585.625,
+            "right": 372,
+            "bottom": 681.625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": -399.03125,
+        "width": 354,
+        "height": 158.65625,
+        "top": -399.03125,
+        "right": 372,
+        "bottom": -240.375,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 705.625,
+        "width": 354,
+        "height": 108,
+        "top": 705.625,
+        "right": 372,
+        "bottom": 813.625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": -399.03125,
+        "width": 354,
+        "height": 1212.65625,
+        "top": -399.03125,
+        "right": 372,
+        "bottom": 813.625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": -399.03125,
+        "width": 354,
+        "height": 1212.65625,
+        "top": -399.03125,
+        "right": 372,
+        "bottom": 813.625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "dark",
+      "active": "growth",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 587.65625,
+            "width": 284,
+            "height": 96,
+            "top": 587.65625,
+            "right": 302,
+            "bottom": 683.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 693.65625,
+            "width": 284,
+            "height": 96,
+            "top": 693.65625,
+            "right": 302,
+            "bottom": 789.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 799.65625,
+            "width": 284,
+            "height": 96,
+            "top": 799.65625,
+            "right": 302,
+            "bottom": 895.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 905.65625,
+            "width": 284,
+            "height": 96,
+            "top": 905.65625,
+            "right": 302,
+            "bottom": 1001.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 1011.65625,
+            "width": 284,
+            "height": 96,
+            "top": 1011.65625,
+            "right": 302,
+            "bottom": 1107.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 1117.65625,
+            "width": 284,
+            "height": 96,
+            "top": 1117.65625,
+            "right": 302,
+            "bottom": 1213.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": 133,
+        "width": 284,
+        "height": 158.65625,
+        "top": 133,
+        "right": 302,
+        "bottom": 291.65625,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 1237.65625,
+        "width": 284,
+        "height": 108,
+        "top": 1237.65625,
+        "right": 302,
+        "bottom": 1345.65625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": 133,
+        "width": 284,
+        "height": 1212.65625,
+        "top": 133,
+        "right": 302,
+        "bottom": 1345.65625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": 133,
+        "width": 284,
+        "height": 1212.65625,
+        "top": 133,
+        "right": 302,
+        "bottom": 1345.65625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "dark",
+      "active": "impact",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 538.65625,
+            "width": 284,
+            "height": 96,
+            "top": 538.65625,
+            "right": 302,
+            "bottom": 634.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 644.65625,
+            "width": 284,
+            "height": 110.5,
+            "top": 644.65625,
+            "right": 302,
+            "bottom": 755.15625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 765.15625,
+            "width": 284,
+            "height": 96,
+            "top": 765.15625,
+            "right": 302,
+            "bottom": 861.15625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 871.15625,
+            "width": 284,
+            "height": 96,
+            "top": 871.15625,
+            "right": 302,
+            "bottom": 967.15625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 977.15625,
+            "width": 284,
+            "height": 96,
+            "top": 977.15625,
+            "right": 302,
+            "bottom": 1073.15625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 1083.15625,
+            "width": 284,
+            "height": 96,
+            "top": 1083.15625,
+            "right": 302,
+            "bottom": 1179.15625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": 84,
+        "width": 284,
+        "height": 158.65625,
+        "top": 84,
+        "right": 302,
+        "bottom": 242.65625,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 1203.15625,
+        "width": 284,
+        "height": 108,
+        "top": 1203.15625,
+        "right": 302,
+        "bottom": 1311.15625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": 84,
+        "width": 284,
+        "height": 1227.15625,
+        "top": 84,
+        "right": 302,
+        "bottom": 1311.15625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": 84,
+        "width": 284,
+        "height": 1227.15625,
+        "top": 84,
+        "right": 302,
+        "bottom": 1311.15625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "dark",
+      "active": "team",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 95.65625,
+            "width": 284,
+            "height": 96,
+            "top": 95.65625,
+            "right": 302,
+            "bottom": 191.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 201.65625,
+            "width": 284,
+            "height": 96,
+            "top": 201.65625,
+            "right": 302,
+            "bottom": 297.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 307.65625,
+            "width": 284,
+            "height": 96,
+            "top": 307.65625,
+            "right": 302,
+            "bottom": 403.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 413.65625,
+            "width": 284,
+            "height": 96,
+            "top": 413.65625,
+            "right": 302,
+            "bottom": 509.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 519.65625,
+            "width": 284,
+            "height": 96,
+            "top": 519.65625,
+            "right": 302,
+            "bottom": 615.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 625.65625,
+            "width": 284,
+            "height": 96,
+            "top": 625.65625,
+            "right": 302,
+            "bottom": 721.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 158.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": -200.34375,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 745.65625,
+        "width": 284,
+        "height": 108,
+        "top": 745.65625,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 1212.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 1212.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "dark",
+      "active": "projects",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 95.65625,
+            "width": 284,
+            "height": 96,
+            "top": 95.65625,
+            "right": 302,
+            "bottom": 191.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 201.65625,
+            "width": 284,
+            "height": 96,
+            "top": 201.65625,
+            "right": 302,
+            "bottom": 297.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 307.65625,
+            "width": 284,
+            "height": 96,
+            "top": 307.65625,
+            "right": 302,
+            "bottom": 403.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 413.65625,
+            "width": 284,
+            "height": 96,
+            "top": 413.65625,
+            "right": 302,
+            "bottom": 509.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 519.65625,
+            "width": 284,
+            "height": 96,
+            "top": 519.65625,
+            "right": 302,
+            "bottom": 615.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 625.65625,
+            "width": 284,
+            "height": 96,
+            "top": 625.65625,
+            "right": 302,
+            "bottom": 721.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 158.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": -200.34375,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 745.65625,
+        "width": 284,
+        "height": 108,
+        "top": 745.65625,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 1212.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 1212.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "dark",
+      "active": "freedom",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 95.65625,
+            "width": 284,
+            "height": 96,
+            "top": 95.65625,
+            "right": 302,
+            "bottom": 191.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 201.65625,
+            "width": 284,
+            "height": 96,
+            "top": 201.65625,
+            "right": 302,
+            "bottom": 297.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 307.65625,
+            "width": 284,
+            "height": 96,
+            "top": 307.65625,
+            "right": 302,
+            "bottom": 403.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 413.65625,
+            "width": 284,
+            "height": 96,
+            "top": 413.65625,
+            "right": 302,
+            "bottom": 509.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 519.65625,
+            "width": 284,
+            "height": 96,
+            "top": 519.65625,
+            "right": 302,
+            "bottom": 615.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 625.65625,
+            "width": 284,
+            "height": 96,
+            "top": 625.65625,
+            "right": 302,
+            "bottom": 721.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 158.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": -200.34375,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 745.65625,
+        "width": 284,
+        "height": 108,
+        "top": 745.65625,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 1212.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 1212.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 320,
+      "height": 740,
+      "theme": "dark",
+      "active": "learning",
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 18,
+            "y": 95.65625,
+            "width": 284,
+            "height": 96,
+            "top": 95.65625,
+            "right": 302,
+            "bottom": 191.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 18,
+            "y": 201.65625,
+            "width": 284,
+            "height": 96,
+            "top": 201.65625,
+            "right": 302,
+            "bottom": 297.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 18,
+            "y": 307.65625,
+            "width": 284,
+            "height": 96,
+            "top": 307.65625,
+            "right": 302,
+            "bottom": 403.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 18,
+            "y": 413.65625,
+            "width": 284,
+            "height": 96,
+            "top": 413.65625,
+            "right": 302,
+            "bottom": 509.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 18,
+            "y": 519.65625,
+            "width": 284,
+            "height": 96,
+            "top": 519.65625,
+            "right": 302,
+            "bottom": 615.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 18,
+            "y": 625.65625,
+            "width": 284,
+            "height": 96,
+            "top": 625.65625,
+            "right": 302,
+            "bottom": 721.65625,
+            "left": 18
+          },
+          "gap": null,
+          "centerOffset": null
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 158.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": -200.34375,
+        "left": 18
+      },
+      "actions": {
+        "x": 18,
+        "y": 745.65625,
+        "width": 284,
+        "height": 108,
+        "top": 745.65625,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "pin": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 1212.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "stage": {
+        "x": 18,
+        "y": -359,
+        "width": 284,
+        "height": 1212.65625,
+        "top": -359,
+        "right": 302,
+        "bottom": 853.65625,
+        "left": 18
+      },
+      "sticky": false,
+      "svgVisible": false,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(209, 175, 242, 0.24), rgba(163, 111, 214, 0.12))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "reduced": false,
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 159.125,
+            "y": 404.75,
+            "width": 220,
+            "height": 62,
+            "top": 404.75,
+            "right": 379.125,
+            "bottom": 466.75,
+            "left": 159.125
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 449.1875,
+            "y": 305.59375,
+            "width": 220,
+            "height": 99.1875,
+            "top": 305.59375,
+            "right": 669.1875,
+            "bottom": 404.78125,
+            "left": 449.1875
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 656.859375,
+            "y": 481.453125,
+            "width": 220,
+            "height": 62,
+            "top": 481.453125,
+            "right": 876.859375,
+            "bottom": 543.453125,
+            "left": 656.859375
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 574.453125,
+            "y": 592.078125,
+            "width": 220,
+            "height": 62,
+            "top": 592.078125,
+            "right": 794.453125,
+            "bottom": 654.078125,
+            "left": 574.453125
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 284.390625,
+            "y": 654.046875,
+            "width": 220,
+            "height": 62,
+            "top": 654.046875,
+            "right": 504.390625,
+            "bottom": 716.046875,
+            "left": 284.390625
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 76.71875,
+            "y": 515.375,
+            "width": 220,
+            "height": 62,
+            "top": 515.375,
+            "right": 296.71875,
+            "bottom": 577.375,
+            "left": 76.71875
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 540,
+        "height": 164.84375,
+        "top": 110.578125,
+        "right": 620,
+        "bottom": 275.421875,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 803.421875,
+        "width": 760,
+        "height": 46,
+        "top": 803.421875,
+        "right": 840,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 100,
+        "width": 1280,
+        "height": 760,
+        "top": 100,
+        "right": 1360,
+        "bottom": 860,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 110.578125,
+        "width": 1280,
+        "height": 738.84375,
+        "top": 110.578125,
+        "right": 1360,
+        "bottom": 849.421875,
+        "left": 80
+      },
+      "sticky": true,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(200, 163, 239, 0.32), rgba(162, 115, 213, 0.17))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "reduced": true,
+      "cards": [
+        {
+          "id": "growth",
+          "rect": {
+            "x": 159.125,
+            "y": 439.546875,
+            "width": 220,
+            "height": 62,
+            "top": 439.546875,
+            "right": 379.125,
+            "bottom": 501.546875,
+            "left": 159.125
+          },
+          "gap": 14.00958251953125,
+          "centerOffset": 0.007193659481231407
+        },
+        {
+          "id": "impact",
+          "rect": {
+            "x": 449.1875,
+            "y": 340.390625,
+            "width": 220,
+            "height": 99.1875,
+            "top": 340.390625,
+            "right": 669.1875,
+            "bottom": 439.578125,
+            "left": 449.1875
+          },
+          "gap": 14.009682906301407,
+          "centerOffset": 0.01130210725887082
+        },
+        {
+          "id": "team",
+          "rect": {
+            "x": 656.859375,
+            "y": 516.25,
+            "width": 220,
+            "height": 62,
+            "top": 516.25,
+            "right": 876.859375,
+            "bottom": 578.25,
+            "left": 656.859375
+          },
+          "gap": 13.999920092130992,
+          "centerOffset": 0.004140314302958359
+        },
+        {
+          "id": "projects",
+          "rect": {
+            "x": 574.453125,
+            "y": 626.875,
+            "width": 220,
+            "height": 62,
+            "top": 626.875,
+            "right": 794.453125,
+            "bottom": 688.875,
+            "left": 574.453125
+          },
+          "gap": 13.993971172131978,
+          "centerOffset": 0.00852694009483912
+        },
+        {
+          "id": "freedom",
+          "rect": {
+            "x": 284.390625,
+            "y": 688.84375,
+            "width": 220,
+            "height": 62,
+            "top": 688.84375,
+            "right": 504.390625,
+            "bottom": 750.84375,
+            "left": 284.390625
+          },
+          "gap": 13.994071558902078,
+          "centerOffset": 0.004418492317199707
+        },
+        {
+          "id": "learning",
+          "rect": {
+            "x": 76.71875,
+            "y": 550.171875,
+            "width": 220,
+            "height": 62,
+            "top": 550.171875,
+            "right": 296.71875,
+            "bottom": 612.171875,
+            "left": 76.71875
+          },
+          "gap": 14.015510960629172,
+          "centerOffset": 0.0114926523283998
+        }
+      ],
+      "collisions": [],
+      "heading": {
+        "x": 80,
+        "y": 145.375,
+        "width": 540,
+        "height": 164.84375,
+        "top": 145.375,
+        "right": 620,
+        "bottom": 310.21875,
+        "left": 80
+      },
+      "actions": {
+        "x": 80,
+        "y": 838.21875,
+        "width": 760,
+        "height": 46,
+        "top": 838.21875,
+        "right": 840,
+        "bottom": 884.21875,
+        "left": 80
+      },
+      "pin": {
+        "x": 80,
+        "y": 145.375,
+        "width": 1280,
+        "height": 738.84375,
+        "top": 145.375,
+        "right": 1360,
+        "bottom": 884.21875,
+        "left": 80
+      },
+      "stage": {
+        "x": 80,
+        "y": 145.375,
+        "width": 1280,
+        "height": 738.84375,
+        "top": 145.375,
+        "right": 1360,
+        "bottom": 884.21875,
+        "left": 80
+      },
+      "sticky": false,
+      "svgVisible": true,
+      "horizontalOverflow": false,
+      "primary": {
+        "background": "linear-gradient(135deg, rgba(200, 163, 239, 0.32), rgba(162, 115, 213, 0.17))",
+        "filter": "blur(20px) saturate(1.45)"
+      }
+    }
+  ],
+  "interaction": {
+    "futureControlsRemoved": true
+  },
+  "errors": [],
+  "passed": true
+}

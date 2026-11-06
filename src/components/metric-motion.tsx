@@ -1,6 +1,18 @@
-export function MetricMotion({ index }: { index: number }) {
+import { useRef } from "react";
+import { useMetricSvgAnimation } from "./metric-svg-animation";
+
+export function MetricMotion({
+  index,
+  active = false,
+}: {
+  index: number;
+  active?: boolean;
+}) {
+  const root = useRef<SVGSVGElement>(null);
+  useMetricSvgAnimation(root, index, active);
   return (
     <svg
+      ref={root}
       viewBox="0 0 96 58"
       fill="none"
       stroke="currentColor"

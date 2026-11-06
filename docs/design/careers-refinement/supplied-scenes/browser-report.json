@@ -1,0 +1,31 @@
+{
+  "report": [
+    {
+      "theme": "dark",
+      "scroll": "all five chapters forward/backward",
+      "generatedVideo": "only team",
+      "projects": "no video, no borrowed poster",
+      "rapidReverse": "passed",
+      "loopWraps": 4,
+      "freedomAspect": "preserved",
+      "reduced": "correct static states"
+    },
+    {
+      "theme": "light",
+      "scroll": "all five chapters forward/backward",
+      "generatedVideo": "only team",
+      "projects": "no video, no borrowed poster",
+      "rapidReverse": "passed",
+      "loopWraps": 4,
+      "freedomAspect": "preserved",
+      "reduced": "correct static states"
+    },
+    {
+      "mobile": "all five touch selections, no horizontal overflow"
+    },
+    {
+      "failure": "selected poster fallback; pending chapter stays empty"
+    }
+  ],
+  "errors": []
+}

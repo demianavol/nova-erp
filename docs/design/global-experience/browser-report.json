@@ -1,0 +1,868 @@
+{
+  "media": "separate supplied dark/light videos with synchronized country mattes",
+  "layouts": [
+    {
+      "width": 1440,
+      "theme": "dark",
+      "overflow": false,
+      "stage": {
+        "x": 550.015625,
+        "y": 157.125,
+        "width": 809.96875,
+        "height": 683.96875,
+        "top": 157.125,
+        "right": 1359.984375,
+        "bottom": 841.09375,
+        "left": 550.015625
+      },
+      "picture": {
+        "x": 550.015625,
+        "y": 173.6796875,
+        "width": 809.96875,
+        "height": 650.859375,
+        "top": 173.6796875,
+        "right": 1359.984375,
+        "bottom": 824.5390625,
+        "left": 550.015625
+      },
+      "buttons": [
+        {
+          "x": 80,
+          "y": 499.109375,
+          "width": 110.6875,
+          "height": 62,
+          "top": 499.109375,
+          "right": 190.6875,
+          "bottom": 561.109375,
+          "left": 80
+        },
+        {
+          "x": 202.6875,
+          "y": 499.109375,
+          "width": 160.4375,
+          "height": 62,
+          "top": 499.109375,
+          "right": 363.125,
+          "bottom": 561.109375,
+          "left": 202.6875
+        },
+        {
+          "x": 375.125,
+          "y": 499.109375,
+          "width": 157.34375,
+          "height": 62,
+          "top": 499.109375,
+          "right": 532.46875,
+          "bottom": 561.109375,
+          "left": 375.125
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-masked-v3.mp4"
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "overflow": false,
+      "stage": {
+        "x": 550.015625,
+        "y": 157.125,
+        "width": 809.96875,
+        "height": 683.96875,
+        "top": 157.125,
+        "right": 1359.984375,
+        "bottom": 841.09375,
+        "left": 550.015625
+      },
+      "picture": {
+        "x": 550.015625,
+        "y": 173.6796875,
+        "width": 809.96875,
+        "height": 650.859375,
+        "top": 173.6796875,
+        "right": 1359.984375,
+        "bottom": 824.5390625,
+        "left": 550.015625
+      },
+      "buttons": [
+        {
+          "x": 80,
+          "y": 499.109375,
+          "width": 110.6875,
+          "height": 62,
+          "top": 499.109375,
+          "right": 190.6875,
+          "bottom": 561.109375,
+          "left": 80
+        },
+        {
+          "x": 202.6875,
+          "y": 499.109375,
+          "width": 160.4375,
+          "height": 62,
+          "top": 499.109375,
+          "right": 363.125,
+          "bottom": 561.109375,
+          "left": 202.6875
+        },
+        {
+          "x": 375.125,
+          "y": 499.109375,
+          "width": 157.34375,
+          "height": 62,
+          "top": 499.109375,
+          "right": 532.46875,
+          "bottom": 561.109375,
+          "left": 375.125
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-native-light-v1.mp4"
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "overflow": false,
+      "stage": {
+        "x": 411.390625,
+        "y": 156.0625,
+        "width": 580.59375,
+        "height": 490.265625,
+        "top": 156.0625,
+        "right": 991.984375,
+        "bottom": 646.328125,
+        "left": 411.390625
+      },
+      "picture": {
+        "x": 411.390625,
+        "y": 167.9140625,
+        "width": 580.59375,
+        "height": 466.546875,
+        "top": 167.9140625,
+        "right": 991.984375,
+        "bottom": 634.4609375,
+        "left": 411.390625
+      },
+      "buttons": [
+        {
+          "x": 32,
+          "y": 401.203125,
+          "width": 81.46875,
+          "height": 56,
+          "top": 401.203125,
+          "right": 113.46875,
+          "bottom": 457.203125,
+          "left": 32
+        },
+        {
+          "x": 121.46875,
+          "y": 401.203125,
+          "width": 119.515625,
+          "height": 56,
+          "top": 401.203125,
+          "right": 240.984375,
+          "bottom": 457.203125,
+          "left": 121.46875
+        },
+        {
+          "x": 248.984375,
+          "y": 401.203125,
+          "width": 117.140625,
+          "height": 56,
+          "top": 401.203125,
+          "right": 366.125,
+          "bottom": 457.203125,
+          "left": 248.984375
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-masked-v3.mp4"
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "overflow": false,
+      "stage": {
+        "x": 411.390625,
+        "y": 156.0625,
+        "width": 580.59375,
+        "height": 490.265625,
+        "top": 156.0625,
+        "right": 991.984375,
+        "bottom": 646.328125,
+        "left": 411.390625
+      },
+      "picture": {
+        "x": 411.390625,
+        "y": 167.9140625,
+        "width": 580.59375,
+        "height": 466.546875,
+        "top": 167.9140625,
+        "right": 991.984375,
+        "bottom": 634.4609375,
+        "left": 411.390625
+      },
+      "buttons": [
+        {
+          "x": 32,
+          "y": 401.203125,
+          "width": 81.46875,
+          "height": 56,
+          "top": 401.203125,
+          "right": 113.46875,
+          "bottom": 457.203125,
+          "left": 32
+        },
+        {
+          "x": 121.46875,
+          "y": 401.203125,
+          "width": 119.515625,
+          "height": 56,
+          "top": 401.203125,
+          "right": 240.984375,
+          "bottom": 457.203125,
+          "left": 121.46875
+        },
+        {
+          "x": 248.984375,
+          "y": 401.203125,
+          "width": 117.140625,
+          "height": 56,
+          "top": 401.203125,
+          "right": 366.125,
+          "bottom": 457.203125,
+          "left": 248.984375
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-native-light-v1.mp4"
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "overflow": false,
+      "stage": {
+        "x": 310.21875,
+        "y": 212.640625,
+        "width": 425.765625,
+        "height": 359.53125,
+        "top": 212.640625,
+        "right": 735.984375,
+        "bottom": 572.171875,
+        "left": 310.21875
+      },
+      "picture": {
+        "x": 310.21875,
+        "y": 221.34375,
+        "width": 425.765625,
+        "height": 342.125,
+        "top": 221.34375,
+        "right": 735.984375,
+        "bottom": 563.46875,
+        "left": 310.21875
+      },
+      "buttons": [
+        {
+          "x": 32,
+          "y": 392.40625,
+          "width": 81.46875,
+          "height": 56,
+          "top": 392.40625,
+          "right": 113.46875,
+          "bottom": 448.40625,
+          "left": 32
+        },
+        {
+          "x": 121.46875,
+          "y": 392.40625,
+          "width": 119.515625,
+          "height": 56,
+          "top": 392.40625,
+          "right": 240.984375,
+          "bottom": 448.40625,
+          "left": 121.46875
+        },
+        {
+          "x": 248.984375,
+          "y": 392.40625,
+          "width": 117.140625,
+          "height": 56,
+          "top": 392.40625,
+          "right": 366.125,
+          "bottom": 448.40625,
+          "left": 248.984375
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-masked-v3.mp4"
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "overflow": false,
+      "stage": {
+        "x": 310.21875,
+        "y": 212.640625,
+        "width": 425.765625,
+        "height": 359.53125,
+        "top": 212.640625,
+        "right": 735.984375,
+        "bottom": 572.171875,
+        "left": 310.21875
+      },
+      "picture": {
+        "x": 310.21875,
+        "y": 221.34375,
+        "width": 425.765625,
+        "height": 342.125,
+        "top": 221.34375,
+        "right": 735.984375,
+        "bottom": 563.46875,
+        "left": 310.21875
+      },
+      "buttons": [
+        {
+          "x": 32,
+          "y": 392.40625,
+          "width": 81.46875,
+          "height": 56,
+          "top": 392.40625,
+          "right": 113.46875,
+          "bottom": 448.40625,
+          "left": 32
+        },
+        {
+          "x": 121.46875,
+          "y": 392.40625,
+          "width": 119.515625,
+          "height": 56,
+          "top": 392.40625,
+          "right": 240.984375,
+          "bottom": 448.40625,
+          "left": 121.46875
+        },
+        {
+          "x": 248.984375,
+          "y": 392.40625,
+          "width": 117.140625,
+          "height": 56,
+          "top": 392.40625,
+          "right": 366.125,
+          "bottom": 448.40625,
+          "left": 248.984375
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-native-light-v1.mp4"
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "overflow": false,
+      "stage": {
+        "x": 0.3125,
+        "y": 251.484375,
+        "width": 389.390625,
+        "height": 328.8125,
+        "top": 251.484375,
+        "right": 389.703125,
+        "bottom": 580.296875,
+        "left": 0.3125
+      },
+      "picture": {
+        "x": 0.3125,
+        "y": 259.4453125,
+        "width": 389.390625,
+        "height": 312.890625,
+        "top": 259.4453125,
+        "right": 389.703125,
+        "bottom": 572.3359375,
+        "left": 0.3125
+      },
+      "buttons": [
+        {
+          "x": 18,
+          "y": 576.296875,
+          "width": 95.296875,
+          "height": 54,
+          "top": 576.296875,
+          "right": 113.296875,
+          "bottom": 630.296875,
+          "left": 18
+        },
+        {
+          "x": 121.296875,
+          "y": 576.296875,
+          "width": 123.015625,
+          "height": 54,
+          "top": 576.296875,
+          "right": 244.3125,
+          "bottom": 630.296875,
+          "left": 121.296875
+        },
+        {
+          "x": 252.3125,
+          "y": 576.296875,
+          "width": 119.671875,
+          "height": 54,
+          "top": 576.296875,
+          "right": 371.984375,
+          "bottom": 630.296875,
+          "left": 252.3125
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-masked-v3.mp4"
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "overflow": false,
+      "stage": {
+        "x": 0.3125,
+        "y": 251.484375,
+        "width": 389.390625,
+        "height": 328.8125,
+        "top": 251.484375,
+        "right": 389.703125,
+        "bottom": 580.296875,
+        "left": 0.3125
+      },
+      "picture": {
+        "x": 0.3125,
+        "y": 259.4453125,
+        "width": 389.390625,
+        "height": 312.890625,
+        "top": 259.4453125,
+        "right": 389.703125,
+        "bottom": 572.3359375,
+        "left": 0.3125
+      },
+      "buttons": [
+        {
+          "x": 18,
+          "y": 576.296875,
+          "width": 95.296875,
+          "height": 54,
+          "top": 576.296875,
+          "right": 113.296875,
+          "bottom": 630.296875,
+          "left": 18
+        },
+        {
+          "x": 121.296875,
+          "y": 576.296875,
+          "width": 123.015625,
+          "height": 54,
+          "top": 576.296875,
+          "right": 244.3125,
+          "bottom": 630.296875,
+          "left": 121.296875
+        },
+        {
+          "x": 252.3125,
+          "y": 576.296875,
+          "width": 119.671875,
+          "height": 54,
+          "top": 576.296875,
+          "right": 371.984375,
+          "bottom": 630.296875,
+          "left": 252.3125
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-native-light-v1.mp4"
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "overflow": false,
+      "stage": {
+        "x": 3.8125,
+        "y": 247.59375,
+        "width": 312.390625,
+        "height": 263.78125,
+        "top": 247.59375,
+        "right": 316.203125,
+        "bottom": 511.375,
+        "left": 3.8125
+      },
+      "picture": {
+        "x": 3.8125,
+        "y": 253.9765625,
+        "width": 312.390625,
+        "height": 251.015625,
+        "top": 253.9765625,
+        "right": 316.203125,
+        "bottom": 504.9921875,
+        "left": 3.8125
+      },
+      "buttons": [
+        {
+          "x": 18,
+          "y": 507.375,
+          "width": 75.5625,
+          "height": 54,
+          "top": 507.375,
+          "right": 93.5625,
+          "bottom": 561.375,
+          "left": 18
+        },
+        {
+          "x": 101.5625,
+          "y": 507.375,
+          "width": 97.53125,
+          "height": 54,
+          "top": 507.375,
+          "right": 199.09375,
+          "bottom": 561.375,
+          "left": 101.5625
+        },
+        {
+          "x": 207.09375,
+          "y": 507.375,
+          "width": 94.90625,
+          "height": 54,
+          "top": 507.375,
+          "right": 302,
+          "bottom": 561.375,
+          "left": 207.09375
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-masked-v3.mp4"
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "overflow": false,
+      "stage": {
+        "x": 3.8125,
+        "y": 247.59375,
+        "width": 312.390625,
+        "height": 263.78125,
+        "top": 247.59375,
+        "right": 316.203125,
+        "bottom": 511.375,
+        "left": 3.8125
+      },
+      "picture": {
+        "x": 3.8125,
+        "y": 253.9765625,
+        "width": 312.390625,
+        "height": 251.015625,
+        "top": 253.9765625,
+        "right": 316.203125,
+        "bottom": 504.9921875,
+        "left": 3.8125
+      },
+      "buttons": [
+        {
+          "x": 18,
+          "y": 507.375,
+          "width": 75.5625,
+          "height": 54,
+          "top": 507.375,
+          "right": 93.5625,
+          "bottom": 561.375,
+          "left": 18
+        },
+        {
+          "x": 101.5625,
+          "y": 507.375,
+          "width": 97.53125,
+          "height": 54,
+          "top": 507.375,
+          "right": 199.09375,
+          "bottom": 561.375,
+          "left": 101.5625
+        },
+        {
+          "x": 207.09375,
+          "y": 507.375,
+          "width": 94.90625,
+          "height": 54,
+          "top": 507.375,
+          "right": 302,
+          "bottom": 561.375,
+          "left": 207.09375
+        }
+      ],
+      "bubbleCount": 8,
+      "source": "/media/global-experience/flags-film-native-light-v1.mp4"
+    }
+  ],
+  "interactions": [
+    {
+      "width": 1440,
+      "theme": "dark",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "country": "uz",
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "country": "uz",
+      "passed": true
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 1024,
+      "theme": "dark",
+      "country": "uz",
+      "passed": true
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 1024,
+      "theme": "light",
+      "country": "uz",
+      "passed": true
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "country": "uz",
+      "passed": true
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "country": "uz",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "country": "uz",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "country": "uz",
+      "passed": true
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "country": "uz",
+      "passed": true
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "country": "cn",
+      "passed": true
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "country": "kg",
+      "passed": true
+    },
+    {
+      "width": 320,
+      "theme": "light",
+      "country": "uz",
+      "passed": true
+    }
+  ],
+  "pixels": [
+    {
+      "theme": "dark",
+      "country": "cn",
+      "ratios": [
+        1.0507614213197969,
+        0.7772020725388601,
+        0.7727272727272727
+      ],
+      "edgeAlpha": 0
+    },
+    {
+      "theme": "dark",
+      "country": "kg",
+      "ratios": [
+        0.7766497461928934,
+        1.0518134715025906,
+        0.7727272727272727
+      ],
+      "edgeAlpha": 0
+    },
+    {
+      "theme": "dark",
+      "country": "uz",
+      "ratios": [
+        0.766497461928934,
+        0.7772020725388601,
+        1.0636363636363637
+      ],
+      "edgeAlpha": 0
+    },
+    {
+      "theme": "light",
+      "country": "cn",
+      "ratios": [
+        1.053658536585366,
+        0.7828282828282829,
+        0.7673267326732673
+      ],
+      "edgeAlpha": 0
+    },
+    {
+      "theme": "light",
+      "country": "kg",
+      "ratios": [
+        0.775609756097561,
+        1.0555555555555556,
+        0.7722772277227723
+      ],
+      "edgeAlpha": 0
+    },
+    {
+      "theme": "light",
+      "country": "uz",
+      "ratios": [
+        0.7707317073170732,
+        0.7828282828282829,
+        1.0495049504950495
+      ],
+      "edgeAlpha": 0
+    }
+  ],
+  "playback": {
+    "darkPanelTypewriter": true,
+    "darkThemeSourceAndPlayhead": true,
+    "bubbleAutonomousDisplacement": [
+      9.345266335157305,
+      11.903758356495409,
+      6.0194006750363105,
+      4.009702007032439,
+      5.560052105063249,
+      7.777052686600925,
+      9.662367568798734,
+      8.297719414309588
+    ],
+    "bubbleHover": {
+      "maxDisplacement": 10.949666661592946,
+      "maxFrameStep": 0.49010203019371407
+    },
+    "bubblePopAndRespawn": true,
+    "loop": true,
+    "offscreenPaused": true,
+    "lightPanelTypewriter": true,
+    "lightThemeSourceAndPlayhead": true,
+    "darkReducedMotion": true,
+    "lightReducedMotion": true,
+    "darkPosterFallback": true,
+    "lightPosterFallback": true
+  },
+  "errors": [],
+  "passed": true
+}

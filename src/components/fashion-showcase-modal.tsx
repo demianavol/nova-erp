@@ -19,9 +19,13 @@ const countLabel = (count: number) =>
 export function FashionShowcaseModal({
   isOpen,
   onClose,
+  initialCategory = "all",
+  initialProductId,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  initialCategory?: CatalogCategoryId;
+  initialProductId?: string;
 }) {
   const [selectedCategory, setSelectedCategory] =
     useState<CatalogCategoryId>("all");
@@ -32,12 +36,36 @@ export function FashionShowcaseModal({
   const close = useRef<HTMLButtonElement>(null);
   const opener = useRef<HTMLElement | null>(null);
   const productOpener = useRef<HTMLElement | null>(null);
+  const initialFocused = useRef(false);
   useEffect(() => {
     if (isOpen) {
-      setSelectedCategory("all");
+      setSelectedCategory(initialCategory);
       setPreviewProduct(null);
+      initialFocused.current = false;
     }
-  }, [isOpen]);
+  }, [isOpen, initialCategory, initialProductId]);
+  useEffect(() => {
+    if (
+      !isOpen ||
+      !initialProductId ||
+      initialFocused.current ||
+      selectedCategory !== initialCategory
+    )
+      return;
+    const frame = requestAnimationFrame(() => {
+      const card = [
+        ...(scroll.current?.querySelectorAll<HTMLButtonElement>(
+          "[data-product-id]",
+        ) ?? []),
+      ].find((element) => element.dataset.productId === initialProductId);
+      if (card) {
+        initialFocused.current = true;
+        card.focus({ preventScroll: true });
+        card.scrollIntoView({ block: "nearest", behavior: "instant" });
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [isOpen, selectedCategory, initialCategory, initialProductId]);
   const filtered =
     selectedCategory === "all"
       ? fashionProducts
@@ -137,6 +165,7 @@ export function FashionShowcaseModal({
                       key={product.id}
                       type="button"
                       className="fsm-card"
+                      data-product-id={product.id}
                       aria-label={`Просмотреть: ${product.title}`}
                       onClick={(event) => {
                         productOpener.current = event.currentTarget;

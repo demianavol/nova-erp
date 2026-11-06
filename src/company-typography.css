@@ -1,0 +1,89 @@
+/* Shared homepage type scale; the hero keeps its own display heading. */
+.landing.landing-home {
+  --yu-section-title-size: clamp(28px, 3vw, 40px);
+  --yu-card-title-size: 19px;
+}
+
+.landing.landing-home
+  :is(
+    .lp-results-caption .lp-block-title,
+    .explorer-heading > h2,
+    .journey-header h2,
+    .cp-headline,
+    .future-heading h2
+  ) {
+  font:
+    600 var(--yu-section-title-size)/1.15 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.03em;
+  text-transform: none;
+}
+
+.landing.landing-home :is(.cp-eyebrow, .future-eyebrow) {
+  gap: 6px;
+  font:
+    500 13px/1.7 "Inter Variable",
+    sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.landing.landing-home :is(.cp-lead, .future-heading p) {
+  font:
+    400 15px/1.65 "Inter Variable",
+    sans-serif;
+}
+
+.landing.landing-home :is(.cp-eyebrow-dash, .future-eyebrow > span) {
+  font-size: inherit;
+  line-height: inherit;
+  opacity: 0.7;
+}
+
+.landing.landing-home .future-heading {
+  text-align: left;
+}
+
+.landing.landing-home .future-heading h2 {
+  margin: 14px 0 18px;
+}
+
+.landing.landing-home .future-heading h2 > span {
+  color: inherit;
+}
+
+.landing.landing-home :is(.cp-card-title, .future-priority-copy h3) {
+  font:
+    600 var(--yu-card-title-size)/1.25 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.4px;
+}
+
+.landing.landing-home :is(.cp-card-description, .future-priority-copy p) {
+  font:
+    400 14px/1.6 "Inter Variable",
+    sans-serif;
+}
+
+.landing.landing-home #contacts {
+  scroll-margin-block: 112px 24px;
+}
+
+.landing.landing-home .lp-partner-footer:not(.company-footer) {
+  margin-top: var(--lp-section-space);
+}
+
+@media (max-width: 767px) {
+  .landing.landing-home {
+    --yu-card-title-size: 18px;
+  }
+
+  .landing.landing-home :is(.cp-lead, .future-heading p) {
+    font-size: 14.5px;
+  }
+
+  .landing.landing-home .future-heading p {
+    max-width: 440px;
+    margin-inline: 0;
+  }
+}

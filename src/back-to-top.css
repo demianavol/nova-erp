@@ -1,0 +1,56 @@
+.landing .lp-back-to-top {
+  position: fixed;
+  right: max(24px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 11px 16px;
+  border: 1px solid var(--yu-story-border, #e8dff0);
+  border-radius: 24px;
+  color: var(--yu-accent);
+  background: var(--yu-story-panel, #fff);
+  box-shadow: 0 4px 18px #160c2414;
+  font-size: 12px;
+  line-height: 1.5;
+  animation: lp-back-to-top-in 220ms ease both;
+}
+.landing .lp-back-to-top:hover {
+  border-color: var(--yu-accent);
+}
+.landing .lp-back-to-top:focus-visible {
+  outline: 2px solid var(--yu-accent);
+  outline-offset: 4px;
+}
+@keyframes lp-back-to-top-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 600px) {
+  .landing .lp-back-to-top {
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing .lp-back-to-top {
+    animation: none;
+  }
+}
+@media print {
+  .landing .lp-back-to-top {
+    display: none;
+  }
+}
+.landing[data-export="pdf"] .lp-back-to-top {
+  display: none;
+}

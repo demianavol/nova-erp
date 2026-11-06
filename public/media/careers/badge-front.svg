@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1440" viewBox="0 0 1024 1440">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#e7ceff"/><stop offset=".42" stop-color="#b48bd9"/>
+      <stop offset=".75" stop-color="#c3a0e6"/><stop offset="1" stop-color="#ead8ff"/>
+    </linearGradient>
+    <linearGradient id="silk" x1="0" y1="0" x2=".9" y2="1">
+      <stop stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#f5e7ff" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#9864c7" stop-opacity=".08"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#glass)" opacity=".34" d="M0 0h1024v1440H0z"/>
+  <path fill="url(#silk)" d="M-50 1290C300 1430 600 1080 1090 1135v305H-50z"/>
+  <path d="M-30 1280C300 1420 620 1070 1060 1130" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="3"/>
+  <!-- Official yuc-mark.svg paths; only the ink color is changed for print. -->
+  <g transform="translate(222 555) scale(1.55)" fill="#fff">
+    <path d="M18 3 59 47 42 58Z"/>
+    <path d="m68 45 20-11q4-2 5 3l13 48q3 16-3 25L57 60Z"/>
+    <path d="M42 66 13 83C1 90-2 107 11 111h45c5 0 7-4 4-9Z"/>
+  </g>
+  <g fill="#fff" font-family="Arial, sans-serif" font-weight="700" font-size="62" letter-spacing="-2">
+    <text x="438" y="593">YOUNG</text><text x="438" y="660">UNICORN</text><text x="438" y="727">COMPANY</text>
+  </g>
+</svg>

@@ -2154,3 +2154,72 @@
     margin-top: 8px;
   }
 }
+.employee-guide-erp {
+  border: 1px solid #e7e5eb;
+  border-radius: 16px;
+  padding: 0 30px 20px;
+}
+.employee-guide-erp .eg-content {
+  width: 100%;
+  max-width: 1100px;
+}
+.employee-guide-erp .eg-team {
+  margin: 45px 0;
+  padding: 30px 0;
+  border-block: 1px solid var(--yu-line);
+}
+.employee-guide-erp .eg-team::before {
+  display: none;
+}
+.employee-guide-erp .eg-team .lp-team-heading {
+  margin-bottom: 20px;
+  gap: 20px;
+}
+.employee-guide-erp .eg-team .lp-team-heading h2 {
+  font-size: 27px;
+  line-height: 1.3;
+  letter-spacing: -1px;
+}
+.employee-guide-erp .eg-team .lp-team-heading p {
+  font-size: 11px;
+}
+.employee-guide-erp .eg-team .lp-team-layout {
+  grid-template-columns: minmax(0, 2fr) minmax(180px, 1fr);
+  gap: 25px;
+}
+.employee-guide-erp .eg-team .lp-department-info {
+  min-width: 0;
+  padding-left: 25px;
+}
+.employee-guide-erp .eg-team .lp-department-description h3 {
+  font-size: 28px;
+}
+.employee-guide-erp .eg-team .lp-network-group .lp-department-buttons > button {
+  background: #f4eff9;
+}
+.employee-guide-erp
+  .eg-team
+  .lp-network-group
+  .lp-department-buttons
+  > button.is-connected {
+  color: white;
+}
+@media (max-width: 1100px) {
+  .employee-guide-erp .eg-team .lp-team-layout {
+    grid-template-columns: 1fr;
+  }
+  .employee-guide-erp .eg-team .lp-department-info {
+    padding: 20px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--yu-line);
+  }
+}
+@media (max-width: 640px) {
+  .employee-guide-erp {
+    padding-inline: 16px;
+  }
+  .employee-guide-erp .eg-team .lp-team-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

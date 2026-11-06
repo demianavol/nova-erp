@@ -1,0 +1,27 @@
+Use the attached dark flag video only as a composition and motion reference.
+Create a premium photorealistic LIGHT-THEME version for a website.
+
+10-second seamless loop, 16:9, 1920x1080, 24 fps. Locked camera, no cuts,
+no camera movement, no zoom. Three floating fabric flags: China upper left,
+Kyrgyzstan upper right, Uzbekistan in the foreground below. Preserve the
+reference's arrangement, overlap and approximately fixed flag positions.
+Use accurate national artwork and proportions: China 3:2, Kyrgyzstan 5:3
+with the current 40 straight sun rays and correct tunduk, Uzbekistan 2:1
+with the correct crescent, twelve stars and stripe order. Do not redesign,
+add or melt symbols. Let symbols deform only naturally with the fabric.
+
+Background must be a clean uniform warm white, HEX #FAF8FD, edge to edge.
+Keep the outer 12% of the frame completely empty and uniformly #FAF8FD.
+All flags remain fully inside this safe area throughout the loop. No cropping.
+Light the actual fabric with soft daylight: rich natural colors, deep flowing
+folds, broad soft silk reflections and delicate shading within the folds.
+No dark environment, no black halo, no outline, no artificial cutout look.
+
+Behind the flags: one very subtle translucent pale-lavender sphere and a fine
+violet elliptical light ribbon. Keep this atmosphere within the central
+composition and let it disappear naturally into the uniform white background.
+No overexposure, no heavy bloom. No bubbles or particles: those will be added
+interactively by the website. No text, logos, UI, borders, watermark or audio.
+Gentle continuous wind with different cloth timing for each flag. No rigid
+rotation, no whole-group drifting, no exaggerated flapping or speed changes.
+The final frame and motion must connect smoothly to the first frame.

@@ -9,8 +9,7 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { useSiteTheme } from "../components/site-theme";
-import { PublicHeader } from "../components/public-header";
+import { EmployeeTeam } from "../components/employee-team";
 import { company } from "../data/company";
 import { guideTopics } from "../data/employee-guide";
 import {
@@ -18,15 +17,12 @@ import {
   GuideTopicIcon,
   guideCardNotes,
 } from "../components/guide-visual";
-import { useAuth } from "../data/store";
 import "../landing.css";
 import "../employees.css";
 
 const groups = ["Компания", "Работа", "В команде"];
 export function Employees() {
-  useSiteTheme();
-  const authenticated = useAuth((s) => s.authenticated);
-  const erpRoute = authenticated ? "/erp" : "/login";
+  const erpRoute = "/erp";
   const location = useLocation();
   const menu = useRef<HTMLDetailsElement>(null);
   const [query, setQuery] = useState("");
@@ -56,6 +52,9 @@ export function Employees() {
     document.title = `${topic ? topic.title : "Сотрудникам"} — Young Unicorn`;
     window.scrollTo({ top: 0, behavior: "instant" });
     if (location.hash) article.current?.focus({ preventScroll: true });
+    return () => {
+      document.title = "Young Unicorn · Рабочее пространство";
+    };
   }, [location.hash, topic]);
   useEffect(() => {
     const close = (event: PointerEvent) => {
@@ -84,16 +83,19 @@ export function Employees() {
     if (menu.current) menu.current.open = false;
   };
   return (
-    <div className="landing employee-guide">
-      <PublicHeader employee erpRoute={erpRoute} onGuideNavigate={open} />
-      <main id="main-content" className="eg-content" tabIndex={-1}>
+    <div className="landing employee-guide employee-guide-erp">
+      <div className="eg-content">
         <div className="eg-toolbar">
           <details className="eg-topics-menu" ref={menu}>
             <summary>
               Темы справочника <ChevronDown size={16} />
             </summary>
             <nav aria-label="Темы справочника">
-              <Link className="eg-all-topics" to="/employees" onClick={open}>
+              <Link
+                className="eg-all-topics"
+                to="/erp/employees"
+                onClick={open}
+              >
                 Все темы <ArrowRight size={15} />
               </Link>
               <div className="eg-menu-groups">
@@ -105,7 +107,7 @@ export function Employees() {
                       .map((item) => (
                         <Link
                           key={item.id}
-                          to={`/employees#${item.id}`}
+                          to={`/erp/employees#${item.id}`}
                           aria-current={
                             topic?.id === item.id ? "page" : undefined
                           }
@@ -156,7 +158,11 @@ export function Employees() {
             </p>
             <div className="eg-topic-list">
               {matches.map((item) => (
-                <Link to={`/employees#${item.id}`} key={item.id} onClick={open}>
+                <Link
+                  to={`/erp/employees#${item.id}`}
+                  key={item.id}
+                  onClick={open}
+                >
                   <span>
                     <strong>{item.title}</strong>
                     <span>{item.summary}</span>
@@ -174,13 +180,13 @@ export function Employees() {
             aria-labelledby="eg-article-title"
           >
             <div className="eg-article-navigation">
-              <Link className="eg-breadcrumb" to="/employees">
+              <Link className="eg-breadcrumb" to="/erp/employees">
                 <ArrowLeft size={14} /> Все темы
               </Link>
               {nextTopic && (
                 <Link
                   className="eg-next-topic"
-                  to={`/employees#${nextTopic.id}`}
+                  to={`/erp/employees#${nextTopic.id}`}
                   onClick={open}
                 >
                   Следующая тема <ArrowRight size={16} />
@@ -225,7 +231,7 @@ export function Employees() {
             >
               {previousTopic ? (
                 <Link
-                  to={`/employees#${previousTopic.id}`}
+                  to={`/erp/employees#${previousTopic.id}`}
                   onClick={open}
                   rel="prev"
                 >
@@ -236,7 +242,7 @@ export function Employees() {
                   </span>
                 </Link>
               ) : (
-                <Link to="/employees">
+                <Link to="/erp/employees">
                   <ArrowLeft size={19} />
                   <span>
                     <small>Справочник</small>Все темы
@@ -245,7 +251,7 @@ export function Employees() {
               )}
               {nextTopic ? (
                 <Link
-                  to={`/employees#${nextTopic.id}`}
+                  to={`/erp/employees#${nextTopic.id}`}
                   onClick={open}
                   rel="next"
                 >
@@ -258,7 +264,7 @@ export function Employees() {
                   <ArrowRight size={19} />
                 </Link>
               ) : (
-                <Link to="/employees">
+                <Link to="/erp/employees">
                   <span>
                     <small>Конец справочника</small>Вернуться к справочнику
                   </span>
@@ -277,7 +283,7 @@ export function Employees() {
                 будет отвлекать
               </p>
               <div className="eg-quick-links">
-                <Link to="/employees#adaptation">
+                <Link to="/erp/employees#adaptation">
                   <GuideTopicIcon id="adaptation" size={28} />
                   <span>
                     Адаптация
@@ -287,7 +293,7 @@ export function Employees() {
                     С чего начать <ArrowRight size={18} />
                   </strong>
                 </Link>
-                <Link to="/employees#process">
+                <Link to="/erp/employees#process">
                   <GuideTopicIcon id="process" size={28} />
                   <span>
                     Рабочий цикл
@@ -309,6 +315,7 @@ export function Employees() {
                 </Link>
               </div>
             </section>
+            <EmployeeTeam />
             <section
               className="eg-directory"
               aria-labelledby="eg-directory-title"
@@ -336,7 +343,7 @@ export function Employees() {
                     (item) => topicGroup === "Все" || item.group === topicGroup,
                   )
                   .map((item) => (
-                    <Link to={`/employees#${item.id}`} key={item.id}>
+                    <Link to={`/erp/employees#${item.id}`} key={item.id}>
                       <div className="eg-card-heading">
                         <span
                           className={`eg-topic-symbol eg-symbol-${item.id}`}
@@ -366,13 +373,7 @@ export function Employees() {
           </span>
         </div>
         <p className="eg-source">Материалы welcome-презентации Young Unicorn</p>
-      </main>
-      <footer className="eg-footer lp-container">
-        <Link to="/">
-          На сайт компании <ArrowUpRight size={14} />
-        </Link>
-        <span>© {new Date().getFullYear()} Young Unicorn</span>
-      </footer>
+      </div>
     </div>
   );
 }

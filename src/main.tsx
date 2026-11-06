@@ -103,7 +103,7 @@ function Protected() {
   ) : (
     <Navigate
       to="/login"
-      state={{ from: location.pathname + location.search }}
+      state={{ from: location.pathname + location.search + location.hash }}
       replace
     />
   );
@@ -141,7 +141,7 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Landing />} />
-            <Route path="/employees" element={<Employees />} />
+            <Route path="/employees" element={<LegacyERPRedirect />} />
             <Route path="/login" element={<Login />} />
             <Route path="/erp" element={<Protected />}>
               <Route index element={<Dashboard />} />
@@ -150,6 +150,7 @@ function App() {
               <Route path="sales/customers" element={<Customers />} />
               <Route path="sales/pipeline" element={<Pipeline />} />
               <Route path="tasks" element={<Tasks />} />
+              <Route path="employees" element={<Employees />} />
               <Route path="departments/finance" element={<FinancePage />} />
               <Route path="departments/:department" element={<Department />} />
               <Route path="settings" element={<Settings />} />

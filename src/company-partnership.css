@@ -1,0 +1,486 @@
+/* A physical invitation, in the normal document flow. */
+html.yu-invitation-transition {
+  overflow-anchor: none;
+}
+.company-partnership {
+  --invitation-ink: #342934;
+  --invitation-muted: #584552;
+  --invitation-paper: #d8cbb9;
+  --invitation-edge: #87677638;
+  position: relative;
+  isolation: isolate;
+  outline: none;
+  background: var(--yu-site-surface, #faf8fd);
+}
+html[data-site-theme="dark"] .company-partnership {
+  --invitation-ink: #302533;
+  --invitation-muted: #392b36;
+  --invitation-paper: #a99a9f;
+  --invitation-edge: #48344345;
+}
+.partnership-atmosphere {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(
+    transparent,
+    #000 12%,
+    #000 calc(100% - 144px),
+    transparent
+  );
+  background: radial-gradient(ellipse at center, #aa78d51c, transparent 80%);
+}
+.company-partnership .partnership-silk {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: clamp(680px, 100svh, 1000px);
+  mask-image: radial-gradient(ellipse at 50% 42%, #000 24%, transparent 76%);
+  opacity: 0.48;
+  transition: opacity 900ms ease;
+}
+html[data-site-theme="dark"] .partnership-silk {
+  opacity: 0.6;
+}
+.company-partnership:is([data-invitation="opening"], [data-invitation="open"])
+  .partnership-silk {
+  opacity: 0.192;
+}
+html[data-site-theme="dark"]
+  .company-partnership:is([data-invitation="opening"], [data-invitation="open"])
+  .partnership-silk {
+  opacity: 0.24;
+}
+.partnership-silk .silk-canvas {
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+.partnership-silk .silk-canvas[data-ready="true"] {
+  opacity: 1;
+}
+.partnership-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-block: 76px 48px;
+}
+.partnership-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 40px;
+  color: var(--yu-muted);
+  font:
+    400 11px/1.5 "Inter Variable",
+    sans-serif;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+.partnership-eyebrow > span {
+  width: 28px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--yu-accent), transparent);
+}
+.invitation-stage {
+  position: relative;
+  width: min(640px, 100%);
+  height: 407px;
+  perspective: 1400px;
+}
+.invitation-stage::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 640 / 372;
+  border-radius: 32px;
+  background: #b080e0;
+  filter: blur(32px);
+  opacity: 0;
+  pointer-events: none;
+}
+.invitation-stage[data-state="closed"]::before {
+  animation: invitation-pulse 4s ease-in-out infinite;
+  animation-play-state: paused;
+}
+.company-partnership[data-in-view="true"]
+  .invitation-stage[data-state="closed"]::before {
+  animation-play-state: running;
+}
+@keyframes invitation-pulse {
+  0%,
+  100% {
+    opacity: 0.08;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(1.035);
+  }
+}
+.invitation-definitions {
+  position: absolute;
+  pointer-events: none;
+}
+.invitation-envelope-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 640 / 372;
+  pointer-events: none;
+}
+.invitation-envelope-layer > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.invitation-rear {
+  z-index: 0;
+  filter: drop-shadow(0 24px 34px #683f8833);
+}
+.invitation-pocket {
+  z-index: 3;
+  filter: drop-shadow(0 6px 8px #5c397826);
+}
+.invitation-letter-sleeve {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  /* The measured V-shaped mask is supplied by the invitation controller. */
+  clip-path: inset(0);
+}
+.invitation-stage:is([data-state="opening"], [data-state="closing"])
+  .invitation-letter {
+  will-change: transform;
+}
+.invitation-flap {
+  z-index: 4;
+  perspective: 1200px;
+}
+.invitation-hinge {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 640 / 232;
+  transform-origin: 50% 0;
+}
+.invitation-hinge > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+.invitation-seal {
+  position: absolute;
+  width: 34px;
+  aspect-ratio: 110 / 125;
+  top: 47%;
+  left: calc(50% - 17px);
+  background: #fff2ff;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  filter: drop-shadow(0 0 8px #ead4ff);
+}
+.invitation-trigger {
+  position: absolute;
+  z-index: 6;
+  inset: 0 0 auto;
+  width: 100%;
+  aspect-ratio: 640 / 372;
+  border: 0;
+  border-radius: 28px;
+  padding: 0;
+  background: transparent;
+  color: var(--invitation-ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: box-shadow 200ms ease;
+}
+.invitation-trigger:hover {
+  box-shadow: 0 0 50px #b482db30;
+}
+.invitation-trigger:focus-visible {
+  outline: 2px solid var(--yu-accent);
+  outline-offset: 8px;
+}
+.invitation-address {
+  position: absolute;
+  inset: auto 16px 15%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 3px;
+  font:
+    400 clamp(16px, 2vw, 23px)/1.35 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.025em;
+  text-shadow: none;
+}
+html[data-site-theme="dark"] .invitation-trigger {
+  color: #fcf5ff;
+}
+.invitation-address strong {
+  font-size: 0.65em;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.invitation-open-hint {
+  position: absolute;
+  top: calc(100% + 20px);
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  color: var(--yu-muted);
+  font:
+    400 12px/1.5 "Inter Variable",
+    sans-serif;
+}
+.invitation-letter {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 3%;
+  width: 94%;
+  visibility: hidden;
+  padding: 36px 40px 30px;
+  border: 1px solid #80667466;
+  border-radius: 4px 7px 5px 8px / 8px 4px 7px 5px;
+  background-color: var(--invitation-paper);
+  background-image:
+    radial-gradient(ellipse at 5% 0, var(--invitation-edge), transparent 48%),
+    radial-gradient(
+      ellipse at 100% 100%,
+      var(--invitation-edge),
+      transparent 45%
+    ),
+    radial-gradient(ellipse at 55% 38%, #f2dfc322, transparent 70%),
+    linear-gradient(
+      180deg,
+      transparent 49.6%,
+      #5d40530c 49.9%,
+      #f5e7d20c 50.15%,
+      transparent 50.5%
+    );
+  box-shadow:
+    inset 0 0 26px #4a2d4030,
+    inset 0 1px 0 #eadac33b,
+    0 16px 42px #20102c33;
+  isolation: isolate;
+  color: var(--invitation-ink);
+  transform-origin: 50% 0;
+  pointer-events: auto;
+}
+.invitation-letter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: url("/media/partnership/archival-paper.svg") center / 640px 800px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.invitation-letter-copy {
+  position: relative;
+  opacity: 0;
+}
+.invitation-letter-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 27px;
+}
+.invitation-letter-mark {
+  display: block;
+  flex: none;
+  width: 24px;
+  height: 28px;
+  opacity: 0.72;
+}
+.invitation-letter-label {
+  margin: 0;
+  color: var(--invitation-muted);
+  font:
+    500 9px/1.6 "Inter Variable",
+    sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.landing .invitation-letter h2 {
+  max-width: 450px;
+  margin: 0 0 23px;
+  font:
+    400 clamp(28px, 2.7vw, 36px)/1.2 Georgia,
+    "Times New Roman",
+    serif;
+  letter-spacing: -0.027em;
+  color: var(--invitation-ink);
+  text-wrap: balance;
+  outline: none;
+}
+.invitation-opening,
+.invitation-description {
+  font:
+    400 16px/1.65 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+.invitation-opening {
+  margin: 0 0 18px;
+  color: var(--invitation-ink);
+}
+.invitation-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--invitation-muted);
+}
+.invitation-letter-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 1px solid #4b315d1a;
+  margin-top: 27px;
+  padding-top: 23px;
+}
+.partnership-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 46px;
+  padding: 12px 17px;
+  border: 1px solid #493454;
+  border-radius: 9px;
+  background: #493454;
+  box-shadow: none;
+  color: #fff;
+  font:
+    500 13px/1.5 "Inter Variable",
+    sans-serif;
+  text-decoration: none;
+  transition:
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+.partnership-cta:hover {
+  border-color: #715083;
+  background: #5c3e6c;
+  box-shadow: 0 4px 12px #49345420;
+}
+.partnership-cta:focus-visible,
+.invitation-close:focus-visible {
+  outline: 2px solid var(--yu-accent);
+  outline-offset: 5px;
+}
+.invitation-close {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: var(--invitation-muted);
+  font:
+    400 12px/1.5 "Inter Variable",
+    sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.invitation-close:hover {
+  color: var(--invitation-ink);
+}
+@media (max-width: 640px) {
+  .company-partnership .partnership-layout {
+    width: 100%;
+    padding: 48px 18px 28px;
+  }
+  .partnership-eyebrow {
+    margin-bottom: 30px;
+    font-size: 10px;
+  }
+  .invitation-stage {
+    height: 240px;
+  }
+  .invitation-seal {
+    width: 25px;
+    left: calc(50% - 12.5px);
+  }
+  .invitation-trigger {
+    border-radius: 16px;
+  }
+  .invitation-letter {
+    left: 0;
+    width: 100%;
+    padding: 26px 24px 24px;
+    border-radius: 4px 7px 5px 8px / 8px 4px 7px 5px;
+  }
+  .invitation-letter-mark {
+    width: 22px;
+    height: 26px;
+  }
+  .invitation-letter-header {
+    gap: 10px;
+    margin-bottom: 23px;
+  }
+  .invitation-letter-label {
+    font-size: 8px;
+    letter-spacing: 0.09em;
+  }
+  .landing .invitation-letter h2 {
+    font-size: clamp(26px, 7vw, 32px);
+  }
+  .invitation-opening,
+  .invitation-description {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .invitation-description {
+    font-size: 14px;
+  }
+  .invitation-letter-actions {
+    flex-direction: column;
+    gap: 13px;
+    margin-top: 24px;
+    padding-top: 22px;
+  }
+  .partnership-cta {
+    gap: 8px;
+    padding-inline: 14px;
+    font-size: 12px;
+    width: 100%;
+  }
+  .invitation-close {
+    margin: 0;
+  }
+  .invitation-open-hint {
+    top: calc(100% + 16px);
+    font-size: 11px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .invitation-stage::before {
+    animation: none !important;
+  }
+  .partnership-silk {
+    display: none;
+  }
+  .partnership-silk,
+  .invitation-trigger,
+  .partnership-cta {
+    transition: none;
+  }
+}

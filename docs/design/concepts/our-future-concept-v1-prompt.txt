@@ -1,0 +1,36 @@
+Generated with the built-in image_gen tool.
+Reference: public/media/history-icons/lavender_glass_unicorn_token.png (logo identity and material only).
+Output: our-future-concept-v1.png
+
+Use case: ui-mockup.
+Create ONE extraordinary, finished premium website section concept for Young Unicorn, titled "Наше будущее". A single standalone widescreen 16:9 canvas, ideally 2048x1152. This is a static art-directed landing-section design, NOT a browser screenshot: no browser chrome, no navigation header, no device frame, no mockup surroundings.
+
+REFERENCE IMAGE ROLE: use the attached image ONLY to identify the exact Young Unicorn abstract emblem (the THREE separate angular shapes in its center) and the glossy lavender material quality. Absolutely DO NOT recreate the square glass tile, rounded-square frame, plaque or token in that reference.
+
+CRITICAL LOGO RULE: the abstract Young Unicorn emblem appears EXACTLY ONCE in the entire canvas, printed on a SMALL FLAG on the highest central peak. Nowhere else. NO logo in the header, footer, icons, mountain body, decorative cubes, badges, glass tiles, cards or watermarks. The flag is the sole branded object. This is an abstract angular three-piece emblem, not a horse/unicorn animal drawing.
+
+ART DIRECTION: luxurious futuristic editorial web design, precise and quiet, premium modern tech, restrained cinematic atmosphere. Deep dark aubergine-purple background #191526 with deeper ink shadows, subtle lavender halos, strong clean contrast, ample negative space. Glossy translucent lavender glass with physically believable thickness, soft internal refraction, elegant specular edge lighting and delicate caustics. Crisp graphic typography, sharply resolved glass edges, subtle atmospheric depth. NOT blurry, not foggy, no cheap neon gradient wallpaper, no cartoon forms.
+
+COMPOSITION: fresh spatial composition centered around a sculptural futuristic GLASS PEAK, in the central 50% of the section. An elegant semi-abstract mountain formed by three to five beautifully folded and tapered glass ridges, flowing stepped glass contours at the base, one unmistakable high central summit. Architectural, aspirational, art-object quality; NOT a realistic rocky mountain and NOT a corporate bar chart. Tall slender elegant pole at its summit with a small softly curved pale-lavender flag carrying the three-piece Young Unicorn emblem. The peak is the hero, but there is generous breathing room.
+
+Four DISTINCT collectible sculptural glass objects float around the mountain in asymmetrical orbits and at different depths, without enclosing square cards:
+1. expansion/scaling: an ascending pair of elegant curved glass arcs, opening outward;
+2. new categories: a modular three-petal opening glass form;
+3. brand development: a polished four-point glass sparkle/star;
+4. strategic progress: a delicate gyroscopic compass-like glass orbit with one directional tip.
+Each is expressive but minimal, translucent lavender with refined luminous edges. These are sculptural symbolic objects rather than literal business graphs. Four objects total, one per priority, visually distinct. No logo on any of these. Very faint orbital hairlines may connect their positions compositionally; avoid visual clutter.
+
+EDITORIAL UI: distribute light, beautifully aligned typography around the central visual, not a traditional left-image/right-content split. Make the render feel like a premium design studio's polished website case study.
+Use only the following exact Russian copy, all legible and carefully typeset in modern refined sans-serif similar to Manrope/Inter, with spacious tracking on small labels:
+Small eyebrow: "ГОРИЗОНТ РАЗВИТИЯ"
+Main heading: "Наше будущее"
+Short supporting statement: "Растём в масштабе. Развиваем бренды. Открываем новые направления."
+Elegant small labels adjacent to the four floating objects, with unobtrusive 01–04 index numbers:
+"Масштабирование"
+"Новые категории"
+"Сильные бренды"
+"Стратегическое развитие"
+A restrained call-to-action near the lower edge: "Создавать будущее вместе" with a fine northeast arrow.
+No extra text, filler copy, invented statistics, logos, years, dashboard controls, charts, repeated square cards or badges. Keep the typography secondary to the sculptural composition. Use full-bleed aubergine with refined section margins. Overall feeling: strategic ambition, stronger brands, expanded horizons, exquisite collected glass objects, aspirational future.
+
+Final image must be a coherent, meticulously polished 16:9 website section concept ready to translate into an interactive landing block. Logo exactly once, on the summit flag ONLY.

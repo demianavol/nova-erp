@@ -1,38 +1,9 @@
-// Figures supplied in the company's welcome presentation.
-// Keep historical portfolio size distinct from the number of active brands.
+// Company-wide statistics and archival observations live in company-metrics.ts.
 export const company = {
   name: "Young Unicorn",
   since: "2020",
   partnerUrl: "https://t.me/kiyamova_alina_yuc",
   source: "По данным welcome-презентации Young Unicorn",
-  highlights: [
-    {
-      value: "2",
-      unit: "млн+",
-      label: "покупателей",
-      detail: "выбрали наши продукты",
-    },
-    { value: "2,7", unit: "млн+", label: "заказов", detail: "на маркетплейсе" },
-    {
-      value: "3",
-      unit: "",
-      label: "бренда в портфеле",
-      detail: "за весь период работы",
-    },
-    {
-      value: "50–100",
-      unit: "%",
-      label: "рост оборота",
-      detail: "год к году",
-      compact: true,
-    },
-  ],
-  marketplace: {
-    value: "5",
-    unit: "%",
-    label: "поставщиков Wildberries",
-    prefix: "топ",
-  },
   directions: [
     {
       id: "fashion",

@@ -39,6 +39,13 @@ export function Orders() {
   const navigate = useNavigate();
   const data = useERP((s) => s.data);
   const [params] = useSearchParams();
+  const openOrder = (key: "open" | "create", value: string) => {
+    const next = new URLSearchParams(params);
+    next.delete("open");
+    next.delete("create");
+    next.set(key, value);
+    navigate(`/erp/sales/orders?${next}`);
+  };
   const [filters, setFilters] = useState<OrderFilters>(() => ({
     ...emptyOrderFilters,
     from: /^\d{4}-\d{2}-\d{2}$/.test(params.get("from") || "")
@@ -102,7 +109,7 @@ export function Orders() {
               <Download size={16} />
               Экспорт CSV
             </Button>
-            <Button onClick={() => navigate("/erp/sales/orders?create=1")}>
+            <Button onClick={() => openOrder("create", "1")}>
               <Plus size={17} />
               Новый заказ
             </Button>
@@ -307,12 +314,15 @@ export function Orders() {
                 return (
                   <tr
                     key={o.id}
-                    onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
+                    onClick={() => openOrder("open", o.id)}
                   >
                     <td>
                       <button
                         className="table-order-button"
-                        onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          openOrder("open", o.id);
+                        }}
                       >
                         <strong>{o.number}</strong>
                         <span>{dateLabel(o.createdAt, true)}</span>

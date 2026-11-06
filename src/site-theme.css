@@ -20,21 +20,35 @@
   outline: 2px solid var(--yu-accent);
   outline-offset: 4px;
 }
+html[data-site-theme] {
+  scrollbar-width: thin;
+}
+html[data-site-theme] body {
+  min-width: 0;
+}
+html[data-site-theme="light"] {
+  --yu-site-surface: #faf8fd;
+  color-scheme: light;
+  background: var(--yu-site-surface);
+  scrollbar-color: #b8b0c4 var(--yu-site-surface);
+}
 html[data-site-theme="dark"] {
+  --yu-site-surface: #191526;
   color-scheme: dark;
-  background: #131219;
+  background: var(--yu-site-surface);
+  scrollbar-color: #6c607f var(--yu-site-surface);
 }
 html[data-site-theme="dark"] .landing {
   --yu-ink: #eeeaf5;
   --yu-muted: #b9adc8;
   --yu-accent: #b990f2;
   --yu-line: #39313f;
-  --yu-paper: #201c28;
-  background: #131219;
+  --yu-paper: var(--yu-site-surface);
+  background: var(--yu-site-surface);
   color: var(--yu-ink);
 }
 html[data-site-theme="dark"] .landing .lp-header {
-  background: #15131de8;
+  background: color-mix(in srgb, var(--yu-site-surface) 95%, transparent);
   border-color: #332d3b;
 }
 html[data-site-theme="dark"] .landing .yuc-brand {
@@ -97,14 +111,14 @@ html[data-site-theme="dark"]
 }
 html[data-site-theme="dark"] .landing .lp-company::before,
 html[data-site-theme="dark"] .landing .lp-team::before {
-  background: #1d1926;
+  background: var(--yu-site-surface);
   border-color: var(--yu-line);
 }
 html[data-site-theme="dark"] .landing .lp-team::before {
-  background: #191b26;
+  background: var(--yu-site-surface);
 }
 html[data-site-theme="dark"] .landing .lp-partner-footer {
-  background: #17151d;
+  background: var(--yu-site-surface);
   border-color: var(--yu-line);
 }
 html[data-site-theme="dark"]
@@ -426,27 +440,27 @@ html[data-site-theme="dark"] .landing .lp-contact-success-mark {
   color: #dec6f8;
 }
 
-/* Quiet neutral surfaces keep the imagery and typography in front. */
+/* One continuous dark canvas, matching the company history section. */
 html[data-site-theme="dark"],
 html[data-site-theme="dark"] .landing {
-  background: #18181b;
+  background: var(--yu-site-surface);
 }
 html[data-site-theme="dark"] .landing {
   --yu-ink: #ecebef;
   --yu-muted: #b8b6c0;
   --yu-line: #343339;
-  --yu-paper: #212125;
+  --yu-paper: var(--yu-site-surface);
 }
 html[data-site-theme="dark"] .landing .lp-header {
-  background: #1a1a1ef2;
+  background: color-mix(in srgb, var(--yu-site-surface) 95%, transparent);
 }
 html[data-site-theme="dark"] .landing .lp-company::before,
 html[data-site-theme="dark"] .landing .lp-team::before {
-  background: #202024;
+  background: var(--yu-site-surface);
   border-color: #343339;
 }
 html[data-site-theme="dark"] .landing .lp-partner-footer {
-  background: #1b1b1e;
+  background: var(--yu-site-surface);
   border-color: #343339;
 }
 html[data-site-theme="dark"] .landing .lp-closing-faq summary {
@@ -462,7 +476,7 @@ html[data-site-theme="dark"] .landing .lp-closing-faq details > p {
   background: #f5f4f7;
 }
 html[data-site-theme="dark"] .landing:not(.employee-guide) .lp-company::before {
-  background: #202024;
+  background: var(--yu-site-surface);
 }
 
 /* Opaque reading layers; translucent decoration stays behind the content. */

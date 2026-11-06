@@ -1,0 +1,15 @@
+{
+  "report": [
+    {
+      "theme": "dark",
+      "history": "7 years, glass frames, example labels and lightbox",
+      "badge": "idle motion, hover/manual/focus pause, resume, offscreen pause and reduced motion"
+    },
+    {
+      "theme": "light",
+      "history": "7 years, glass frames, example labels and lightbox",
+      "badge": "idle motion, hover/manual/focus pause, resume, offscreen pause and reduced motion"
+    }
+  ],
+  "errors": []
+}

@@ -971,7 +971,7 @@ export function EntityDialogs() {
           : null;
   const close = () => {
     const remaining = new URLSearchParams();
-    for (const key of ["project", "view"])
+    for (const key of ["project", "view", "from", "to"])
       if (params.get(key)) remaining.set(key, params.get(key)!);
     navigate(
       location.pathname + (remaining.size ? "?" + remaining.toString() : ""),

@@ -1,0 +1,261 @@
+{
+  "report": [
+    {
+      "theme": "dark",
+      "wheel": [
+        {
+          "progress": 0,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.0025683593748908606
+        },
+        {
+          "progress": 0,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.0025683593748908606
+        },
+        {
+          "progress": 0,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.0025683593748908606
+        },
+        {
+          "progress": 0.0734681280982255,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.0034518807187851053
+        },
+        {
+          "progress": 0.19970084365318586,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.00472017829588367
+        },
+        {
+          "progress": 0.2,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.003945312499809006
+        },
+        {
+          "progress": 0.2,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.003945312499809006
+        },
+        {
+          "progress": 0.2,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.003945312499809006
+        },
+        {
+          "progress": 0.26694266842099673,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.00007453679711488803
+        },
+        {
+          "progress": 0.3988124437422489,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.00011716146309481701
+        },
+        {
+          "progress": 0.4,
+          "active": 2,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.000458984375086402
+        },
+        {
+          "progress": 0.4,
+          "active": 2,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.000458984375086402
+        }
+      ],
+      "dragDegrees": 136.5,
+      "clickedDegrees": 360,
+      "video": {
+        "loops": 2,
+        "frames": 110,
+        "duration": 3.583333,
+        "rate": 0.85
+      },
+      "responsive": [
+        [
+          320,
+          844
+        ],
+        [
+          390,
+          844
+        ],
+        [
+          768,
+          900
+        ],
+        [
+          960,
+          900
+        ],
+        [
+          1024,
+          700
+        ],
+        [
+          1200,
+          768
+        ],
+        [
+          1440,
+          900
+        ]
+      ],
+      "reduced": "passed"
+    },
+    {
+      "theme": "light",
+      "wheel": [
+        {
+          "progress": 0,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.0025683593748908606
+        },
+        {
+          "progress": 0,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.0025683593748908606
+        },
+        {
+          "progress": 0,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.0025683593748908606
+        },
+        {
+          "progress": 0.0734681280982255,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.0034518807187851053
+        },
+        {
+          "progress": 0.19970084365318586,
+          "active": 0,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.00472017829588367
+        },
+        {
+          "progress": 0.2,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.003945312499809006
+        },
+        {
+          "progress": 0.2,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.003945312499809006
+        },
+        {
+          "progress": 0.2,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.003945312499809006
+        },
+        {
+          "progress": 0.26694266842099673,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.00007453679711488803
+        },
+        {
+          "progress": 0.3988124437422489,
+          "active": 1,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.00011716146309481701
+        },
+        {
+          "progress": 0.4,
+          "active": 2,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.000458984375086402
+        },
+        {
+          "progress": 0.4,
+          "active": 2,
+          "pinTop": 100,
+          "dotError": 0,
+          "dashError": 0.000458984375086402
+        }
+      ],
+      "dragDegrees": 136.5,
+      "clickedDegrees": 360,
+      "video": {
+        "loops": 2,
+        "frames": 105,
+        "duration": 3.583333,
+        "rate": 0.85
+      },
+      "responsive": [
+        [
+          320,
+          844
+        ],
+        [
+          390,
+          844
+        ],
+        [
+          768,
+          900
+        ],
+        [
+          960,
+          900
+        ],
+        [
+          1024,
+          700
+        ],
+        [
+          1200,
+          768
+        ],
+        [
+          1440,
+          900
+        ]
+      ],
+      "reduced": "passed"
+    }
+  ],
+  "errors": []
+}

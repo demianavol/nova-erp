@@ -1,0 +1,202 @@
+/* A quiet closing signature on the same canvas as the invitation. */
+.landing.landing-home .company-footer {
+  --footer-glow: #b18ad31a;
+  --footer-line: #9c7bb72b;
+  --footer-orbit: #966cbb;
+  position: relative;
+  isolation: isolate;
+  margin-top: 12px;
+  padding: 0 0 20px;
+  border: 0;
+}
+html[data-site-theme="dark"] .landing .company-footer {
+  --footer-glow: #a783da12;
+  --footer-line: #bb9bdb24;
+  --footer-orbit: #c9a5ed;
+}
+.company-footer::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 580px 220px at 63% 65%,
+    var(--footer-glow),
+    transparent 85%
+  );
+  pointer-events: none;
+}
+.company-footer-shell {
+  position: relative;
+}
+.company-footer-horizon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  color: var(--footer-orbit);
+  pointer-events: none;
+}
+.company-footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1.5fr 0.95fr;
+  gap: clamp(28px, 4vw, 60px);
+  padding-block: 82px 38px;
+}
+.company-footer-signature {
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+  color: var(--yu-ink);
+  text-decoration: none;
+}
+.company-footer-signature .yuc-brand > img {
+  width: 31px;
+  height: 36px;
+}
+.company-footer-signature > span:last-child {
+  font:
+    500 clamp(24px, 2.1vw, 30px)/1.2 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+.company-footer .company-footer-nav {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+}
+.landing .company-footer .company-footer-heading {
+  margin: 0 0 15px;
+  color: var(--yu-muted);
+  font:
+    450 10px/1.6 "Inter Variable",
+    sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.company-footer-links {
+  display: flex;
+  flex-direction: column;
+}
+.company-footer-links > a {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  width: fit-content;
+  color: var(--yu-ink);
+  font:
+    400 13px/1.6 "Inter Variable",
+    sans-serif;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+.company-footer-links > a:hover,
+.company-footer-staff:hover {
+  color: var(--yu-accent);
+}
+.company-footer-telegram {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+  color: var(--yu-ink);
+  font:
+    450 21px/1.4 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.035em;
+  text-decoration: none;
+}
+.company-footer-contact-arrow {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  border: 1px solid var(--footer-line);
+  border-radius: 50%;
+  color: var(--yu-accent);
+  transition:
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+.company-footer-telegram:hover .company-footer-contact-arrow {
+  transform: translate(1px, -1px);
+  border-color: var(--yu-accent);
+}
+.company-footer-staff {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  color: var(--yu-muted);
+  font:
+    400 12px/1.6 "Inter Variable",
+    sans-serif;
+  text-decoration: none;
+}
+.company-footer a:focus-visible {
+  outline: 2px solid var(--yu-accent);
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+@media (max-width: 1100px) {
+  .company-footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 34px 48px;
+  }
+  .company-footer-brand {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    column-gap: 36px;
+  }
+}
+@media (max-width: 640px) {
+  .landing.landing-home .company-footer {
+    margin-top: 8px;
+    padding-bottom: 12px;
+  }
+  .company-footer .company-footer-shell {
+    width: calc(100% - 36px);
+  }
+  .company-footer-horizon {
+    height: 46px;
+  }
+  .company-footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 24px;
+    padding-block: 62px 25px;
+  }
+  .company-footer-brand {
+    display: block;
+  }
+  .company-footer-signature > span:last-child {
+    font-size: 28px;
+  }
+  .company-footer-nav,
+  .company-footer-contact {
+    grid-column: 1 / -1;
+  }
+  .company-footer .company-footer-nav {
+    gap: 24px;
+  }
+  .company-footer-links > a {
+    min-height: 36px;
+    font-size: 13px;
+  }
+  .company-footer-telegram {
+    gap: 12px;
+    font-size: 19px;
+  }
+  .company-footer-contact-arrow {
+    width: 28px;
+    height: 28px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .company-footer-links > a,
+  .company-footer-contact-arrow {
+    transition: none;
+  }
+}

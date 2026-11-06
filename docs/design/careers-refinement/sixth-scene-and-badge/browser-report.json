@@ -1,0 +1,111 @@
+{
+  "cases": [
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "muted": true,
+        "loop": true,
+        "rate": 0.85,
+        "duration": 26.291667,
+        "src": "/media/careers/learning-notes.mp4"
+      },
+      "back": {
+        "text": "Мы ждёмименно тебя!",
+        "rect": {
+          "x": 1005.6895141601562,
+          "y": 408.26995849609375,
+          "width": 214.13958740234375,
+          "height": 93.57516479492188,
+          "top": 408.26995849609375,
+          "right": 1219.8291015625,
+          "bottom": 501.8451232910156,
+          "left": 1005.6895141601562
+        },
+        "opacity": "1"
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "height": 900,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "muted": true,
+        "loop": true,
+        "rate": 0.85,
+        "duration": 26.291667,
+        "src": "/media/careers/learning-notes.mp4"
+      },
+      "back": {
+        "text": "Мы ждёмименно тебя!",
+        "rect": {
+          "x": 1005.544189453125,
+          "y": 408.1470947265625,
+          "width": 214.133056640625,
+          "height": 93.43023681640625,
+          "top": 408.1470947265625,
+          "right": 1219.67724609375,
+          "bottom": 501.57733154296875,
+          "left": 1005.544189453125
+        },
+        "opacity": "1"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "muted": true,
+        "loop": true,
+        "rate": 0.85,
+        "duration": 26.291667,
+        "src": "/media/careers/learning-notes.mp4"
+      },
+      "back": {
+        "text": "Мы ждёмименно тебя!",
+        "rect": {
+          "x": 143.85137939453125,
+          "y": 423.8190612792969,
+          "width": 111.93757629394531,
+          "height": 52.414520263671875,
+          "top": 423.8190612792969,
+          "right": 255.78895568847656,
+          "bottom": 476.23358154296875,
+          "left": 143.85137939453125
+        },
+        "opacity": "1"
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "height": 900,
+      "reduced": true,
+      "back": {
+        "text": "Мы ждёмименно тебя!",
+        "rect": {
+          "x": 1003.7747802734375,
+          "y": 465.93719482421875,
+          "width": 214.044189453125,
+          "height": 91.6568603515625,
+          "top": 465.93719482421875,
+          "right": 1217.8189697265625,
+          "bottom": 557.5940551757812,
+          "left": 1003.7747802734375
+        },
+        "opacity": "1"
+      }
+    }
+  ],
+  "errors": [],
+  "passed": true
+}

@@ -1,0 +1,401 @@
+.directions-explorer {
+  color: var(--yu-ink);
+}
+.explorer-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+.explorer-heading > h2 {
+  margin-bottom: 0;
+}
+.explorer-heading > span {
+  color: var(--yu-muted);
+  font-size: 11px;
+}
+.directions-explorer :is(button, a):focus-visible {
+  outline: 2px solid var(--yu-accent);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+.explorer-viewport {
+  height: 680px;
+  overflow: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--yu-story-border) transparent;
+  border-radius: 16px;
+  background: transparent;
+}
+.explorer-scene {
+  min-height: 100%;
+  padding: 30px;
+}
+.explorer-scene-directions {
+  height: 100%;
+  padding: 0;
+}
+.explorer-directions-grid {
+  display: grid;
+  height: 100%;
+  grid-template-columns: 1.4fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+}
+.explorer-direction {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  color: #fff;
+  background: #130b21;
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.explorer-direction:first-child {
+  grid-row: span 2;
+}
+.explorer-direction-visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  will-change: transform;
+  transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.explorer-direction-visual > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.explorer-direction[data-direction="fashion"] .explorer-direction-visual > img {
+  object-position: right top;
+}
+.explorer-direction[data-direction="fashion"] .explorer-direction-visual {
+  transform-origin: right top;
+}
+/* Image and vignette share ONE transformed visual layer. Independent GPU
+   image clipping exposed a pale source-pixel fringe at fractional zoom. */
+.explorer-direction-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(32, 17, 44, 0.2) 0%,
+    transparent 28%,
+    rgba(23, 14, 39, 0.6) 65%,
+    rgba(19, 11, 33, 0.94) 100%
+  );
+  pointer-events: none;
+  /* The contrast vignette stays fully painted during every hover reversal. */
+  opacity: 1;
+}
+/* One isolated tint layer; no interpolated gradient or backdrop sampling. */
+.explorer-direction-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(
+    ellipse 90% 70% at 50% 100%,
+    rgb(131 93 183 / 0.12),
+    transparent 80%
+  );
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
+  transition: opacity 300ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .explorer-direction:hover {
+    /* Keep the clipped frame stationary: lifting it exposed a 2px pale strip. */
+    box-shadow: 0 16px 36px -10px rgba(16, 9, 28, 0.46);
+  }
+  .explorer-direction:hover .explorer-direction-visual::before {
+    opacity: 1;
+  }
+  .explorer-direction:hover .explorer-direction-visual {
+    transform: scale(1.018);
+  }
+  .explorer-direction:hover .explorer-direction-copy {
+    transform: translateY(-4px);
+  }
+  .explorer-direction:hover .explorer-direction-hint {
+    opacity: 1;
+    max-height: 40px;
+    margin-top: 6px;
+    transform: translateY(0);
+  }
+  .explorer-direction:hover .explorer-direction-action {
+    color: #ffffff;
+  }
+  .explorer-direction:hover .explorer-direction-arrow {
+    transform: translate(3px, -3px) scale(1.06);
+    background: rgba(59, 39, 83, 0.8);
+    border-color: rgba(230, 215, 255, 0.4);
+    color: #ffffff;
+  }
+  .explorer-direction:hover .explorer-development {
+    color: #ffffff;
+    border-color: rgba(230, 215, 255, 0.85);
+    background: rgba(33, 24, 43, 0.85);
+    box-shadow: 0 4px 14px rgba(160, 110, 240, 0.22);
+    transform: translateY(-1px);
+  }
+  .explorer-direction:hover .explorer-development svg {
+    transform: rotate(-8deg);
+  }
+}
+.explorer-direction:focus-visible {
+  box-shadow: 0 16px 36px -10px rgba(16, 9, 28, 0.46);
+}
+.explorer-direction:focus-visible .explorer-direction-visual::before {
+  opacity: 1;
+}
+.explorer-direction:focus-visible .explorer-direction-visual {
+  transform: scale(1.018);
+}
+.explorer-direction:focus-visible .explorer-direction-copy {
+  transform: translateY(-4px);
+}
+.explorer-direction:focus-visible .explorer-direction-hint {
+  opacity: 1;
+  max-height: 40px;
+  margin-top: 6px;
+  transform: translateY(0);
+}
+.explorer-direction:focus-visible .explorer-direction-action {
+  color: #ffffff;
+}
+.explorer-direction:focus-visible .explorer-direction-arrow {
+  transform: translate(3px, -3px) scale(1.06);
+  background: rgba(59, 39, 83, 0.8);
+  border-color: rgba(230, 215, 255, 0.4);
+  color: #ffffff;
+}
+.explorer-direction.is-development .explorer-direction-visual > img {
+  filter: saturate(0.3) contrast(0.9);
+  opacity: 0.8;
+}
+.explorer-direction-index {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  z-index: 3;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #ffffffc9;
+}
+.explorer-direction-copy {
+  position: absolute;
+  bottom: 28px;
+  left: 28px;
+  right: 28px;
+  z-index: 3;
+  background: transparent;
+  will-change: transform;
+  backface-visibility: hidden;
+  transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.explorer-direction-copy > strong {
+  display: block;
+  font:
+    450 clamp(25px, 2.5vw, 36px)/1.15 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -1px;
+  max-width: 320px;
+}
+.explorer-direction-hint {
+  display: block;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #ede4f8d0;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  max-height: 0;
+  margin-top: 0;
+  transform: translateY(6px);
+  overflow: hidden;
+  transition:
+    opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    max-height 340ms cubic-bezier(0.22, 1, 0.36, 1),
+    margin-top 340ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.explorer-direction-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  font-size: 11px;
+  color: #ede4f8;
+  transition: color 240ms ease;
+}
+.explorer-direction-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(33, 24, 43, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ede4f8;
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 240ms ease,
+    border-color 240ms ease,
+    color 240ms ease;
+}
+.explorer-development {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  border: 1px dashed var(--yu-story-border);
+  border-radius: 20px;
+  color: var(--yu-accent);
+  font-size: 10px;
+}
+.explorer-direction .explorer-development {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 3;
+  color: #f0e5ff;
+  border-color: #e4d4ff99;
+  background: #21182b65;
+  /* Avoid backdrop-filter repaint flashes over the moving photograph. */
+  transition:
+    background 300ms ease,
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 300ms ease;
+}
+.explorer-direction .explorer-development svg {
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: none) {
+  .explorer-direction-hint {
+    opacity: 0.92;
+    max-height: 38px;
+    margin-top: 5px;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .explorer-direction,
+  .explorer-direction-visual::before,
+  .explorer-direction-visual::after,
+  .explorer-direction-visual,
+  .explorer-direction-visual > img,
+  .explorer-direction-copy,
+  .explorer-direction-hint,
+  .explorer-direction-arrow,
+  .explorer-direction .explorer-development,
+  .explorer-direction .explorer-development svg {
+    transition: none !important;
+    animation: none !important;
+  }
+  .explorer-direction:is(:hover, :focus-visible) {
+    transform: none !important;
+  }
+  .explorer-direction:is(:hover, :focus-visible) .explorer-direction-visual {
+    transform: none !important;
+  }
+  .explorer-direction:is(:hover, :focus-visible) .explorer-direction-copy {
+    transform: none !important;
+  }
+  .explorer-direction:is(:hover, :focus-visible) .explorer-direction-arrow {
+    transform: none !important;
+  }
+  .explorer-direction:is(:hover, :focus-visible) .explorer-development {
+    transform: none !important;
+  }
+  .explorer-direction-hint {
+    opacity: 1;
+    max-height: none;
+    transform: none;
+    margin-top: 6px;
+  }
+}
+@media (max-width: 1000px) {
+  .explorer-scene {
+    padding: 24px;
+  }
+  .explorer-scene-directions {
+    padding: 0;
+  }
+}
+@media (max-width: 760px) {
+  .explorer-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .explorer-viewport {
+    height: 720px;
+    border-radius: 12px;
+  }
+  .explorer-scene {
+    padding: 22px;
+  }
+  .explorer-scene-directions {
+    padding: 0;
+  }
+  .explorer-directions-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1.4fr 1fr 1fr;
+    gap: 12px;
+  }
+  .explorer-direction:first-child {
+    grid-row: auto;
+  }
+  .explorer-direction-index {
+    top: 16px;
+    left: 18px;
+    font-size: 9px;
+  }
+  .explorer-direction .explorer-development {
+    top: 13px;
+    right: 13px;
+    font-size: 9px;
+  }
+  .explorer-direction-copy {
+    bottom: 19px;
+    left: 20px;
+    right: 20px;
+  }
+  .explorer-direction-copy > strong {
+    font-size: 24px;
+    max-width: 250px;
+  }
+  .explorer-direction-hint {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  .explorer-direction-action {
+    margin-top: 10px;
+    font-size: 10px;
+  }
+  .explorer-direction-arrow {
+    width: 24px;
+    height: 24px;
+  }
+  .explorer-direction-arrow svg {
+    width: 14px;
+    height: 14px;
+  }
+}

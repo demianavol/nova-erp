@@ -1,0 +1,451 @@
+.landing .company-future {
+  --future-ink: #292031;
+  --future-muted: #675970;
+  --future-accent: #7851c4;
+  --future-panel: linear-gradient(140deg, #fffffff2, #f3eafbde);
+  --future-border: #b291d766;
+  --future-popover: #faf6ff;
+  position: relative;
+  isolation: isolate;
+  padding-block: 32px 28px;
+  color: var(--future-ink);
+}
+
+.company-future::before {
+  content: "";
+  position: absolute;
+  inset: -40px auto -40px 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  z-index: -2;
+  background: radial-gradient(ellipse at 50% 68%, #b68be41a, transparent 65%);
+  mask-image: linear-gradient(transparent, #000 20%, #000 70%, transparent);
+  pointer-events: none;
+}
+
+html[data-site-theme="dark"] .landing .company-future {
+  --future-ink: #fbf8ff;
+  --future-muted: #d0c5e0;
+  --future-accent: #c4a0f4;
+  --future-panel: linear-gradient(140deg, #514066b8, #211a32eb 62%, #352544df);
+  --future-border: #bc91f56b;
+  --future-popover: #2d213d;
+}
+
+.future-atmosphere {
+  position: absolute;
+  z-index: -1;
+  inset: 120px -4% 10px;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: radial-gradient(
+    ellipse closest-side at 50% 48%,
+    #000 55%,
+    #000b 80%,
+    transparent 100%
+  );
+}
+.future-gradient-waves {
+  width: 100%;
+  height: 100%;
+}
+
+.future-heading {
+  position: relative;
+  z-index: 4;
+  text-align: center;
+}
+
+.future-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--future-accent);
+}
+
+.future-eyebrow > span {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.landing .future-heading h2 {
+  margin: 12px 0 16px;
+  color: var(--future-ink);
+  font:
+    550 clamp(38px, 5vw, 68px)/1.08 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -2.4px;
+}
+
+.landing .future-heading h2 > span {
+  color: var(--future-accent);
+}
+
+.landing .future-heading p {
+  margin: 0;
+  color: var(--future-muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.future-scene {
+  position: relative;
+  height: 580px;
+  margin-top: 12px;
+  overflow-anchor: none;
+}
+.future-mountain {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 88px;
+  width: min(800px, 86%);
+  aspect-ratio: 3 / 2;
+  transform: translateX(-50%)
+    translate3d(var(--future-x, 0px), var(--future-y, 0px), 0);
+}
+.future-mountain > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  mask-image: linear-gradient(#000 86%, transparent);
+  pointer-events: none;
+}
+.future-points {
+  position: absolute;
+  inset: 0;
+}
+.future-point-anchor {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+.future-point-anchor[data-open="true"] {
+  z-index: 6;
+}
+.future-point {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #e6cfffaa;
+  border-radius: 50%;
+  background: #4e2869e6;
+  color: #fff;
+  box-shadow:
+    0 0 0 6px #b28ad52e,
+    0 4px 22px #26103866;
+  font:
+    600 12px/1 "Manrope Variable",
+    sans-serif;
+  cursor: pointer;
+  transition:
+    background 240ms ease,
+    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 300ms ease;
+}
+.future-point:hover,
+.future-point[aria-expanded="true"] {
+  background: #a16ed0;
+  transform: scale(1.13);
+  box-shadow:
+    0 0 0 8px #c7a0ed33,
+    0 0 28px #c799f8a1;
+  z-index: 3;
+}
+.future-point-ring {
+  position: absolute;
+  inset: -11px;
+  border: 1px solid #d1acff66;
+  border-radius: inherit;
+}
+.future-point[aria-expanded="true"] .future-point-ring {
+  animation: future-point-pulse 2.5s ease-out infinite;
+}
+.future-point-label {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  padding: 7px 11px;
+  border: 1px solid #d2a6fa66;
+  border-radius: 9px;
+  background: #33233fef;
+  color: #fff;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -5px);
+  pointer-events: none;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+.future-point:is(:hover, :focus-visible):not([aria-expanded="true"])
+  .future-point-label {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+@keyframes future-point-pulse {
+  from {
+    opacity: 0.8;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+.future-priorities {
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.future-priority-surface {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 94px;
+  padding: 16px;
+  border: 1px solid var(--future-border);
+  border-radius: 20px;
+  background: var(--future-panel);
+  box-shadow:
+    inset 0 1px 0 #e9d8ff50,
+    0 12px 30px #170d2814;
+  text-align: left;
+  color: var(--future-ink);
+  cursor: pointer;
+  transition:
+    transform 250ms ease,
+    border-color 250ms ease,
+    background-color 250ms ease;
+}
+.future-priority-surface:hover {
+  transform: translateY(-3px);
+  border-color: var(--future-accent);
+}
+.future-priority.is-active .future-priority-surface {
+  border-color: var(--future-accent);
+  background-color: #ab78e32b;
+}
+.future-priority-icon {
+  display: block;
+  flex: 0 0 48px;
+}
+.future-priority-icon img {
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+.future-priority-copy {
+  display: block;
+  min-width: 0;
+}
+.future-priority-number {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--future-accent);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.future-priority-title {
+  display: block;
+  font:
+    600 14px/1.3 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.3px;
+}
+.future-priority-arrow {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  color: var(--future-accent);
+  opacity: 0.7;
+}
+.future-detail {
+  position: absolute;
+  z-index: 6;
+  width: 286px;
+  max-width: calc(100vw - 40px);
+}
+.future-detail-content {
+  position: relative;
+  padding: 24px;
+  border: 1px solid var(--future-border);
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 0 0, #bc8de51c, transparent 70%),
+    var(--future-popover);
+  box-shadow:
+    0 16px 45px #170d2840,
+    inset 0 1px 0 #ffffff1a;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+.future-detail-kicker {
+  color: var(--future-accent);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.future-detail-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.future-detail-heading > div {
+  min-width: 0;
+}
+.future-detail-icon {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  object-fit: contain;
+}
+.landing .future-detail h3 {
+  margin: 6px 0 0;
+  color: var(--future-ink);
+  font:
+    600 18px/1.25 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.6px;
+}
+.future-detail p {
+  margin: 0;
+  color: var(--future-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.future-detail-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: #aa7cde15;
+  color: var(--future-accent);
+  cursor: pointer;
+}
+.future-detail-close:hover {
+  background: #aa7cde33;
+}
+.future-scene :focus-visible {
+  outline: 2px solid var(--future-accent);
+  outline-offset: 5px;
+}
+@media (max-width: 1100px) {
+  .future-scene {
+    height: 600px;
+  }
+  .future-mountain {
+    bottom: 100px;
+    width: min(800px, 100%);
+  }
+  .future-priorities {
+    gap: 10px;
+  }
+  .future-priority-surface {
+    padding: 14px 10px;
+    gap: 8px;
+  }
+  .future-priority-icon,
+  .future-priority-icon img {
+    width: 36px;
+    height: 36px;
+    flex-basis: 36px;
+  }
+  .future-priority-title {
+    font-size: 12px;
+  }
+}
+@media (max-width: 767px) {
+  .landing .company-future {
+    padding-block: 26px 28px;
+  }
+  .future-scene {
+    height: auto;
+    padding-top: 330px;
+    margin-top: 16px;
+  }
+  .future-mountain {
+    width: min(540px, 125%);
+    top: 0;
+    bottom: auto;
+  }
+  .future-priorities {
+    position: relative;
+    inset: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .future-priority-surface {
+    min-height: 90px;
+    border-radius: 16px;
+  }
+  .future-detail-content {
+    padding: 24px;
+  }
+  .future-point-anchor,
+  .future-point {
+    width: 40px;
+    height: 40px;
+    font-size: 11px;
+  }
+  .future-point-ring {
+    inset: -7px;
+  }
+  .future-point-label {
+    font-size: 10px;
+    padding: 5px 7px;
+  }
+  .future-atmosphere {
+    top: 150px;
+    bottom: auto;
+    height: 360px;
+  }
+}
+@media (max-width: 400px) {
+  .future-scene {
+    padding-top: 285px;
+  }
+  .future-point-anchor,
+  .future-point {
+    width: 36px;
+    height: 36px;
+  }
+  .future-priority-icon,
+  .future-priority-icon img {
+    width: 30px;
+    height: 30px;
+    flex-basis: 30px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .future-scene *,
+  .future-scene *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .future-mountain {
+    transform: translateX(-50%);
+  }
+  .future-detail-content {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,55 @@
+Generated with the built-in image_gen tool.
+Reference 1: docs/design/concepts/our-future-reference.png (user's intended design reference).
+Reference 2: public/media/history-icons/lavender_glass_unicorn_token.png (emblem identity only).
+Output: our-future-concept-v2.png
+
+Use case: ui-mockup / reference-based premium website section.
+Create ONE polished final static website section concept for Young Unicorn, 16:9 widescreen landscape (ideally 2048x1152), closely following Image 1, the newly supplied DESIGN REFERENCE. This is a revision of the prior concept using the user's intended reference. Follow the new reference's spatial layout, four floating wide glass cards, copy, mountain placement and atmosphere. Do not reuse the previous concept's freestanding icon-only layout.
+
+INPUT ROLES:
+Image 1 is the primary reference for the whole composition and intended art direction. Preserve its recognizable layout.
+Image 2 is ONLY a reference for the exact Young Unicorn emblem: the three angular shapes in its center. DO NOT reproduce Image 2's square token, glass tile or rounded-square frame.
+
+COMPOSITION from Image 1:
+Centered editorial heading at the top, subtle eyebrow above, one short centered supporting line below. Four floating elongated translucent dark-lavender glass panels with generously rounded corners, luminous lavender edges and restrained perspectival tilt arranged around a central glass mountain: 01 upper-left, 02 upper-right, 03 lower-left, 04 lower-right. Two cards per side, slightly different tilts and depths, generous spacing, completely readable text.
+The sculptural semi-abstract crystalline mountain sits in the lower center, with one dominant summit and smaller flowing faceted ridges, architectural and symbolic rather than photoreal rock. A single delicate elliptical lavender orbit curves around it. Foreground silky purple glass-like waves run along the bottom edge. A thin elegant flagpole rises from the mountain summit and a small silky lavender flag catches soft light.
+Adapt the original wider-than-16:9 reference to 16:9 by adding breathing room above and below and subtly recomposing the spacing, never stretching it or cutting off cards.
+
+CRITICAL BRAND RULE:
+Replace the asterisk/sparkle printed on the reference's flag with the actual Young Unicorn three-piece abstract angular emblem from Image 2. The Young Unicorn emblem appears EXACTLY ONCE, ON THE SUMMIT FLAG ONLY. No other instance anywhere: no logo in the header, CTA, cards, icons, glass cube, framed token, badge or mountain. Do not draw a unicorn animal. The only logo is the emblem on the small flag.
+
+MATERIAL + LIGHT:
+Luxurious futuristic editorial web/UI design, deep aubergine-purple background close to #191526 and #130f20, glossy translucent lavender glass, beautiful controlled rim lighting, restrained lilac glow accents, dark glass panels with delicate specular bevels, subtle cinematic depth. Strong crisp text contrast. Premium clean modern tech aesthetic matching the reference. No cloudy blur over the type, no cheap neon, no starry space wallpaper, no clutter. Keep the glass reflections refined and the hierarchy exceptionally polished.
+
+Each panel has a distinct beautiful 3D glass object at its left and its text at right, following Image 1:
+01: clear lavender shopping bag with curved handles and a small blank tag.
+02: sculptural cluster of three translucent glass people, elegant rounded forms.
+03: stacked transparent glass technology layers / AI chip, subtle "AI" lettering, no brand logo.
+04: elegant lavender ascending glass columns and a curved upward arrow, matching the reference.
+
+EXACT RUSSIAN COPY:
+Eyebrow: "Цели и планы"
+Main heading: "Наше будущее" (white "Наше", lavender "будущее", like reference)
+Supporting line: "Куда мы движемся и что создаём в ближайшие годы"
+Panel 01:
+"01"
+"Новые бренды"
+"Выводим монобренды на российский рынок и расширяем портфель"
+Panel 02:
+"02"
+"Развитие команды"
+"Создаём полноценную инфраструктуру для роста и развития сотрудников"
+Panel 03:
+"03"
+"Технологии и AI"
+"Внедряем новые технологии для продукта, маркетинга и операционной эффективности"
+Panel 04:
+"04"
+"Влияние на рынок"
+"Создаём бренды и продукты, которые задают новые стандарты в своих категориях"
+
+Add a discreet, visually light CTA at the very bottom with fine northeast arrow:
+"Создавать будущее вместе"
+Use modern, refined Manrope/Inter-like sans-serif, carefully typeset and legible. Card headings semibold, descriptions light, small rounded number capsules matching Image 1. No additional text, dates, metrics, navigation header, browser chrome, device frame, watermark or extra logo. The design is one finished static landing-section concept, not a whole homepage.
+
+The finished image should look like an elevated faithful art-directed version of Image 1: central glass summit and flag, four beautifully balanced floating cards, clean centered heading, premium aubergine and lavender, crisp readable copy. LOGO ON FLAG ONLY, exactly one.

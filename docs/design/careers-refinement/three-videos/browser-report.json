@@ -1,0 +1,64 @@
+{
+  "report": [
+    {
+      "theme": "dark",
+      "scroll": "5 chapters forward/backward",
+      "dissolve": [
+        {
+          "id": "growth",
+          "opacity": 0.889208,
+          "paused": false
+        },
+        {
+          "id": "impact",
+          "opacity": 0.110792,
+          "paused": false
+        },
+        {
+          "id": "team",
+          "opacity": 0,
+          "paused": true
+        }
+      ],
+      "rapidReverse": "passed",
+      "loopWraps": 3,
+      "offscreen": "all paused",
+      "reduced": "matching poster, no videos"
+    },
+    {
+      "theme": "light",
+      "scroll": "5 chapters forward/backward",
+      "dissolve": [
+        {
+          "id": "growth",
+          "opacity": 0.880195,
+          "paused": false
+        },
+        {
+          "id": "impact",
+          "opacity": 0.119805,
+          "paused": false
+        },
+        {
+          "id": "team",
+          "opacity": 0,
+          "paused": true
+        }
+      ],
+      "rapidReverse": "passed",
+      "loopWraps": 3,
+      "offscreen": "all paused",
+      "reduced": "matching poster, no videos"
+    },
+    {
+      "mobile": "5 touch selections, no horizontal overflow"
+    },
+    {
+      "failedClip": "poster fallback, other scene works, reselecting failed clip works"
+    },
+    {
+      "slowNetwork": "old scene retained until new video ready"
+    }
+  ],
+  "errors": []
+}

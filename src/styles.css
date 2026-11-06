@@ -6016,3 +6016,25 @@ tbody > tr:has(button):hover {
     scroll-behavior: auto !important;
   }
 }
+
+.sidebar-guide-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  margin-bottom: 5px;
+  font-size: 11px;
+  color: #6d6579;
+  border-radius: 6px;
+}
+.sidebar-guide-link > svg {
+  flex-shrink: 0;
+}
+.sidebar-guide-link:hover {
+  background: #eee9f7;
+  color: #7851c4;
+}
+.sidebar-guide-link:focus-visible {
+  outline: 2px solid #7851c4;
+  outline-offset: 2px;
+}

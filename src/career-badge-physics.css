@@ -1,0 +1,105 @@
+.career-badge-container.career-badge-physics {
+  display: block;
+  perspective: none;
+  isolation: isolate;
+  touch-action: pan-y;
+}
+.career-badge-physics .career-badge-live,
+.career-badge-physics .career-badge-static {
+  position: absolute;
+  inset: 0;
+}
+.career-badge-poster {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+  pointer-events: none;
+}
+.career-badge-poster > img {
+  position: absolute;
+  top: 22.8%;
+  left: 50%;
+  width: auto;
+  height: min(64cqh, 101.25cqw);
+  translate: -50% 0;
+  border-radius: 12% / 8.5%;
+  background: linear-gradient(138deg, #9e82b8, #7d5e9d 62%, #a481c0);
+  box-shadow: 0 12px 28px #170d2652, inset 0 1px 1px #ffffff60;
+}
+.career-badge-poster-strap {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(7.2cqh, 11.4cqw);
+  height: 20.6%;
+  translate: -50% 0;
+  z-index: 1;
+  background: linear-gradient(90deg, #67419c, #8c63c1 55%, #62408e);
+}
+.career-badge-poster-strap::after {
+  content: "";
+  position: absolute;
+  inset: auto -8% 0;
+  height: 19%;
+  border-radius: 2px;
+  background: linear-gradient(#a59ead, #5a5263);
+}
+.career-badge-poster::before,
+.career-badge-poster::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 1;
+}
+.career-badge-poster::before {
+  top: 25.4%;
+  width: 10cqh;
+  height: 2cqh;
+  border-radius: 1cqh;
+  background: #32223e;
+}
+.career-badge-poster::after {
+  top: 20.6%;
+  width: 3.1cqh;
+  height: 6cqh;
+  border: 2px solid #aeabb2;
+  border-radius: 50%;
+}
+.career-badge-physics .career-badge-static {
+  display: grid;
+  place-items: center;
+}
+.career-badge-physics .career-badge-live {
+  opacity: 0;
+}
+.career-badge-physics[data-ready="true"] .career-badge-live {
+  opacity: 1;
+}
+.career-badge-physics .lanyard-canvas {
+  border-radius: 18px;
+  -webkit-tap-highlight-color: transparent;
+}
+.career-badge-physics .lanyard-canvas:focus-visible {
+  outline: 2px solid var(--career-accent);
+  outline-offset: -4px;
+}
+.career-badge-drag-hint {
+  position: absolute;
+  inset: auto 0 -14px;
+  color: var(--career-muted);
+  text-align: center;
+  font:
+    400 11px/1.5 "Inter Variable",
+    sans-serif;
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .career-badge-container.career-badge-physics {
+    height: 320px;
+  }
+  .career-badge-drag-hint {
+    bottom: 0;
+    font-size: 10px;
+  }
+}

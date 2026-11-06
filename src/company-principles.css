@@ -1,0 +1,617 @@
+/* ==========================================================================
+   Young Unicorn — Principles & Values Section Styling
+   ========================================================================== */
+
+.landing .company-principles {
+  --cp-surface: var(--yu-site-surface, #faf8fd);
+  --cp-surface-card: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.94) 0%,
+    rgba(247, 244, 253, 0.84) 100%
+  );
+  --cp-border-card: rgba(120, 81, 196, 0.14);
+  --cp-border-card-hover: rgba(120, 81, 196, 0.38);
+  --cp-shadow-card: inset 0 1px 0 #ffffff, 0 12px 30px rgba(80, 50, 120, 0.08);
+  --cp-shadow-card-hover:
+    inset 0 1px 0 #ffffff, 0 22px 42px rgba(80, 50, 120, 0.16),
+    0 0 32px rgba(120, 81, 196, 0.14);
+  --cp-ink: #1f1a29;
+  --cp-muted: #5e556c;
+  --cp-accent: #7851c4;
+  --cp-glow: rgba(120, 81, 196, 0.18);
+  --cp-pin-bg: rgba(120, 81, 196, 0.1);
+  --cp-pin-text: #663eb3;
+
+  color: var(--cp-ink);
+  color-scheme: light;
+  position: relative;
+  isolation: isolate;
+  margin-top: var(--lp-section-space, 44px);
+  padding: 0;
+}
+
+.landing .company-principles::before {
+  content: "";
+  position: absolute;
+  inset: -40px auto -40px 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(
+      ellipse 600px 380px at 15% 25%,
+      rgba(145, 100, 225, 0.07) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 700px 420px at 85% 75%,
+      rgba(125, 80, 210, 0.05) 0%,
+      transparent 70%
+    );
+  z-index: -1;
+  mask-image: linear-gradient(transparent, #000 18%, #000 82%, transparent);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Dark Mode Overrides
+   -------------------------------------------------------------------------- */
+html[data-site-theme="dark"] .landing .company-principles {
+  --cp-surface: var(--yu-site-surface);
+  --cp-surface-card: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.065) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  --cp-border-card: rgba(195, 165, 245, 0.16);
+  --cp-border-card-hover: rgba(200, 165, 255, 0.42);
+  --cp-shadow-card:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 18px 40px rgba(6, 3, 14, 0.45);
+  --cp-shadow-card-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 24px 50px rgba(10, 4, 25, 0.58),
+    0 0 35px rgba(165, 110, 245, 0.22);
+  --cp-ink: #fcfaff;
+  --cp-muted: #c5bad6;
+  --cp-accent: #bda0ed;
+  --cp-glow: rgba(185, 144, 242, 0.3);
+  --cp-pin-bg: rgba(185, 144, 242, 0.15);
+  --cp-pin-text: #dfd4fa;
+
+  color: var(--cp-ink);
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   Desktop Composition Layout (Split Columns)
+   -------------------------------------------------------------------------- */
+.cp-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: clamp(24px, 3.6vw, 52px);
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   Left Column: Editorial Intro & Branded Glass Sculpture
+   -------------------------------------------------------------------------- */
+.cp-editorial {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+}
+
+.cp-editorial-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.cp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Inter Variable", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cp-accent);
+  margin-bottom: 14px;
+}
+
+.cp-eyebrow-dash {
+  opacity: 0.7;
+}
+
+.landing .cp-headline {
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 40px;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -1.2px;
+  color: var(--cp-ink);
+  margin: 0 0 18px;
+}
+
+.cp-lead {
+  font-family: "Inter Variable", sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--cp-muted);
+  margin: 0;
+  max-width: 320px;
+}
+
+/* Glass Sculpture in Lower-Left Area */
+.cp-sculpture-wrapper {
+  position: relative;
+  isolation: isolate;
+  margin-top: 36px;
+  width: 100%;
+  max-width: 260px;
+  align-self: center;
+}
+
+.cp-sculpture-control {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.cp-sculpture-control[data-dragging] {
+  cursor: grabbing;
+}
+
+.cp-sculpture-control:focus-visible {
+  outline: 2px solid var(--cp-accent);
+  outline-offset: 4px;
+}
+
+.cp-sculpture-float,
+.cp-sculpture-object {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cp-sculpture-float {
+  animation: cp-sculpture-float 6s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.cp-sculpture-wrapper[data-animate="true"] .cp-sculpture-float {
+  animation-play-state: running;
+}
+
+.cp-sculpture-control:is(:hover, :focus-visible, [data-dragging])
+  .cp-sculpture-float {
+  animation-play-state: paused;
+}
+
+.cp-sculpture-object {
+  transform: perspective(800px) rotateX(var(--cp-object-x, 0deg))
+    rotateY(var(--cp-object-y, 0deg))
+    rotateZ(calc(-8deg + var(--cp-object-z, 0deg)));
+}
+
+@keyframes cp-sculpture-float {
+  0%,
+  100% {
+    transform: translateY(3px) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(1.5deg);
+  }
+}
+
+.cp-sculpture-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 30px rgba(110, 70, 170, 0.18));
+  pointer-events: none;
+}
+
+.cp-sculpture-sheen {
+  position: absolute;
+  inset: 0;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  background: radial-gradient(
+    circle at var(--cp-light-x, 50%) var(--cp-light-y, 45%),
+    #fff9,
+    #e2ccff25 28%,
+    transparent 60%
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity 350ms ease;
+  pointer-events: none;
+}
+
+.cp-sculpture-control:is(:hover, :focus-visible, [data-dragging])
+  .cp-sculpture-sheen {
+  opacity: 0.8;
+}
+
+.cp-sculpture-glow {
+  position: absolute;
+  inset: 15% 10% 10% 10%;
+  background: radial-gradient(
+    circle at 50% 60%,
+    var(--cp-glow) 0%,
+    transparent 65%
+  );
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* --------------------------------------------------------------------------
+   Right Column: 3 Columns x 2 Rows Glassmorphism Cards Grid
+   -------------------------------------------------------------------------- */
+.cp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+  align-content: start;
+  overflow-anchor: none;
+}
+
+/* --------------------------------------------------------------------------
+   Individual Principles Glass Card
+   -------------------------------------------------------------------------- */
+.cp-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--cp-surface-card);
+  border: 1px solid var(--cp-border-card);
+  border-radius: 22px;
+  padding: 22px 20px 20px;
+  min-width: 0;
+  height: 260px;
+  contain: layout paint;
+  box-sizing: border-box;
+  box-shadow: var(--cp-shadow-card);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  overflow: hidden;
+  transition: border-color 380ms ease;
+}
+
+.cp-card.is-expanded {
+  border-color: var(--cp-border-card-hover);
+}
+
+.cp-card-toggle {
+  position: absolute;
+  top: 19px;
+  right: 19px;
+  width: 16px;
+  height: 16px;
+  color: var(--cp-accent);
+  opacity: 0.55;
+  transition:
+    transform 420ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 300ms ease;
+  pointer-events: none;
+}
+
+.cp-card.is-expanded .cp-card-toggle {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.cp-card:focus-visible {
+  outline: 2px solid var(--cp-accent);
+  outline-offset: 3px;
+}
+
+/* A stationary highlight fades in without moving the card's hit area. */
+.cp-card-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 50% 35%,
+    rgba(215, 180, 255, 0.16) 0%,
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 450ms ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cp-card.is-expanded .cp-card-sheen {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   Card Icon & Glass Pool Reflection
+   -------------------------------------------------------------------------- */
+.cp-card-icon-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 84px;
+  flex: 0 0 84px;
+  margin-bottom: 12px;
+  z-index: 2;
+  transform: translate3d(0, 26px, 0);
+  transition:
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 250ms ease;
+}
+.cp-card.is-expanded .cp-card-icon-area {
+  transform: translate3d(0, -12px, 0) scale(0.88);
+  opacity: 0;
+}
+
+.cp-card-icon-glow {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--cp-glow) 0%,
+    rgba(165, 110, 245, 0.08) 50%,
+    transparent 75%
+  );
+  filter: blur(14px);
+  opacity: 0.65;
+  transition:
+    transform 450ms ease,
+    opacity 350ms ease;
+  pointer-events: none;
+}
+
+.cp-card.is-expanded .cp-card-icon-glow {
+  transform: scale(1.22);
+  opacity: 1;
+}
+
+.cp-card-icon-frame {
+  position: relative;
+  display: block;
+}
+
+.cp-card-icon-img {
+  display: block;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Card Heading (Index & Title)
+   -------------------------------------------------------------------------- */
+.cp-card-heading {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 62px;
+  z-index: 2;
+  transform: translate3d(0, 26px, 0);
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cp-card.is-expanded .cp-card-heading {
+  transform: translate3d(0, -96px, 0);
+}
+
+.cp-card-number {
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--cp-accent);
+  opacity: 0.85;
+}
+
+.cp-card-title {
+  font-family: "Manrope Variable", sans-serif;
+  font-size: 19px;
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+  color: var(--cp-ink);
+  margin: 0;
+  transition: color 250ms ease;
+}
+
+/* --------------------------------------------------------------------------
+   Smooth Drawer Reveal for Description
+   -------------------------------------------------------------------------- */
+.cp-card-drawer {
+  position: absolute;
+  inset: 98px 20px auto;
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 300ms ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cp-card.is-expanded .cp-card-drawer {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+.cp-card-drawer-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cp-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+}
+
+.cp-card-description {
+  font-family: "Inter Variable", sans-serif;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--cp-muted);
+  margin: 0;
+}
+
+.cp-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.cp-card-slide {
+  font-size: 11px;
+  color: var(--cp-accent);
+  opacity: 0.8;
+  font-weight: 450;
+}
+
+.cp-card-pin-tag {
+  position: absolute;
+  top: 16px;
+  right: 43px;
+  z-index: 3;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--cp-pin-text);
+  background: var(--cp-pin-bg);
+  border-radius: 6px;
+  padding: 2px 7px;
+  letter-spacing: 0.02em;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+
+/* Tablet & Intermediate Views (768px – 1079px) */
+@media (max-width: 1079px) {
+  .cp-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .cp-editorial {
+    min-height: auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .cp-sculpture-wrapper {
+    margin-top: 0;
+    max-width: 220px;
+  }
+
+  .cp-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+
+/* Mobile Small Devices (< 768px) */
+@media (max-width: 767px) {
+  .landing .company-principles {
+    margin-top: var(--lp-section-space, 28px);
+    padding: 0;
+  }
+
+  .cp-layout {
+    gap: 28px;
+  }
+
+  .cp-editorial {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .landing .cp-headline {
+    font-size: 28px;
+    letter-spacing: -0.8px;
+  }
+
+  .cp-lead {
+    font-size: 14.5px;
+  }
+
+  .cp-sculpture-wrapper {
+    margin-top: 20px;
+    max-width: 180px;
+    align-self: center;
+  }
+
+  .cp-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .cp-card {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .cp-card-icon-area {
+    height: 76px;
+    flex-basis: 76px;
+    margin-bottom: 10px;
+  }
+  .cp-card.is-expanded .cp-card-heading {
+    transform: translate3d(0, -86px, 0);
+  }
+
+  .cp-card-icon-img {
+    width: 72px;
+    height: 72px;
+  }
+
+  .cp-card-title {
+    font-size: 18px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility: Reduced Motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .cp-card,
+  .cp-card-heading,
+  .cp-card-icon-area,
+  .cp-card-icon-frame,
+  .cp-sculpture-img,
+  .cp-sculpture-float,
+  .cp-sculpture-sheen,
+  .cp-card-drawer,
+  .cp-card-sheen,
+  .cp-card-toggle,
+  .cp-card-icon-glow {
+    transition: none !important;
+    animation: none !important;
+  }
+}

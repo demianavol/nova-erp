@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import {
   Bell,
+  BookOpen,
   Box,
   Building2,
   CalendarDays,
@@ -56,6 +57,7 @@ const nav = [
   { to: "/erp/departments/warehouse", label: "Склад", icon: Package },
   { to: "/erp/departments/finance", label: "Финансы", icon: Wallet },
   { to: "/erp/departments/team", label: "Команда", icon: Users },
+  { to: "/erp/employees", label: "Справочник", icon: BookOpen },
 ];
 function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
   const data = useERP((s) => s.data),
@@ -289,11 +291,14 @@ export function Layout() {
           ? "Аналитика"
           : location.pathname === "/erp/tasks"
             ? "Задачи"
-            : location.pathname === "/erp/settings"
-              ? "Настройки"
-              : location.pathname.includes("departments")
-                ? nav.find((n) => n.to === location.pathname)?.label || "Отдел"
-                : "Обзор";
+            : location.pathname === "/erp/employees"
+              ? "Справочник сотрудника"
+              : location.pathname === "/erp/settings"
+                ? "Настройки"
+                : location.pathname.includes("departments")
+                  ? nav.find((n) => n.to === location.pathname)?.label ||
+                    "Отдел"
+                  : "Обзор";
   return (
     <div
       className={cn("app-shell", preferences.collapsed && "sidebar-collapsed")}
@@ -413,6 +418,14 @@ export function Layout() {
               <ArrowUpRight size={12} />
             </button>
           )}
+          <Link
+            className="sidebar-guide-link"
+            to="/erp/employees"
+            title="Справочник сотрудника"
+          >
+            <BookOpen size={17} />
+            <span>Справочник сотрудника</span>
+          </Link>
           <div className="sidebar-utility">
             <button title="Справка" onClick={() => setHelp(true)}>
               <CircleHelp size={17} />

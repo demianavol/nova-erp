@@ -1,0 +1,368 @@
+/* Preserve the original grid and separate card motion from the info target. */
+.lp-results .lp-metrics-prototype {
+  color: var(--yu-muted);
+  font-size: 10px;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+.lp-results .lp-metric,
+.lp-results .lp-evidence-item {
+  position: relative;
+}
+.lp-results :is(.lp-metric, .lp-evidence-item)::before {
+  content: "";
+  position: absolute;
+  inset: -8px 4px;
+  border-radius: 10px;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--yu-accent) 3%, transparent);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+.lp-results .is-engaged::before {
+  opacity: 1;
+}
+.lp-results .lp-metric-trigger,
+.lp-results .lp-evidence-item .lp-metric-trigger {
+  inset: -8px 0 auto auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: none;
+  transition: background 240ms ease;
+}
+.lp-results .lp-metric-trigger:hover,
+.lp-results .is-expanded .lp-metric-trigger {
+  background: color-mix(in srgb, var(--yu-accent) 7%, transparent);
+  box-shadow: none;
+}
+.lp-results .lp-metric-info-symbol {
+  position: static;
+  color: var(--yu-muted);
+  opacity: 0.65;
+}
+.lp-results .is-expanded .lp-metric-info-symbol {
+  color: var(--yu-accent);
+  opacity: 1;
+  transform: scale(1.08);
+}
+.lp-results .lp-metric-motion,
+.lp-results .evidence-icon {
+  transition:
+    transform 260ms ease,
+    color 260ms ease;
+}
+.lp-results .is-engaged .evidence-icon {
+  transform: translateY(-2px) rotate(-2deg);
+}
+.lp-results .lp-metric.has-motion .lp-metric-value > span {
+  animation: none;
+}
+.lp-results .lp-evidence-item strong {
+  transition: color 240ms ease;
+}
+.lp-results .is-engaged :is(.lp-metric-value, .evidence-copy > strong) {
+  color: var(--yu-accent);
+}
+.lp-results .lp-metric-kind-3 .lp-metric-value::after {
+  display: none;
+}
+.lp-results .evidence-copy {
+  padding-right: 26px;
+}
+.lp-results .lp-evidence-item small {
+  font-size: 10px;
+}
+.lp-results .lp-evidence-item {
+  cursor: default;
+}
+
+/* The portal is independent of landing overflow and uses its own theme tokens. */
+.company-metric-positioner {
+  --cmp-ink: #29252f;
+  --cmp-muted: #716b7a;
+  --cmp-accent: #7851c4;
+  --cmp-line: #eae6ef;
+  --cmp-surface: #fff;
+  --cmp-tint: #f4effa;
+  --cmp-shadow: 0 12px 36px #29203218, 0 2px 8px #29203208;
+  z-index: 60;
+  width: min(320px, calc(100vw - 24px));
+  color: var(--cmp-ink);
+  font:
+    400 12px/1.5 "Inter Variable",
+    sans-serif;
+  text-align: left;
+  outline: none;
+}
+html[data-site-theme="dark"] .company-metric-positioner {
+  --cmp-ink: #ecebf0;
+  --cmp-muted: #b7b2c2;
+  --cmp-accent: #bd9ae9;
+  --cmp-line: #3c3745;
+  --cmp-surface: #242228;
+  --cmp-tint: #312a3d;
+  --cmp-shadow: 0 12px 36px #0004, 0 2px 8px #0002;
+  color-scheme: dark;
+}
+.company-metric-panel {
+  box-sizing: border-box;
+  max-height: inherit;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cmp-line) transparent;
+  padding: 16px;
+  border: 1px solid var(--cmp-line);
+  border-radius: 16px;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--cmp-tint) 35%, var(--cmp-surface)),
+    var(--cmp-surface) 45%
+  );
+  box-shadow: var(--cmp-shadow);
+}
+.cmp-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  position: relative;
+  padding-right: 24px;
+}
+.cmp-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 28px;
+  height: 28px;
+  border-radius: 9px;
+  color: var(--cmp-accent);
+  background: var(--cmp-tint);
+}
+.cmp-icon svg {
+  width: 17px;
+  height: 17px;
+}
+.cmp-heading h3 {
+  margin: 0;
+  font:
+    550 13px/1.4 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.15px;
+}
+.cmp-heading h3::first-letter {
+  text-transform: uppercase;
+}
+.cmp-close {
+  position: absolute;
+  top: -6px;
+  right: -7px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  color: var(--cmp-muted);
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color 200ms ease,
+    background 200ms ease;
+}
+.cmp-close:hover {
+  color: var(--cmp-accent);
+  background: var(--cmp-tint);
+}
+.cmp-close:focus-visible {
+  outline: 2px solid var(--cmp-accent);
+  outline-offset: 1px;
+}
+.cmp-value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 8px 0 10px;
+  font:
+    450 32px/1.15 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.cmp-value > span {
+  font:
+    450 14px/1.3 "Inter Variable",
+    sans-serif;
+  letter-spacing: -0.25px;
+}
+.cmp-metadata {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.cmp-metadata > div {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 8px;
+}
+.cmp-metadata dt,
+.cmp-breakdown dt {
+  color: var(--cmp-muted);
+}
+.cmp-metadata dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.cmp-breakdown {
+  border-top: 1px solid var(--cmp-line);
+  margin-top: 10px;
+  padding-top: 9px;
+}
+.cmp-breakdown h4 {
+  margin: 0 0 6px;
+  font-size: 10px;
+  color: var(--cmp-muted);
+  font-weight: 450;
+}
+.cmp-breakdown dl {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.cmp-breakdown dl > div {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 12px;
+  line-height: 1.5;
+}
+.cmp-breakdown dd {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.cmp-breakdown strong {
+  font-weight: 500;
+}
+.cmp-breakdown dd > span {
+  color: var(--cmp-muted);
+  font-size: 9px;
+  text-align: right;
+}
+.cmp-methodology {
+  margin: 10px 0 0;
+  color: var(--cmp-muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.cmp-footer {
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid var(--cmp-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 8px;
+  font-size: 9px;
+}
+.cmp-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--cmp-accent);
+  font-weight: 500;
+}
+.cmp-status-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.cmp-source {
+  color: var(--cmp-muted);
+}
+.cmp-achievements {
+  list-style: none;
+  display: grid;
+  gap: 9px;
+  margin: 10px 0 0;
+  padding: 9px 0 0;
+  border-top: 1px solid var(--cmp-line);
+}
+.cmp-achievements li > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+}
+.cmp-achievements strong {
+  color: var(--cmp-accent);
+  font-weight: 550;
+}
+.cmp-achievements p,
+.cmp-achievements small {
+  display: block;
+  margin: 2px 0 0;
+  color: var(--cmp-muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+@media (max-width: 760px) {
+  .lp-results-caption {
+    flex-wrap: wrap;
+    gap: 10px 20px;
+  }
+  .cmp-close {
+    width: 44px;
+    height: 44px;
+    top: -12px;
+    right: -13px;
+  }
+  .cmp-heading {
+    padding-right: 30px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-results
+    :is(
+      .lp-metric-trigger,
+      .lp-metric-motion,
+      .lp-metric-info-symbol,
+      .lp-metric-value,
+      .evidence-icon,
+      .lp-evidence-item strong
+    )::before,
+  .lp-results :is(.lp-metric, .lp-evidence-item)::before,
+  .lp-results
+    :is(
+      .lp-metric-trigger,
+      .lp-metric-motion,
+      .lp-metric-info-symbol,
+      .lp-metric-value,
+      .evidence-icon,
+      .lp-evidence-item strong
+    ),
+  .company-metric-panel,
+  .cmp-close {
+    animation: none !important;
+    transition: none !important;
+  }
+  .lp-results
+    .is-engaged
+    :is(.lp-metric-motion, .evidence-icon, .lp-metric-info-symbol) {
+    transform: none;
+  }
+}
+@media print {
+  .company-metric-positioner {
+    display: none;
+  }
+}

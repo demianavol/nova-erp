@@ -1,0 +1,706 @@
+.bex-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #29203166;
+  backdrop-filter: blur(7px);
+  animation: bex-backdrop-in 220ms ease both;
+}
+:root[data-site-theme="dark"] .bex-backdrop {
+  background: #050509b8;
+}
+:root .bex-dialog.landing {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  width: min(980px, calc(100vw - 64px));
+  height: auto;
+  max-height: min(82dvh, 760px);
+  padding: 0;
+  overflow: hidden;
+  background: var(--yu-paper);
+  color: var(--yu-ink);
+  border: 1px solid var(--yu-line);
+  border-radius: 18px;
+  outline: none;
+  box-shadow: 0 20px 70px #21142e24;
+  animation: bex-open 250ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  -webkit-tap-highlight-color: transparent;
+}
+.bex-dialog[data-state="closed"] {
+  animation: bex-close 200ms ease both !important;
+  pointer-events: none;
+}
+.bex-backdrop[data-state="closed"] {
+  animation: bex-backdrop-out 200ms ease both;
+}
+.bex-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  padding: 18px 28px 10px;
+}
+.bex-heading {
+  min-width: 0;
+  margin-right: auto;
+}
+.bex-dialog .bex-wordmark {
+  font:
+    450 26px/1.15 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.04em;
+  margin: 0;
+  color: var(--yu-ink);
+}
+.bex-introduction {
+  margin: 4px 0 0;
+  color: var(--yu-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.bex-close,
+.bex-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  color: var(--yu-muted);
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+}
+.bex-close:hover,
+.bex-back:hover {
+  color: var(--yu-ink);
+  background: color-mix(in srgb, var(--yu-accent) 7%, transparent);
+}
+.bex-dialog :is(button, a, select):focus-visible {
+  outline: 2px solid var(--yu-accent);
+  outline-offset: 4px;
+}
+.bex-tabs {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  flex-shrink: 0;
+  padding: 0 28px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--yu-line) transparent;
+  border-bottom: 1px solid var(--yu-line);
+}
+.bex-tabs > button {
+  position: relative;
+  flex-shrink: 0;
+  min-height: 38px;
+  padding: 6px 0 10px;
+  background: none;
+  border: 0;
+  color: var(--yu-muted);
+  font-size: 12px;
+  white-space: nowrap;
+  transition: color 180ms ease;
+}
+.bex-tabs > button:hover {
+  color: var(--yu-ink);
+}
+.bex-tabs > button[aria-selected="true"] {
+  color: var(--yu-accent);
+}
+.bex-tabs > button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--yu-accent);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.bex-tabs > button[aria-selected="true"]::after {
+  opacity: 0.8;
+}
+.bex-tabs > button:focus-visible {
+  outline-offset: -3px;
+}
+.bex-brand-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+.bex-brand-trigger > span,
+.bex-brand-option-identity > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bex-brand-mark {
+  display: block;
+  max-width: 128px;
+  max-height: 32px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.bex-brand-chevron {
+  flex-shrink: 0;
+  color: var(--yu-muted);
+  transition: transform 180ms ease;
+}
+.bex-brand-trigger[data-state="open"] .bex-brand-chevron {
+  transform: rotate(180deg);
+}
+.bex-brand-menu {
+  z-index: 110;
+  min-width: 220px;
+  max-width: calc(100vw - 48px);
+  max-height: min(260px, var(--radix-dropdown-menu-content-available-height));
+  overflow-y: auto;
+  padding: 5px;
+  border: 1px solid var(--yu-line);
+  border-radius: 12px;
+  background: var(--yu-paper);
+  color: var(--yu-ink);
+  box-shadow: 0 10px 30px #21142e1a;
+  outline: none;
+  animation: bex-grid-in 160ms ease both;
+  font:
+    400 13px/1.5 "Inter Variable",
+    sans-serif;
+}
+.bex-brand-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 44px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+}
+.bex-brand-option[data-highlighted] {
+  background: color-mix(in srgb, var(--yu-accent) 7%, transparent);
+}
+.bex-brand-option[data-state="checked"] {
+  color: var(--yu-accent);
+}
+.bex-brand-option-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.bex-brand-option-identity img {
+  display: block;
+  max-width: 52px;
+  max-height: 26px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+.bex-brand-selected {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 15px;
+}
+.bex-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px 28px 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--yu-line) transparent;
+}
+.bex-collection {
+  position: relative;
+  isolation: isolate;
+  --bex-card-edge: color-mix(in srgb, var(--yu-accent) 27%, var(--yu-line));
+  --bex-card-surface: color-mix(in srgb, var(--yu-accent) 9%, var(--yu-paper));
+}
+.bex-grid-current {
+  position: relative;
+  animation: bex-grid-in 210ms ease both;
+}
+.bex-collection-kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 2px 2px 0;
+  color: var(--yu-muted);
+  font-size: 11px;
+}
+.bex-collection-kicker > span:first-child,
+.bex-detail-kicker {
+  color: var(--yu-accent);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.bex-orbit.circular-carousel {
+  height: min(53dvh, 490px);
+  min-height: 345px;
+  margin-top: 8px;
+  border-radius: 20px;
+  background: radial-gradient(
+    ellipse at 50% 48%,
+    var(--bex-card-surface),
+    transparent 71%
+  );
+}
+.bex-orbit .circular-carousel__view {
+  bottom: 56px;
+}
+.bex-orbit .circular-carousel__custom {
+  position: absolute;
+}
+.bex-orbit .circular-carousel__controls {
+  position: absolute;
+  z-index: 2;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--yu-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.bex-orbit .circular-carousel__controls button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--bex-card-edge);
+  background: var(--yu-paper);
+  color: var(--yu-ink);
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+.bex-orbit .circular-carousel__controls button:hover {
+  background: var(--bex-card-surface);
+  color: var(--yu-accent);
+}
+.bex-product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 6px;
+  background: var(--bex-card-surface);
+  border: 1px solid var(--bex-card-edge);
+  border-radius: 21px;
+  opacity: 0.65;
+  cursor: pointer;
+}
+.bex-product-card[data-active="true"] {
+  opacity: 1;
+  box-shadow: 0 8px 23px #11081940;
+}
+.bex-card-photo {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 15px;
+  background: var(--yu-line);
+}
+.bex-card-photo > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bex-rating-chip {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  border: 1px solid #ffffff4a;
+  background: #201825e8;
+  pointer-events: none;
+}
+.bex-dialog .fsm-product-rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  color: var(--yu-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.bex-dialog .fsm-product-rating strong {
+  color: var(--yu-accent);
+}
+.bex-dialog .bex-rating-chip .fsm-product-rating {
+  color: #f3ebf6;
+}
+.bex-dialog .bex-rating-chip :is(svg, strong) {
+  color: #e9c8fd;
+}
+.bex-product-button {
+  flex: 0 0 55px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 8px;
+  text-align: left;
+  color: var(--yu-ink);
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.bex-product-button svg {
+  flex-shrink: 0;
+  color: var(--yu-accent);
+}
+.bex-product-name {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 560;
+}
+.bex-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
+  gap: clamp(22px, 5vw, 68px);
+  align-items: center;
+  padding: 4px 0 6px;
+  animation: bex-grid-in 210ms ease both;
+}
+.bex-detail-media {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 0;
+  padding: 4px;
+  border-radius: 23px;
+  border: 1px solid color-mix(in srgb, var(--yu-accent) 25%, var(--yu-line));
+  background: color-mix(in srgb, var(--yu-accent) 14%, var(--yu-paper));
+  box-shadow: 0 12px 28px #180c282b;
+}
+.bex-detail-media > .bex-detail-image {
+  display: block;
+  width: 100%;
+  max-height: 58dvh;
+  aspect-ratio: 10 / 13;
+}
+.bex-detail-media figcaption {
+  position: absolute;
+  inset: auto 5px 5px;
+  border-radius: 0 0 19px 19px;
+  pointer-events: none;
+  padding: 32px 17px 15px;
+  color: #fff;
+  background: linear-gradient(transparent, #1a1028cb);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.bex-detail-copy {
+  padding: clamp(4px, 2vw, 22px) 0;
+}
+.bex-detail-kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.bex-detail-kicker span {
+  width: 16px;
+  height: 1px;
+  background: currentColor;
+}
+.bex-dialog .bex-detail-title {
+  margin: 0 0 18px;
+  font:
+    480 clamp(27px, 3vw, 41px)/1.08 "Manrope Variable",
+    sans-serif;
+  letter-spacing: -0.05em;
+  outline: none;
+  text-wrap: balance;
+}
+.bex-detail-evidence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  margin-bottom: 19px;
+}
+.bex-detail-evidence > small {
+  color: var(--yu-muted);
+  font-size: 10px;
+}
+.bex-detail-copy > p {
+  margin: 0 0 13px;
+  color: var(--yu-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.bex-detail-copy .bex-fabric {
+  color: var(--yu-ink);
+  font-size: 12px;
+  font-weight: 620;
+}
+.bex-detail-link,
+.bex-development-copy > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  margin-top: 16px;
+  color: var(--yu-accent);
+  font-size: 12px;
+}
+.bex-detail-link {
+  padding: 0 16px;
+  border: 1px solid color-mix(in srgb, var(--yu-accent) 40%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--yu-accent) 9%, var(--yu-paper));
+}
+.bex-development {
+  color: var(--yu-muted);
+  font-size: 12px;
+}
+.bex-development > img {
+  display: block;
+  width: 100%;
+  aspect-ratio: auto;
+  height: auto;
+  object-fit: contain;
+  filter: saturate(0.35);
+}
+.bex-development-copy > p {
+  white-space: pre-line;
+  margin: 0;
+  line-height: 1.85;
+}
+.bex-development-copy {
+  padding: 16px 20px 14px;
+}
+.bex-development-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.bex-development-heading > .bex-development-status {
+  flex-shrink: 0;
+  margin: 0;
+}
+.bex-development-copy .bex-development-description {
+  margin-top: 10px;
+  max-width: 460px;
+}
+.bex-development-copy > a {
+  margin-top: 8px;
+}
+:root .bex-dialog-development.landing {
+  width: min(600px, calc(100vw - 64px));
+}
+.bex-dialog-development .bex-development-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  padding: 0;
+}
+.bex-development-toolbar .bex-close {
+  background: color-mix(in srgb, var(--yu-paper) 94%, transparent);
+  color: var(--yu-ink);
+}
+.bex-dialog-development .bex-body {
+  padding: 0;
+}
+.bex-dialog-development .bex-wordmark {
+  font-size: 24px;
+  line-height: 1.2;
+}
+.bex-introduction.bex-development-status {
+  display: inline-flex;
+  padding: 3px 8px;
+  border: 1px solid var(--yu-line);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--yu-accent) 5%, transparent);
+  color: var(--yu-accent);
+  font-size: 10px;
+}
+.bex-empty {
+  margin: 16px 0;
+  color: var(--yu-muted);
+  font-size: 12px;
+}
+@keyframes bex-open {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -49%) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@keyframes bex-close {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -49%) scale(0.985);
+  }
+}
+@keyframes bex-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes bex-backdrop-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes bex-grid-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-width: 760px) {
+  :root .bex-dialog.landing {
+    width: calc(100vw - 24px);
+    max-height: 92dvh;
+    border-radius: 16px;
+  }
+  .bex-header {
+    gap: 10px;
+    padding: 16px 18px 8px;
+  }
+  .bex-dialog .bex-wordmark {
+    font-size: 23px;
+  }
+  .bex-introduction {
+    font-size: 10px;
+    margin: 3px 0 0;
+  }
+  .bex-tabs {
+    gap: 18px;
+    padding-inline: 18px;
+  }
+  .bex-tabs > button {
+    font-size: 11px;
+    min-height: 36px;
+    padding: 6px 0 8px;
+  }
+  .bex-body {
+    padding: 14px 18px 20px;
+  }
+  :root .bex-dialog-development.landing {
+    width: calc(100vw - 24px);
+  }
+  .bex-dialog-development .bex-development-toolbar {
+    padding: 0;
+    top: 8px;
+    right: 8px;
+  }
+  .bex-dialog-development .bex-body {
+    padding: 0;
+  }
+  .bex-dialog-development .bex-wordmark {
+    font-size: 22px;
+  }
+  .bex-development-copy {
+    padding: 14px 16px 12px;
+  }
+  .bex-development-heading {
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .bex-development-heading > .bex-wordmark {
+    font-size: 20px;
+  }
+  .bex-development-heading > .bex-development-status {
+    font-size: 9px;
+  }
+  .bex-brand-menu {
+    min-width: 200px;
+  }
+  .bex-orbit.circular-carousel {
+    height: min(54dvh, 440px);
+    min-height: 345px;
+    margin-inline: -8px;
+  }
+  .bex-collection-kicker {
+    font-size: 10px;
+  }
+  .bex-detail {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .bex-detail-media > .bex-detail-image {
+    max-height: 46dvh;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root .bex-dialog.landing,
+  .bex-dialog[data-state="closed"] {
+    animation: none !important;
+    transform: translate(-50%, -50%);
+  }
+  .bex-backdrop,
+  .bex-backdrop[data-state="closed"],
+  .bex-grid-current,
+  .bex-detail {
+    animation: none;
+  }
+  .bex-brand-menu {
+    animation: none;
+  }
+  .bex-dialog * {
+    transition: none !important;
+  }
+}

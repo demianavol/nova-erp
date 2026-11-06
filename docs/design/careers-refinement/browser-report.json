@@ -1,0 +1,137 @@
+[
+  {
+    "theme": "dark",
+    "animations": [
+      [
+        "career-step-light",
+        "career-step-light",
+        "career-step-light"
+      ],
+      [
+        "career-influence-wave",
+        "none",
+        "none"
+      ],
+      [
+        "career-team-left",
+        "none",
+        "career-team-right"
+      ],
+      [
+        "career-assemble",
+        "career-assemble",
+        "career-assemble"
+      ],
+      [
+        "career-open-left",
+        "career-open-right",
+        "none"
+      ]
+    ]
+  },
+  {
+    "theme": "dark",
+    "scroll": "forward/backward, 11 positions",
+    "synchronizedFrames": 15
+  },
+  {
+    "theme": "dark",
+    "badge": {
+      "transform": "matrix3d(0.992191, 0.00909101, -0.124399, 0, 0, 0.99734, 0.072885, 0, 0.124731, -0.0723158, 0.989552, 0, 0, 0, 0, 1)",
+      "rx": 4.179708375279404,
+      "ry": 7.165215256755074
+    },
+    "rest": {
+      "rx": 0.002976143501364341,
+      "ry": 0.00510196092827714
+    },
+    "video": {
+      "wraps": 2,
+      "frames": 87,
+      "duration": 3.5
+    }
+  },
+  {
+    "theme": "light",
+    "animations": [
+      [
+        "career-step-light",
+        "career-step-light",
+        "career-step-light"
+      ],
+      [
+        "career-influence-wave",
+        "none",
+        "none"
+      ],
+      [
+        "career-team-left",
+        "none",
+        "career-team-right"
+      ],
+      [
+        "career-assemble",
+        "career-assemble",
+        "career-assemble"
+      ],
+      [
+        "career-open-left",
+        "career-open-right",
+        "none"
+      ]
+    ]
+  },
+  {
+    "theme": "light",
+    "scroll": "forward/backward, 11 positions",
+    "synchronizedFrames": 15
+  },
+  {
+    "theme": "light",
+    "badge": {
+      "transform": "matrix3d(0.99218, 0.00910291, -0.12448, 0, 0, 0.997337, 0.0729327, 0, 0.124812, -0.0723624, 0.989538, 0, 0, 0, 0, 1)",
+      "rx": 4.182451910787946,
+      "ry": 7.169918461074189
+    },
+    "rest": {
+      "rx": 0.002997932331173307,
+      "ry": 0.005139313212636838
+    },
+    "video": {
+      "wraps": 2,
+      "frames": 168,
+      "duration": 3.5
+    }
+  },
+  {
+    "theme": "dark",
+    "mobile": "all five touch selections, descriptions, CTAs, dialog, no overflow"
+  },
+  {
+    "theme": "light",
+    "mobile": "all five touch selections, descriptions, CTAs, dialog, no overflow"
+  },
+  {
+    "responsive": [
+      320,
+      390,
+      640,
+      768,
+      960,
+      1024,
+      1200,
+      1440
+    ]
+  },
+  {
+    "theme": "dark",
+    "reducedMotion": "static poster, immediate selection, no tilt or animated slices"
+  },
+  {
+    "theme": "light",
+    "reducedMotion": "static poster, immediate selection, no tilt or animated slices"
+  },
+  {
+    "videoFailure": "poster preserved"
+  }
+]

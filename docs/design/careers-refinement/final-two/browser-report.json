@@ -1,0 +1,25 @@
+{
+  "report": [
+    {
+      "theme": "dark",
+      "scroll": "five scenes forward/backward",
+      "rapidReverse": "passed",
+      "team": "original generated video preserved",
+      "newFootage": "736x414, muted, loops, 0.85x",
+      "reduced": "matching posters"
+    },
+    {
+      "theme": "light",
+      "scroll": "five scenes forward/backward",
+      "rapidReverse": "passed",
+      "team": "original generated video preserved",
+      "newFootage": "736x414, muted, loops, 0.85x",
+      "reduced": "matching posters"
+    },
+    {
+      "mobile": "five touch selections, no horizontal overflow",
+      "failure": "projects poster fallback, other scenes work"
+    }
+  ],
+  "errors": []
+}

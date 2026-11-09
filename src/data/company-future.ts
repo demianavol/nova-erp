@@ -10,7 +10,6 @@ export const companyFuture = {
       title: "Новые бренды",
       description:
         "Выводим монобренды на российский рынок и расширяем портфель",
-      icon: "media/history-icons/translucent_lavender_glass_shopping_bag.png",
     },
     {
       id: "team",
@@ -18,7 +17,6 @@ export const companyFuture = {
       title: "Развитие команды",
       description:
         "Создаём полноценную инфраструктуру для роста и развития сотрудников",
-      icon: "media/future/team-glass.png",
     },
     {
       id: "technology",
@@ -26,7 +24,6 @@ export const companyFuture = {
       title: "Технологии и AI",
       description:
         "Внедряем новые технологии для продукта, маркетинга и операционной эффективности",
-      icon: "media/future/ai-glass.png",
     },
     {
       id: "impact",
@@ -34,7 +31,6 @@ export const companyFuture = {
       title: "Влияние на рынок",
       description:
         "Создаём бренды и продукты, которые задают новые стандарты в своих категориях",
-      icon: "media/history-icons/glossy_lavender_glass_growth_chart.png",
     },
   ],
 } as const;

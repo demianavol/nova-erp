@@ -1,8 +1,9 @@
 """Prepare supplied Careers backgrounds with optional calm excerpt selection.
 
 Usage: python scripts/prepare-careers-purple-videos.py GROWTH.mp4 IMPACT.mp4 FREEDOM.mp4
-Full source durations and framing are preserved apart from a moving 0.5s loop join.
+Framing is preserved and a moving dissolve joins the end and start of each loop.
 Optional: --names NAME ... --starts SECONDS ... --durations SECONDS ...
+          --fps FPS --overlap-frames COUNT
 """
 import argparse
 from pathlib import Path
@@ -17,8 +18,14 @@ def main():
     parser.add_argument('--names', nargs='+')
     parser.add_argument('--starts', type=float, nargs='+')
     parser.add_argument('--durations', type=float, nargs='+')
+    parser.add_argument('--fps', type=int, default=24)
+    parser.add_argument('--overlap-frames', type=int, default=12)
     parser.add_argument('--ffmpeg')
     args = parser.parse_args()
+    fps = args.fps
+    overlap = args.overlap_frames
+    if fps < 1 or overlap < 2:
+        parser.error('FPS must be positive and the overlap must span at least two frames')
     ffmpeg = args.ffmpeg or shutil.which('ffmpeg')
     if not ffmpeg:
         import imageio_ffmpeg
@@ -42,27 +49,27 @@ def main():
         seconds = min(available, selected_duration) if selected_duration is not None else available
         if start < 0 or seconds <= 0:
             raise ValueError(f'Invalid excerpt: {source}')
-        count = round(seconds * 24)
-        first = round(start * 24)
-        if count < 48:
-            raise ValueError('Loop preparation requires at least two seconds')
+        count = round(seconds * fps)
+        first = round(start * fps)
+        if count < 2 * fps or count <= 2 * overlap:
+            raise ValueError('Loop preparation needs at least two seconds and room for both blend edges')
         clip = output / f'{name}.mp4'
-        weight = '(0.5-0.5*cos(PI*T*24/11))'
+        weight = f'(0.5-0.5*cos(PI*T*{fps}/{overlap - 1}))'
         filters = (
-            f"[0:v]scale=-2:'min(ih,720)':flags=lanczos,setsar=1,fps=24,trim=start_frame={first}:end_frame={first+count},setpts=PTS-STARTPTS,split=3[m][t][h];"
-            f'[m]trim=start_frame=12:end_frame={count-12},setpts=PTS-STARTPTS[body];'
-            f'[t]trim=start_frame={count-12}:end_frame={count},setpts=PTS-STARTPTS[tail];'
-            '[h]trim=end_frame=12,setpts=PTS-STARTPTS[head];'
+            f"[0:v]scale=-2:'min(ih,720)':flags=lanczos,setsar=1,fps={fps},trim=start_frame={first}:end_frame={first+count},setpts=PTS-STARTPTS,split=3[m][t][h];"
+            f'[m]trim=start_frame={overlap}:end_frame={count-overlap},setpts=PTS-STARTPTS[body];'
+            f'[t]trim=start_frame={count-overlap}:end_frame={count},setpts=PTS-STARTPTS[tail];'
+            f'[h]trim=end_frame={overlap},setpts=PTS-STARTPTS[head];'
             f"[tail][head]blend=all_expr='A*(1-({weight}))+B*({weight})'[join];"
             '[body][join]concat=n=2:v=1:a=0,format=yuv420p[out]'
         )
         subprocess.run([ffmpeg, '-hide_banner', '-loglevel', 'warning', '-y', '-i', str(source),
                         '-filter_complex', filters, '-map', '[out]', '-an', '-sn', '-dn', '-map_metadata', '-1',
                         '-c:v', 'libx264', '-preset', 'slow', '-crf', '25', '-profile:v', 'high',
-                        '-movflags', '+faststart', '-r', '24', '-g', '48', str(clip)], check=True)
+                        '-movflags', '+faststart', '-r', str(fps), '-g', str(2 * fps), str(clip)], check=True)
         subprocess.run([ffmpeg, '-hide_banner', '-loglevel', 'error', '-y', '-i', str(clip),
                         '-frames:v', '1', '-c:v', 'libwebp', '-quality', '84', str(output / f'{name}-poster.webp')], check=True)
-        print(f'{clip.name}: {clip.stat().st_size:,} bytes, {(count-12)/24:.2f}s')
+        print(f'{clip.name}: {clip.stat().st_size:,} bytes, {(count-overlap)/fps:.2f}s')
 
 
 if __name__ == '__main__':

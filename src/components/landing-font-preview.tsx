@@ -90,6 +90,22 @@ function getLandingFontPreview(): FontPreview | null {
   };
 }
 
+export async function loadLandingFonts() {
+  if (!document.fonts) return;
+  const preview = getLandingFontPreview();
+  const families = new Set([
+    fonts[defaultFont],
+    fonts[preview?.font ?? defaultFont],
+  ]);
+  // Include both primary subsets, even when the current locale uses only one.
+  const sample = "Young Unicorn Создаём бренды";
+  await Promise.allSettled(
+    [...families].map((family) =>
+      document.fonts.load(`400 1em "${family} Variable"`, sample),
+    ),
+  );
+}
+
 export function useLandingFontPreview() {
   const [preview, setPreview] = useState(getLandingFontPreview);
   const font = preview?.font;

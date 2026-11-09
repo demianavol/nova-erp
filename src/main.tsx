@@ -22,9 +22,11 @@ const Login = lazy(() =>
 const Protected = lazy(() =>
   import("./components/layout").then((m) => ({ default: m.ProtectedLayout })),
 );
-const Landing = lazy(() =>
-  import("./pages/landing").then((m) => ({ default: m.Landing })),
-);
+const Landing = lazy(async () => {
+  const { Landing, loadLandingFonts } = await import("./pages/landing");
+  await loadLandingFonts();
+  return { default: Landing };
+});
 const Employees = lazy(() =>
   import("./pages/employees").then((m) => ({ default: m.Employees })),
 );
@@ -114,7 +116,7 @@ function LegacyERPRedirect() {
     />
   );
 }
-function AppContent() {
+function AppContent({ isLanding }: { isLanding: boolean }) {
   const { t } = useSiteLanguage();
   return (
     <ErrorBoundary t={t}>
@@ -130,9 +132,11 @@ function AppContent() {
       </a>
       <Suspense
         fallback={
-          <div className="app-loading">
+          <div className="app-loading" role="status">
             <CompanyBrand compact />
-            <p>{t("Собираем ваше пространство…")}</p>
+            <p className={isLanding ? "sr-only" : undefined}>
+              {t("Собираем ваше пространство…")}
+            </p>
           </div>
         }
       >
@@ -168,9 +172,10 @@ function AppContent() {
 }
 function LocalizedApp() {
   const { pathname } = useLocation();
+  const isLanding = pathname === "/";
   return (
-    <SiteLanguageProvider enabled={pathname === "/"}>
-      <AppContent />
+    <SiteLanguageProvider enabled={isLanding}>
+      <AppContent isLanding={isLanding} />
     </SiteLanguageProvider>
   );
 }

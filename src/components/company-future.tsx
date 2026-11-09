@@ -15,6 +15,7 @@ import {
 import { X, ArrowUpRight } from "lucide-react";
 import { companyFuture } from "../data/company-future";
 import { FutureAtmosphere } from "./future-atmosphere";
+import { FutureEmblem } from "./future-emblem";
 import "../company-future.css";
 
 type FuturePriority = (typeof companyFuture.priorities)[number];
@@ -135,13 +136,10 @@ function FuturePoint({
               strokeWidth={1}
             />
             <div className="future-detail-heading">
-              <img
+              <FutureEmblem
                 className="future-detail-icon"
-                data-icon-priority={priority.id}
-                src={`${import.meta.env.BASE_URL}${priority.icon}`}
-                width={44}
-                height={44}
-                alt=""
+                kind={priority.id}
+                active={open}
               />
               <div>
                 <span className="future-detail-kicker">
@@ -340,14 +338,9 @@ export function CompanyFuture() {
                 }
               >
                 <span className="future-priority-icon" aria-hidden="true">
-                  <img
-                    data-icon-priority={priority.id}
-                    src={`${import.meta.env.BASE_URL}${priority.icon}`}
-                    alt=""
-                    width={120}
-                    height={120}
-                    loading="lazy"
-                    decoding="async"
+                  <FutureEmblem
+                    kind={priority.id}
+                    active={selected === priority.id}
                   />
                 </span>
                 <span className="future-priority-copy">

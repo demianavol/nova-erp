@@ -30,6 +30,8 @@ import "../hero-video.css";
 import "../company-metrics.css";
 import "../company-typography.css";
 
+export { loadLandingFonts } from "../components/landing-font-preview";
+
 function useRevealOnce<T extends HTMLElement>() {
   const root = useRef<T>(null);
   const [revealed, setRevealed] = useState(false);

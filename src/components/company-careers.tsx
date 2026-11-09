@@ -11,10 +11,7 @@ import {
 import { flushSync } from "react-dom";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowUpRight, ArrowRight, Briefcase, Users, X } from "lucide-react";
-import {
-  companyCareers as content,
-  type CareerBenefit,
-} from "../data/company-careers";
+import { companyCareers as content } from "../data/company-careers";
 import {
   careerMilestones,
   careerOrbitPath,
@@ -23,44 +20,11 @@ import {
 } from "../data/career-orbit";
 import { CareersAtmosphere } from "./careers-atmosphere";
 import { CareerBadge, preloadCareerBadge } from "./career-badge";
+import { LandingEmblem } from "./landing-emblem";
 import { useNearViewport } from "./use-near-viewport";
 import "../company-careers.css";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
-
-function BenefitIcon({ benefit }: { benefit: CareerBenefit }) {
-  return (
-    <span
-      className={`career-benefit-icon-wrap career-icon-fx-${benefit.id}`}
-      aria-hidden="true"
-    >
-      <img
-        src={asset(benefit.icon)}
-        width="64"
-        height="64"
-        alt=""
-        loading="lazy"
-        decoding="async"
-        className="career-benefit-icon-img"
-      />
-      {[0, 1, 2].map((part) => (
-        <span
-          className={`career-icon-piece career-icon-piece-${part}`}
-          key={part}
-        >
-          <img
-            src={asset(benefit.icon)}
-            width="64"
-            height="64"
-            alt=""
-            loading="lazy"
-            decoding="async"
-          />
-        </span>
-      ))}
-    </span>
-  );
-}
 
 export function CompanyCareers() {
   const { language, t } = useSiteLanguage();
@@ -74,6 +38,7 @@ export function CompanyCareers() {
   const badgeTrigger = useRef<HTMLButtonElement>(null);
   const alignedScrollY = useRef<number | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [orbitVisible, setOrbitVisible] = useState(false);
   const [milestones, setMilestones] = useState<
     { x: number; y: number; left: number; top: number }[]
   >([]);
@@ -81,6 +46,20 @@ export function CompanyCareers() {
     () => matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
   const motionReduced = useRef(reduced);
+  useEffect(() => {
+    if (!near || !orbitRef.current) return;
+    if (!("IntersectionObserver" in window)) {
+      setOrbitVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => setOrbitVisible(entry.intersectionRatio >= 0.25),
+      { threshold: 0.25 },
+    );
+    observer.observe(orbitRef.current);
+    return () => observer.disconnect();
+  }, [near]);
+
   useEffect(() => {
     if (reduced || !badgeTrigger.current) return;
     const observer = new IntersectionObserver(
@@ -262,6 +241,11 @@ export function CompanyCareers() {
   }, [near, drawProgress, updateTarget]);
 
   const select = (index: number) => {
+    if (
+      index === selectedIndex.current &&
+      (orbit.current.selection === null || orbit.current.selection === index)
+    )
+      return;
     orbit.current.selection = index;
     updateTarget();
     const section = sectionRef.current;
@@ -441,7 +425,13 @@ export function CompanyCareers() {
                     }
                   }}
                 >
-                  <BenefitIcon benefit={benefit} />
+                  <span className="career-benefit-icon-wrap">
+                    <LandingEmblem
+                      kind={`career-${benefit.id}`}
+                      active={active}
+                      visible={orbitVisible}
+                    />
+                  </span>
                   <span className="career-benefit-text">
                     <span className="career-benefit-title">
                       {t(benefit.title)}

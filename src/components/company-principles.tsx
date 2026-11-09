@@ -1,13 +1,5 @@
 import { useSiteLanguage } from "../lib/site-language";
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type PointerEvent,
-} from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import {
   companyPrinciplesData,
   type CompanyPrinciple,
@@ -16,72 +8,100 @@ import "../company-principles.css";
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}media/${name}`;
 
+function PrincipleIcon({ principle }: { principle: CompanyPrinciple }) {
+  return (
+    <picture className="cp-card-icon-frame">
+      <source
+        srcSet={asset(`principles-icons/${principle.iconWebp}`)}
+        type="image/webp"
+      />
+      <source
+        srcSet={asset(`principles-icons/${principle.icon600}`)}
+        type="image/png"
+      />
+      <img
+        src={asset(`principles-icons/${principle.icon}`)}
+        alt=""
+        className="cp-card-icon-img"
+        width={96}
+        height={96}
+        loading="lazy"
+        decoding="async"
+      />
+    </picture>
+  );
+}
+
+function PrincipleAction({ principle }: { principle: CompanyPrinciple }) {
+  return (
+    <>
+      {principle.id === "experiment" && (
+        <span className="cp-card-filament cp-card-mask" />
+      )}
+      {principle.id === "data-driven" && (
+        <>
+          <span className="cp-card-dart">
+            <PrincipleIcon principle={principle} />
+          </span>
+          <span className="cp-card-impact" />
+        </>
+      )}
+      {principle.id === "growth" && (
+        <span className="cp-card-exhaust">
+          <PrincipleIcon principle={principle} />
+        </span>
+      )}
+      {principle.id === "teamwork" && (
+        <>
+          <span className="cp-card-hand cp-card-hand-left">
+            <PrincipleIcon principle={principle} />
+          </span>
+          <span className="cp-card-hand cp-card-hand-right">
+            <PrincipleIcon principle={principle} />
+          </span>
+        </>
+      )}
+      {principle.id === "value" && (
+        <span className="cp-card-heart-light cp-card-mask" />
+      )}
+      {principle.id === "responsibility" && (
+        <span className="cp-card-check-inlay">
+          <PrincipleIcon principle={principle} />
+        </span>
+      )}
+      <span className="cp-card-optics cp-card-mask" />
+    </>
+  );
+}
+
 function PrincipleCard({
   principle,
-  isPinned,
-  onTogglePin,
-  onDismissPin,
+  expanded,
+  onToggle,
 }: {
   principle: CompanyPrinciple;
-  isPinned: boolean;
-  onTogglePin: () => void;
-  onDismissPin: () => void;
+  expanded: boolean;
+  onToggle: () => void;
 }) {
   const { t } = useSiteLanguage();
-  const [isHovered, setIsHovered] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
   const cardId = useId();
-
-  const isExpanded = isPinned || isHovered || isFocused;
-
-  const handlePointerEnter = useCallback(
-    (event: PointerEvent<HTMLDivElement>) => {
-      if (event.pointerType === "mouse") {
-        setIsHovered(true);
-      }
-    },
-    [],
-  );
-
-  const handlePointerLeave = useCallback(() => {
-    setIsHovered(false);
-  }, []);
-
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        onTogglePin();
-      } else if (event.key === "Escape") {
-        event.preventDefault();
-        setIsHovered(false);
-        setIsFocused(false);
-        onDismissPin();
-      }
-    },
-    [onTogglePin, onDismissPin],
-  );
+  const titleId = `${cardId}-title`;
+  const detailId = `${cardId}-details`;
 
   return (
-    <div
+    <article
       id={`cp-card-${principle.id}`}
       data-principle={principle.id}
-      className={`cp-card${isExpanded ? " is-expanded" : ""}${isPinned ? " is-pinned" : ""}`}
-      role="button"
-      tabIndex={0}
-      aria-expanded={isExpanded}
-      aria-controls={`cp-desc-${cardId}`}
-      aria-label={`${principle.number} ${t(principle.title)}: ${t(principle.description)}`}
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
-      onClick={onTogglePin}
-      onKeyDown={handleKeyDown}
-      onFocus={(event) =>
-        setIsFocused(event.currentTarget.matches(":focus-visible"))
-      }
-      onBlur={() => setIsFocused(false)}
+      className={`cp-card${expanded ? " is-expanded" : ""}`}
     >
-      {/* A steady highlight keeps the hover target and text still. */}
+      <button
+        className="cp-card-button"
+        type="button"
+        aria-labelledby={titleId}
+        aria-controls={detailId}
+        aria-expanded={expanded}
+        onClick={onToggle}
+      />
       <div className="cp-card-sheen" aria-hidden="true" />
       <svg
         className="cp-card-toggle"
@@ -97,74 +117,51 @@ function PrincipleCard({
           strokeLinejoin="round"
         />
       </svg>
-      {isPinned && <span className="cp-card-pin-tag">{t("Закреплено")}</span>}
-
-      {/* Icon and ambient glow container */}
-      <div className="cp-card-icon-area">
-        <div className="cp-card-icon-glow" aria-hidden="true" />
-        <picture className="cp-card-icon-frame">
-          <source
-            srcSet={asset(`principles-icons/${principle.iconWebp}`)}
-            type="image/webp"
-          />
-          <source
-            srcSet={asset(`principles-icons/${principle.icon600}`)}
-            type="image/png"
-          />
-          <img
-            src={asset(`principles-icons/${principle.icon}`)}
-            alt=""
-            aria-hidden="true"
-            className="cp-card-icon-img"
-            width={96}
-            height={96}
-            loading="lazy"
-            decoding="async"
-          />
-        </picture>
-      </div>
-
-      {/* Title & Index */}
-      <div className="cp-card-heading">
-        <span className="cp-card-number">{principle.number}</span>
-        <h3 className="cp-card-title">{t(principle.title)}</h3>
-      </div>
-
-      {/* Composited reveal keeps the grid stable throughout the transition. */}
-      <div
-        id={`cp-desc-${cardId}`}
-        className="cp-card-drawer"
-        aria-hidden={!isExpanded}
-      >
-        <div className="cp-card-drawer-inner">
-          <div className="cp-card-details">
-            <p className="cp-card-description">{t(principle.description)}</p>
-            <div className="cp-card-meta">
-              <span className="cp-card-slide">{t(principle.welcomeSlide)}</span>
-            </div>
-          </div>
+      <div className="cp-card-icon-area" aria-hidden="true">
+        <div className="cp-card-icon-glow" />
+        <div
+          className="cp-card-icon-object"
+          style={
+            {
+              "--cp-icon-mask": `url("${asset(`principles-icons/${principle.iconWebp}`)}")`,
+            } as CSSProperties
+          }
+        >
+          <PrincipleIcon principle={principle} />
+          <PrincipleAction principle={principle} />
         </div>
       </div>
-    </div>
+
+      <div className="cp-card-copy">
+        <div className="cp-card-heading">
+          <span className="cp-card-number">{principle.number}</span>
+          <h3 className="cp-card-title" id={titleId}>
+            {t(principle.title)}
+          </h3>
+        </div>
+        <div id={detailId} className="cp-card-drawer" aria-hidden={!expanded}>
+          <p className="cp-card-description">{t(principle.description)}</p>
+          <span className="cp-card-slide">{t(principle.welcomeSlide)}</span>
+        </div>
+      </div>
+    </article>
   );
 }
 
 export function CompanyPrinciples() {
   const { t } = useSiteLanguage();
-  const { eyebrow, headline, description, principles } =
-    companyPrinciplesData;
+  const { eyebrow, headline, description, principles } = companyPrinciplesData;
 
-  const [pinnedId, setPinnedId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Dismiss pinned card on Escape or outside pointerdown
   useEffect(() => {
-    if (!pinnedId) return;
+    if (!expandedId) return;
 
     const handleKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") {
-        setPinnedId(null);
+        setExpandedId(null);
       }
     };
 
@@ -173,7 +170,7 @@ export function CompanyPrinciples() {
         sectionRef.current &&
         !sectionRef.current.contains(event.target as Node)
       ) {
-        setPinnedId(null);
+        setExpandedId(null);
       }
     };
 
@@ -183,7 +180,7 @@ export function CompanyPrinciples() {
       window.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("pointerdown", handlePointerDown);
     };
-  }, [pinnedId]);
+  }, [expandedId]);
 
   return (
     <section
@@ -216,13 +213,12 @@ export function CompanyPrinciples() {
             <PrincipleCard
               key={principle.id}
               principle={principle}
-              isPinned={pinnedId === principle.id}
-              onTogglePin={() =>
-                setPinnedId((current) =>
+              expanded={expandedId === principle.id}
+              onToggle={() =>
+                setExpandedId((current) =>
                   current === principle.id ? null : principle.id,
                 )
               }
-              onDismissPin={() => setPinnedId(null)}
             />
           ))}
         </div>

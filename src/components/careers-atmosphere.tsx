@@ -16,6 +16,7 @@ function FilmLayer({
   playing,
   active,
   selected,
+  underlay,
   onReady,
   onError,
 }: {
@@ -23,35 +24,38 @@ function FilmLayer({
   playing: boolean;
   active: boolean;
   selected: boolean;
+  underlay: number;
   onReady: (id: CareerSceneId) => void;
   onError: (id: CareerSceneId) => void;
 }) {
   const video = useRef<HTMLVideoElement>(null);
-  const [ready, setReady] = useState(false);
+  const [readySource, setReadySource] = useState<string>();
+  const ready = readySource === scene.video;
+
   useEffect(() => {
     const element = video.current;
-    if (!element) return;
+    if (!element || !playing) return;
     let mounted = true;
-    if (playing) {
-      element.muted = true;
-      element.playbackRate = 0.85;
-      void element
-        .play()
-        .then(() => {
-          if (mounted) {
-            setReady(true);
-            onReady(scene.id);
-          }
-        })
-        .catch((error: DOMException) => {
-          if (mounted && error.name !== "AbortError") onError(scene.id);
-        });
-    } else element.pause();
+    element.muted = true;
+    element.playbackRate = 0.85;
+    void element
+      .play()
+      .then(() => {
+        if (mounted) setReadySource(scene.video);
+      })
+      .catch((error: DOMException) => {
+        if (mounted && error.name !== "AbortError") onError(scene.id);
+      });
     return () => {
       mounted = false;
       element.pause();
     };
-  }, [playing, selected, onReady, onError, scene.id, scene.video]);
+  }, [playing, onError, scene.id, scene.video]);
+
+  // Selecting a still-playing layer changes its order, not its media clock.
+  useEffect(() => {
+    if (playing && selected && ready) onReady(scene.id);
+  }, [playing, selected, ready, onReady, scene.id]);
 
   return (
     <video
@@ -60,6 +64,10 @@ function FilmLayer({
       data-scene={scene.id}
       data-ready={ready}
       data-active={active}
+      style={{
+        zIndex: active ? careerScenes.length + 1 : underlay || undefined,
+        opacity: underlay && ready ? 1 : undefined,
+      }}
       src={asset(scene.video)}
       poster={asset(scene.poster)}
       width={1280}
@@ -199,6 +207,7 @@ export function CareersAtmosphere({
                 scene={scene}
                 active={front === scene.id}
                 selected={requestedId === scene.id}
+                underlay={front === null ? 0 : leaving.indexOf(scene.id) + 1}
                 playing={
                   visible &&
                   tabVisible &&

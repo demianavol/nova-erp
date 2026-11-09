@@ -329,7 +329,6 @@ export const siteTranslations: Record<string, readonly [string, string]> = {
     "We take initiative and follow through on our ideas.",
     "我们主动行动，把想法变成实际成果。",
   ],
-  Закреплено: ["Pinned", "已固定"],
   "Карточки принципов и ценностей": [
     "Principle and value cards",
     "原则与价值观卡片",

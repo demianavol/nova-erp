@@ -1,0 +1,245 @@
+.future-emblem {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  flex-shrink: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 3px #0003);
+}
+
+.future-emblem-chip {
+  filter: hue-rotate(-42deg) saturate(1.45);
+}
+
+.future-emblem-trace,
+.future-emblem-wave {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .future-emblem[data-emblem-playing] {
+    animation: future-emblem-settle 1920ms ease-in-out both;
+  }
+
+  .future-emblem[data-emblem-playing]
+    :is(
+      .future-emblem-ribbon,
+      .future-emblem-neuron,
+      .future-emblem-core,
+      .future-emblem-wave
+    ) {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-ribbon {
+    animation: future-emblem-ribbon 1490ms cubic-bezier(0.33, 0.04, 0.24, 1)
+      var(--ribbon-delay, 0ms) both;
+  }
+
+  .future-emblem-ribbon[data-part="upper"] {
+    --ribbon-x: -3px;
+    --ribbon-y: -3.5px;
+    --ribbon-angle: -5deg;
+    --trace-delay: 510ms;
+  }
+
+  .future-emblem-ribbon[data-part="middle"] {
+    --ribbon-x: 0.8px;
+    --ribbon-y: 2.7px;
+    --ribbon-angle: 2deg;
+    --ribbon-delay: 115ms;
+    --trace-delay: 650ms;
+  }
+
+  .future-emblem-ribbon[data-part="lower"] {
+    --ribbon-x: 3px;
+    --ribbon-y: 3.6px;
+    --ribbon-angle: 4deg;
+    --ribbon-delay: 215ms;
+    --trace-delay: 810ms;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-trace {
+    stroke-dasharray: 0.31 1;
+    animation: future-emblem-trace 1020ms ease-in-out var(--trace-delay, 250ms)
+      both;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-brain {
+    animation: future-emblem-brain 1550ms ease-in-out 100ms both;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-neuron {
+    animation: future-emblem-neuron 710ms ease-in-out 545ms both;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-neuron:nth-of-type(2) {
+    animation-delay: 740ms;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-neuron:nth-of-type(3) {
+    animation-delay: 935ms;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-chip {
+    animation: future-emblem-chip 1690ms ease-in-out both;
+  }
+
+  .future-emblem-trace[data-tier="bottom"] {
+    --trace-delay: 180ms;
+  }
+
+  .future-emblem-trace[data-tier="middle"] {
+    --trace-delay: 445ms;
+  }
+
+  .future-emblem-trace[data-tier="top"] {
+    --trace-delay: 720ms;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-core {
+    animation: future-emblem-core 1390ms ease-in-out both;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-wave {
+    animation: future-emblem-wave 1310ms cubic-bezier(0.27, 0.62, 0.27, 1) 480ms
+      both;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-wave[data-part="inner"] {
+    animation-delay: 250ms;
+  }
+
+  .future-emblem[data-emblem-playing] .future-emblem-market-node {
+    animation: future-emblem-node 780ms ease-in-out 780ms both;
+  }
+
+  .future-emblem[data-emblem-playing]
+    .future-emblem-market-node:nth-of-type(3) {
+    animation-delay: 915ms;
+  }
+
+  .future-emblem[data-emblem-playing]
+    .future-emblem-market-node:nth-of-type(4) {
+    animation-delay: 1050ms;
+  }
+
+  @keyframes future-emblem-settle {
+    0%,
+    100% {
+      translate: 0;
+      filter: drop-shadow(0 3px 3px #0003);
+    }
+    38%,
+    58% {
+      translate: 0 -0.8px;
+      filter: drop-shadow(0 4px 3.5px #0004);
+    }
+  }
+
+  @keyframes future-emblem-ribbon {
+    0%,
+    100% {
+      translate: 0;
+      rotate: 0deg;
+    }
+    30% {
+      translate: var(--ribbon-x) var(--ribbon-y);
+      rotate: var(--ribbon-angle);
+    }
+    70% {
+      translate: 0;
+      rotate: 0deg;
+    }
+  }
+
+  @keyframes future-emblem-trace {
+    from {
+      stroke-dashoffset: 0.32;
+      opacity: 0;
+    }
+    38%,
+    63% {
+      opacity: 0.88;
+    }
+    to {
+      stroke-dashoffset: -1;
+      opacity: 0;
+    }
+  }
+
+  @keyframes future-emblem-brain {
+    0%,
+    100% {
+      filter: brightness(1);
+    }
+    43%,
+    64% {
+      filter: brightness(1.17) drop-shadow(0 0 2px #87f8ff60);
+    }
+  }
+
+  @keyframes future-emblem-neuron {
+    0%,
+    100% {
+      scale: 1;
+      filter: brightness(1);
+    }
+    44%,
+    55% {
+      scale: 1.18;
+      filter: brightness(1.2) drop-shadow(0 0 2.5px #87f8ffc0);
+    }
+  }
+
+  @keyframes future-emblem-chip {
+    0%,
+    100% {
+      filter: hue-rotate(-42deg) saturate(1.45);
+    }
+    46%,
+    63% {
+      filter: hue-rotate(-42deg) saturate(1.38) brightness(1.16);
+    }
+  }
+
+  @keyframes future-emblem-core {
+    0%,
+    100% {
+      scale: 1;
+      filter: brightness(1);
+    }
+    36%,
+    51% {
+      scale: 1.09;
+      filter: brightness(1.18);
+    }
+  }
+
+  @keyframes future-emblem-wave {
+    from {
+      scale: 0.35;
+      opacity: 0;
+    }
+    32% {
+      opacity: 0.75;
+    }
+    to {
+      scale: 1.03;
+      opacity: 0;
+    }
+  }
+
+  @keyframes future-emblem-node {
+    0%,
+    100% {
+      filter: brightness(1);
+    }
+    43%,
+    60% {
+      filter: brightness(1.26) drop-shadow(0 0 2px #ffeab5a0);
+    }
+  }
+}

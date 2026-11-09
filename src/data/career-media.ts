@@ -8,14 +8,18 @@ export const careerScenes = [
   },
   {
     id: "impact",
-    video: "impact-supplied-restored.mp4",
-    poster: "impact-supplied-restored-poster.webp",
+    video: "impact-supplied-loop.mp4",
+    poster: "impact-supplied-loop-poster.webp",
   },
-  { id: "team", video: "team-supplied.mp4", poster: "team-supplied-poster.webp" },
+  {
+    id: "team",
+    video: "team-supplied-loop.mp4",
+    poster: "team-supplied-loop-poster.webp",
+  },
   {
     id: "projects",
-    video: "projects-supplied.mp4",
-    poster: "projects-supplied-poster.webp",
+    video: "projects-supplied-loop.mp4",
+    poster: "projects-supplied-loop-poster.webp",
   },
   {
     id: "freedom",
@@ -32,7 +36,7 @@ export const careerScenes = [
 export type CareerScene = (typeof careerScenes)[number];
 export type CareerSceneId = CareerScene["id"];
 
-// Every benefit has its own supplied scene.
+// Every benefit has its own scene, using a moving dissolve at the loop join.
 export function careerSceneForBenefit(
   id: CareerBenefit["id"],
 ): CareerScene | null {

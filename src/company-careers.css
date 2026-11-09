@@ -367,205 +367,11 @@ html[data-site-theme="light"]
   padding-top: 5px;
 }
 
-/* Animate segments of the approved glass bitmap, once per activation. */
 .career-benefit-icon-wrap {
-  position: relative;
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   flex-shrink: 0;
-}
-.career-icon-fx-growth {
-  --career-icon-hue: -45deg;
-}
-.career-icon-fx-impact {
-  --career-icon-hue: 145deg;
-}
-.career-icon-fx-team {
-  --career-icon-hue: -105deg;
-  transform: scale(1.12);
-}
-.career-icon-fx-projects {
-  --career-icon-hue: 175deg;
-}
-.career-icon-fx-freedom {
-  --career-icon-hue: 65deg;
-}
-.career-icon-fx-learning {
-  --career-icon-hue: 220deg;
-}
-.career-icon-fx-impact,
-.career-icon-fx-projects {
-  transform: scale(1.06);
-}
-.career-benefit-icon-img,
-.career-icon-piece img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  filter: hue-rotate(var(--career-icon-hue)) saturate(1.4);
-}
-.career-icon-piece {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-}
-.career-icon-fx-growth .career-icon-piece-0 {
-  clip-path: polygon(14% 100%, 14% 66%, 90% 66%, 90% 100%);
-}
-.career-icon-fx-growth .career-icon-piece-1 {
-  clip-path: inset(36% 10% 34% 14%);
-}
-.career-icon-fx-growth .career-icon-piece-2 {
-  clip-path: inset(8% 10% 64% 14%);
-}
-.is-active .career-icon-fx-growth .career-icon-piece {
-  animation: career-step-light 300ms ease both;
-}
-.is-active .career-icon-fx-growth .career-icon-piece-1 {
-  animation-delay: 80ms;
-}
-.is-active .career-icon-fx-growth .career-icon-piece-2 {
-  animation-delay: 160ms;
-}
-@keyframes career-step-light {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  45% {
-    opacity: 0.8;
-    filter: brightness(1.45);
-  }
-}
-.is-active .career-icon-fx-impact .career-icon-piece-0 {
-  animation: career-influence-wave 460ms ease both;
-}
-@keyframes career-influence-wave {
-  0% {
-    opacity: 0;
-    clip-path: inset(0 100% 0 0);
-  }
-  25% {
-    opacity: 0.7;
-  }
-  55% {
-    clip-path: inset(0 25% 0 35%);
-    filter: brightness(1.4);
-  }
-  100% {
-    opacity: 0;
-    clip-path: inset(0 0 0 100%);
-  }
-}
-.career-icon-fx-team .career-icon-piece-0 {
-  clip-path: inset(0 67% 0 0);
-}
-.career-icon-fx-team .career-icon-piece-1 {
-  clip-path: inset(0 30% 0 33%);
-}
-.career-icon-fx-team .career-icon-piece-2 {
-  clip-path: inset(0 0 0 70%);
-}
-.is-active .career-icon-fx-team .career-benefit-icon-img,
-.is-active .career-icon-fx-projects .career-benefit-icon-img,
-.is-active .career-icon-fx-freedom .career-benefit-icon-img {
-  opacity: 0;
-}
-.is-active .career-icon-fx-team .career-icon-piece {
-  opacity: 1;
-}
-.is-active .career-icon-fx-team .career-icon-piece-0 {
-  animation: career-team-left 420ms ease both;
-}
-.is-active .career-icon-fx-team .career-icon-piece-2 {
-  animation: career-team-right 420ms ease both;
-}
-@keyframes career-team-left {
-  0% {
-    transform: translateX(-2px);
-  }
-  60% {
-    transform: translateX(1px);
-  }
-  100% {
-    transform: none;
-  }
-}
-@keyframes career-team-right {
-  0% {
-    transform: translateX(2px);
-  }
-  60% {
-    transform: translateX(-1px);
-  }
-  100% {
-    transform: none;
-  }
-}
-.career-icon-fx-projects .career-icon-piece-0 {
-  clip-path: inset(0 0 66%);
-}
-.career-icon-fx-projects .career-icon-piece-1 {
-  clip-path: inset(34% 0 33%);
-}
-.career-icon-fx-projects .career-icon-piece-2 {
-  clip-path: inset(67% 0 0);
-}
-.is-active .career-icon-fx-projects .career-icon-piece {
-  animation: career-assemble 420ms ease both;
-}
-.is-active .career-icon-fx-projects .career-icon-piece-1 {
-  animation-delay: 35ms;
-}
-.is-active .career-icon-fx-projects .career-icon-piece-2 {
-  animation-delay: 70ms;
-}
-@keyframes career-assemble {
-  from {
-    opacity: 0.3;
-    transform: translate(-2px, 3px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.career-icon-fx-freedom .career-icon-piece-0 {
-  clip-path: inset(0 50% 0 0);
-}
-.career-icon-fx-freedom .career-icon-piece-1 {
-  clip-path: inset(0 0 0 50%);
-}
-.is-active .career-icon-fx-freedom .career-icon-piece-0 {
-  animation: career-open-left 460ms ease both;
-}
-.is-active .career-icon-fx-freedom .career-icon-piece-1 {
-  animation: career-open-right 460ms ease both;
-}
-@keyframes career-open-left {
-  0%,
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-  50% {
-    opacity: 1;
-    transform: translateX(-1.5px) rotate(-2deg);
-  }
-}
-@keyframes career-open-right {
-  0%,
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-  50% {
-    opacity: 1;
-    transform: translateX(1.5px) rotate(2deg);
-  }
 }
 
 .career-actions {
@@ -890,8 +696,8 @@ html[data-site-theme="dark"] .career-dialog.career-badge-dialog {
     padding-inline: 12px;
   }
   .career-benefit-icon-wrap {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
   .career-benefit-title {
     font-size: 13px;
@@ -1025,8 +831,8 @@ html[data-site-theme="dark"] .career-dialog.career-badge-dialog {
     font-size: 13px;
   }
   .career-benefit-icon-wrap {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
   }
   .career-actions {
     flex-direction: column;
@@ -1059,12 +865,6 @@ html[data-site-theme="dark"] .career-dialog.career-badge-dialog {
   .career-btn,
   .career-btn-arrow {
     transform: none !important;
-  }
-  .company-careers .career-icon-piece {
-    display: none;
-  }
-  .company-careers .career-benefit-icon-img {
-    opacity: 1;
   }
 }
 
@@ -1198,8 +998,8 @@ html[data-site-theme="dark"] .career-dialog.career-badge-dialog {
     padding: 9px 10px;
   }
   .career-benefit-icon-wrap {
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
   }
   .career-benefit-title {
     font-size: 11.5px;
@@ -1332,8 +1132,8 @@ html[data-site-theme="dark"] .career-badge-bloom {
     padding-inline: 8px;
   }
   .career-benefit-icon-wrap {
-    width: 28px;
-    height: 28px;
+    width: 34px;
+    height: 34px;
   }
   .career-benefit-title {
     font-size: 11.5px;

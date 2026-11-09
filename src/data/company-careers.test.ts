@@ -35,7 +35,6 @@ describe("companyCareers data", () => {
 
     for (const benefit of companyCareers.benefits) {
       expect(benefit.description.length).toBeGreaterThan(10);
-      expect(benefit.icon).toMatch(/^media\/careers\/.+-refined\.webp$/);
     }
   });
 

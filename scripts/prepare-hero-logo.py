@@ -1,7 +1,9 @@
 """Pack the glass mark's RGB, alpha and signed edge distance into one H.264 loop."""
 
 from pathlib import Path
+from shutil import copyfile
 import subprocess
+from tempfile import TemporaryDirectory
 
 import av
 import imageio_ffmpeg
@@ -15,8 +17,8 @@ from scipy.ndimage import (
 
 BRAND = Path(__file__).resolve().parents[1] / "public" / "brand"
 CROP = (570, 95, 1220, 645)
-SIZE = (512, 432)
-DISTANCE_RANGE = 24
+SIZE = (640, 540)
+DISTANCE_RANGE = 24 * SIZE[0] / 512
 KEYS = [0, 24, 48, 72, 96, 120, 144, 168, 192, 209]
 # Hand-traced guides in the 320 × 270 crop. Points follow the photographed
 # outline, including the rounded ends, in the same order at every keyframe.
@@ -127,31 +129,37 @@ def main():
 
     ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
     width, height = SIZE
-    command = [
-        ffmpeg, "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24",
-        "-s", f"{width}x{height * 3}", "-r", "24", "-i", "pipe:0",
-        "-an", "-c:v", "libx264", "-crf", "16", "-preset", "slow",
-        "-pix_fmt", "yuv420p", "-movflags", "+faststart",
-        str(BRAND / "young-unicorn-glass.mp4"),
-    ]
-    with subprocess.Popen(command, stdin=subprocess.PIPE) as encoder:
-        for i, frame in enumerate(frames):
-            mask = Image.new("L", SIZE)
-            for shape in contours:
-                ImageDraw.Draw(mask).polygon([tuple(point) for point in shape[i]], fill=255)
-            frame, alpha, distance = refine_edges(frame, np.asarray(mask) > 0)
-            field = np.clip(0.5 + distance / (2 * DISTANCE_RANGE), 0, 1)
-            packed = np.vstack([frame, *[
-                np.repeat(np.rint(plane[..., None] * 255).astype(np.uint8), 3, axis=2)
-                for plane in (alpha, field)
-            ]])
-            encoder.stdin.write(packed.tobytes())
-            if i == 0:
-                rgba = np.dstack((frame, np.rint(alpha * 255).astype(np.uint8)))
-                Image.fromarray(rgba).save(BRAND / "young-unicorn-glass.webp", quality=92)
-        encoder.stdin.close()
-        if encoder.wait():
-            raise RuntimeError("Unable to encode the glass logo")
+    with TemporaryDirectory() as temporary:
+        video = Path(temporary) / "young-unicorn-glass.mp4"
+        poster = video.with_suffix(".webp")
+        command = [
+            ffmpeg, "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24",
+            "-s", f"{width}x{height * 3}", "-r", "24", "-i", "pipe:0",
+            "-an", "-c:v", "libx264", "-crf", "15", "-preset", "slow",
+            "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(video),
+        ]
+        with subprocess.Popen(command, stdin=subprocess.PIPE) as encoder:
+            for i, frame in enumerate(frames):
+                mask = Image.new("L", SIZE)
+                for shape in contours:
+                    ImageDraw.Draw(mask).polygon([tuple(point) for point in shape[i]], fill=255)
+                frame, alpha, distance = refine_edges(frame, np.asarray(mask) > 0)
+                field = np.clip(0.5 + distance / (2 * DISTANCE_RANGE), 0, 1)
+                packed = np.vstack([frame, *[
+                    np.repeat(np.rint(plane[..., None] * 255).astype(np.uint8), 3, axis=2)
+                    for plane in (alpha, field)
+                ]])
+                encoder.stdin.write(packed.tobytes())
+                if i == 0:
+                    rgba = np.dstack((frame, np.rint(alpha * 255).astype(np.uint8)))
+                    Image.fromarray(rgba).save(poster, quality=94)
+            encoder.stdin.close()
+            if encoder.wait():
+                raise RuntimeError("Unable to encode the glass logo")
+        # Replace by writing the completed files, even when Windows keeps a
+        # preview handle open and refuses to rename the existing asset.
+        copyfile(video, BRAND / video.name)
+        copyfile(poster, BRAND / poster.name)
 
 
 if __name__ == "__main__":

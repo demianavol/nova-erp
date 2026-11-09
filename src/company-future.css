@@ -249,6 +249,21 @@ html[data-site-theme="dark"] .landing .company-future {
   height: 48px;
   object-fit: contain;
 }
+.company-future [data-icon-priority="brands"] {
+  --future-icon-hue: 70deg;
+}
+.company-future [data-icon-priority="team"] {
+  --future-icon-hue: -100deg;
+}
+.company-future [data-icon-priority="technology"] {
+  --future-icon-hue: -42deg;
+}
+.company-future [data-icon-priority="impact"] {
+  --future-icon-hue: 166deg;
+}
+.company-future [data-icon-priority] {
+  filter: hue-rotate(var(--future-icon-hue)) saturate(1.45);
+}
 .future-priority-copy {
   display: block;
   min-width: 0;

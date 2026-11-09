@@ -294,21 +294,8 @@ html[data-site-theme="dark"] .invitation-trigger {
   position: relative;
   opacity: 0;
 }
-.invitation-letter-header {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  margin-bottom: 27px;
-}
-.invitation-letter-mark {
-  display: block;
-  flex: none;
-  width: 24px;
-  height: 28px;
-  opacity: 0.72;
-}
 .invitation-letter-label {
-  margin: 0;
+  margin: 0 0 27px;
   color: var(--invitation-muted);
   font:
     500 9px/1.6 "Inter Variable",
@@ -428,15 +415,8 @@ html[data-site-theme="dark"] .invitation-trigger {
     padding: 26px 24px 24px;
     border-radius: 4px 7px 5px 8px / 8px 4px 7px 5px;
   }
-  .invitation-letter-mark {
-    width: 22px;
-    height: 26px;
-  }
-  .invitation-letter-header {
-    gap: 10px;
-    margin-bottom: 23px;
-  }
   .invitation-letter-label {
+    margin-bottom: 23px;
     font-size: 8px;
     letter-spacing: 0.09em;
   }

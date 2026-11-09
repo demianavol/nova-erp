@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useSiteLanguage } from "../lib/site-language";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { Play } from "lucide-react";
 import { companyHistoryInfographic as steps } from "../data/company-journey";
 import { historyMedia } from "../data/history-media";
-import { historyPhotographs } from "../data/history-photographs";
+import { getHistoryPhotoCollections, historyPhotographs } from "../data/history-photographs";
 import { HistoryMilestoneVisual } from "./history-milestone-visual";
 import { HistoryPrintedPhoto } from "./history-printed-photo";
 import { useNearViewport } from "./use-near-viewport";
@@ -13,6 +14,7 @@ const asset = (name: string) => `${import.meta.env.BASE_URL}media/${name}`;
 const curve = "M 60 410 C 400 420 730 300 1140 65";
 
 export function CompanyHistory() {
+  const { t } = useSiteLanguage();
   const root = useRef<HTMLDivElement>(null);
   const pin = useRef<HTMLDivElement>(null);
   const near = useNearViewport(pin);
@@ -250,15 +252,15 @@ export function CompanyHistory() {
         id={leaving ? undefined : "journey-narrative"}
       >
         <span key={`stage-${item.year}`} className="journey-stage-label">
-          {item.stageLabel}
+          {t(item.stageLabel)}
         </span>
         <div className="journey-year-row">
           <span key={item.year} className="journey-year">
             {item.year}
           </span>
         </div>
-        <h3 key={`headline-${item.year}`}>{item.headline}</h3>
-        <p key={`description-${item.year}`}>{item.description}</p>
+        <h3 key={`headline-${item.year}`}>{t(item.headline)}</h3>
+        <p key={`description-${item.year}`}>{t(item.description)}</p>
         <span className="journey-stage-progress" aria-hidden="true">
           {steps.map((step, stepIndex) => (
             <span
@@ -271,9 +273,9 @@ export function CompanyHistory() {
     );
   };
   const current = steps[active];
-  const media =
-    dark && historyMedia.dark.video ? historyMedia.dark : historyMedia.light;
-  const poster = media.poster ?? historyMedia.light.poster;
+  const photographs = useMemo(() => getHistoryPhotoCollections(t), [t]);
+  const media = dark ? historyMedia.dark : historyMedia.light;
+  const poster = media.poster;
   return (
     <div
       ref={root}
@@ -285,14 +287,14 @@ export function CompanyHistory() {
     >
       <div ref={pin} className="journey-pin">
         <header className="journey-header">
-          <h2 id="about-title">Наш путь</h2>
+          <h2 id="about-title">{t("Наш путь")}</h2>
         </header>
         <div className="journey-film" aria-hidden="true">
           {near && !reduced ? (
             <video
               key={media.video}
               ref={video}
-              src={asset(media.video!)}
+              src={asset(media.video)}
               poster={asset(poster)}
               muted
               loop
@@ -325,8 +327,7 @@ export function CompanyHistory() {
             }}
           >
             <Play size={14} aria-hidden="true" />
-            Запустить видео
-          </button>
+            {t("Запустить видео")}</button>
         )}
         <div className="journey-glass-scene">
           <HistoryMilestoneVisual
@@ -345,9 +346,9 @@ export function CompanyHistory() {
         <div
           className="journey-photo-collage"
           role="group"
-          aria-label={`Фотопримеры к этапу ${current.year}`}
+          aria-label={t("Фотопримеры к этапу {0}", current.year)}
         >
-          {current.photographs.map((slot) => (
+          {photographs[current.year].map((slot) => (
             <HistoryPrintedPhoto
               key={slot.variant}
               year={current.year}
@@ -362,7 +363,7 @@ export function CompanyHistory() {
         <div
           className="journey-trajectory"
           role="group"
-          aria-label="Годы истории Young Unicorn"
+          aria-label={t("Годы истории Young Unicorn")}
         >
           <svg
             viewBox="0 0 1200 500"
@@ -416,7 +417,7 @@ export function CompanyHistory() {
                     }
                   : { visibility: "hidden" }
               }
-              aria-label={`${step.year}: ${step.headline}`}
+              aria-label={`${step.year}: ${t(step.headline)}`}
               aria-pressed={index === active}
               aria-controls="journey-narrative"
               onClick={() => select(index)}

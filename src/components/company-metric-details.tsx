@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import {
   createContext,
   useCallback,
@@ -126,6 +127,7 @@ export function MetricDetails({
   style?: CSSProperties;
   children: ReactNode | ((engaged: boolean) => ReactNode);
 }) {
+  const { t } = useSiteLanguage();
   const state = useContext(MetricDetailsContext);
   if (!state) throw new Error("MetricDetails requires MetricDetailsProvider");
   const { selection, open, close } = state;
@@ -232,7 +234,7 @@ export function MetricDetails({
         type="button"
         className="lp-metric-trigger"
         {...getReferenceProps({
-          "aria-label": `Подробнее: ${metric.label}`,
+          "aria-label": t("Подробнее: {0}", t(metric.label)),
           "aria-expanded": active,
           onClick: () => {
             if (pinned) {
@@ -276,11 +278,11 @@ export function MetricDetails({
                   <span className="cmp-icon">
                     <Icon size={21} strokeWidth={1.5} aria-hidden="true" />
                   </span>
-                  <h3 id={titleId}>{metric.label}</h3>
+                  <h3 id={titleId}>{t(metric.label)}</h3>
                   <button
                     type="button"
                     className="cmp-close"
-                    aria-label="Закрыть пояснение"
+                    aria-label={t("Закрыть пояснение")}
                     onClick={(event) =>
                       context.onOpenChange(
                         false,
@@ -295,26 +297,28 @@ export function MetricDetails({
                 <div className="cmp-value">
                   {metricDisplayValue(metric)}
                   {metricDisplayUnit(metric) && (
-                    <span>{metricDisplayUnit(metric)}</span>
+                    <span>{t(metricDisplayUnit(metric))}</span>
                   )}
                 </div>
                 <dl className="cmp-metadata">
                   <div>
-                    <dt>Охват</dt>
-                    <dd>{metric.scope.label}</dd>
+                    <dt>{t("Охват")}</dt>
+                    <dd>{t(metric.scope.label)}</dd>
                   </div>
                   <div>
-                    <dt>Период</dt>
-                    <dd>{metric.period ?? "За всё время · с 2020 года"}</dd>
+                    <dt>{t("Период")}</dt>
+                    <dd>{t(metric.period ?? "За всё время · с 2020 года")}</dd>
                   </div>
                   {metric.brandCounts && (
                     <div>
-                      <dt>Сейчас</dt>
+                      <dt>{t("Сейчас")}</dt>
                       <dd>
-                        {hasDisplayValue
-                          ? (metric.brandCounts.active ?? "—")
-                          : "—"}{" "}
-                        активных бренда
+                        {t(
+                          "{0} активных бренда",
+                          hasDisplayValue
+                            ? (metric.brandCounts.active ?? "—")
+                            : "—",
+                        )}
                       </dd>
                     </div>
                   )}
@@ -322,39 +326,43 @@ export function MetricDetails({
                 {hasDisplayValue && !!metric.marketplaceAchievements?.length ? (
                   <ul
                     className="cmp-achievements"
-                    aria-label="Достижения по годам и брендам"
+                    aria-label={t("Достижения по годам и брендам")}
                   >
                     {metric.marketplaceAchievements.map(
                       (achievement, index) => (
                         <li key={`${achievement.scope.brand}-${index}`}>
                           <div>
                             <strong>
-                              {metricDisplayValue(achievement)}
-                              {metricDisplayUnit(achievement)}
+                              {t(metricDisplayValue(achievement))}
+                              {t(metricDisplayUnit(achievement))}
                             </strong>
-                            <span>{achievement.period}</span>
+                            <span>
+                              {achievement.period && t(achievement.period)}
+                            </span>
                           </div>
                           <p>
-                            {achievement.scope.brand} ·{" "}
+                            {t(achievement.scope.brand)} ·{" "}
                             {achievement.marketplace}
                           </p>
-                          <small>{achievement.category}</small>
+                          <small>{t(achievement.category)}</small>
                         </li>
                       ),
                     )}
                   </ul>
                 ) : hasDisplayValue && !!metric.yearlyBreakdown?.length ? (
                   <div className="cmp-breakdown">
-                    <h4>{metric.breakdownLabel ?? "По годам"}</h4>
+                    <h4>{t(metric.breakdownLabel ?? "По годам")}</h4>
                     <dl
-                      aria-label={metric.breakdownLabel ?? "Годовая разбивка"}
+                      aria-label={t(
+                        metric.breakdownLabel ?? "Годовая разбивка",
+                      )}
                     >
                       {metric.yearlyBreakdown.map((row) => (
                         <div key={row.year}>
                           <dt>{row.year}</dt>
                           <dd>
-                            <strong>{row.value}</strong>
-                            {row.detail && <span>{row.detail}</span>}
+                            <strong>{t(row.value)}</strong>
+                            {row.detail && <span>{t(row.detail)}</span>}
                           </dd>
                         </div>
                       ))}
@@ -362,7 +370,7 @@ export function MetricDetails({
                   </div>
                 ) : null}
                 <p id={descriptionId} className="cmp-methodology">
-                  {metric.methodology}
+                  {t(metric.methodology)}
                 </p>
                 <div className="cmp-footer">
                   <span
@@ -373,12 +381,14 @@ export function MetricDetails({
                     ) : (
                       <span className="cmp-status-dot" />
                     )}
-                    {metric.verification === "demo"
-                      ? "Демо-данные"
-                      : metricVerificationLabels[metric.verification]}
+                    {t(
+                      metric.verification === "demo"
+                        ? "Демо-данные"
+                        : metricVerificationLabels[metric.verification],
+                    )}
                   </span>
                   <span className="cmp-source">
-                    {metric.source?.label ?? "Источник ожидается"}
+                    {t(metric.source?.label ?? "Источник ожидается")}
                   </span>
                 </div>
               </div>

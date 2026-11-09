@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import { ArrowUpRight } from "lucide-react";
+import { useSiteLanguage } from "../lib/site-language";
 import { companyPartnership as content } from "../data/company-partnership";
 import {
   mountPartnershipInvitation,
@@ -19,6 +20,7 @@ import { invitationPocketPath } from "./partnership-invitation-geometry";
 const Silk = lazy(() => import("./react-bits/Silk"));
 
 export function CompanyPartnership() {
+  const { t } = useSiteLanguage();
   const root = useRef<HTMLElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const controller = useRef<ReturnType<
@@ -102,7 +104,7 @@ export function CompanyPartnership() {
       className="company-partnership"
       data-invitation={state}
       data-in-view={inView}
-      aria-label={content.eyebrow}
+      aria-label={t(content.eyebrow)}
       tabIndex={-1}
     >
       <div className="partnership-atmosphere" aria-hidden="true">
@@ -134,7 +136,7 @@ export function CompanyPartnership() {
       <div className="lp-container partnership-layout">
         <p className="partnership-eyebrow">
           <span aria-hidden="true" />
-          {content.eyebrow}
+          {t(content.eyebrow)}
         </p>
         <div ref={stage} className="invitation-stage" data-state={state}>
           <svg
@@ -209,23 +211,12 @@ export function CompanyPartnership() {
               }}
             >
               <div className="invitation-letter-copy">
-                <div className="invitation-letter-header">
-                  <img
-                    className="invitation-letter-mark"
-                    src={`${import.meta.env.BASE_URL}yuc-mark.svg`}
-                    alt=""
-                    width="30"
-                    height="34"
-                  />
-                  <p className="invitation-letter-label">
-                    {content.letterLabel}
-                  </p>
-                </div>
+                <p className="invitation-letter-label">{t(content.letterLabel)}</p>
                 <h2 id="partnership-title" tabIndex={-1}>
-                  {content.title}
+                  {t(content.title)}
                 </h2>
-                <p className="invitation-opening">{content.opening}</p>
-                <p className="invitation-description">{content.description}</p>
+                <p className="invitation-opening">{t(content.opening)}</p>
+                <p className="invitation-description">{t(content.description)}</p>
                 <div className="invitation-letter-actions">
                   <a
                     className="partnership-cta"
@@ -233,7 +224,7 @@ export function CompanyPartnership() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {content.action}
+                    {t(content.action)}
                     <ArrowUpRight size={18} aria-hidden="true" />
                   </a>
                   <button
@@ -241,7 +232,7 @@ export function CompanyPartnership() {
                     className="invitation-close"
                     onClick={() => controller.current?.command("close")}
                   >
-                    {content.close}
+                    {t(content.close)}
                     <span aria-hidden="true">↑</span>
                   </button>
                 </div>
@@ -306,11 +297,11 @@ export function CompanyPartnership() {
             onClick={() => controller.current?.command("open")}
           >
             <span className="invitation-address">
-              <span>{content.invitation[0]}</span>
-              <strong>{content.invitation[1]}</strong>
+              <span>{t(content.invitation[0])}</span>
+              <strong>{t(content.invitation[1])}</strong>
             </span>
             <span className="invitation-open-hint">
-              {content.open}
+              {t(content.open)}
               <ArrowUpRight size={16} aria-hidden="true" />
             </span>
           </button>

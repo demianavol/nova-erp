@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import { useEffect, useRef, useState } from "react";
 import type { ExperienceCountryId } from "../data/global-experience";
 import type { VideoCompositor } from "./global-experience-video-compositor";
@@ -11,6 +12,7 @@ export function GlobalExperienceFilm({
 }: {
   selected: ExperienceCountryId | null;
 }) {
+  const { t } = useSiteLanguage();
   const root = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -152,7 +154,7 @@ export function GlobalExperienceFilm({
       <div
         className="ge-film-picture"
         role="img"
-        aria-label="Видео: флаги Китая, Кыргызстана и Узбекистана с мягким выделением выбранной страны"
+        aria-label={t("Видео: флаги Китая, Кыргызстана и Узбекистана с мягким выделением выбранной страны")}
       >
         <img
           className="ge-film-poster"

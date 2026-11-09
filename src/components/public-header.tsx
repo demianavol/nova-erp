@@ -1,4 +1,6 @@
-import { useEffect, useId, useState } from "react";
+import { siteLanguages, useSiteLanguage } from "../lib/site-language";
+import { useEffect, useId, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
 import * as Dropdown from "@radix-ui/react-dropdown-menu";
 import {
@@ -19,6 +21,7 @@ import {
 } from "@floating-ui/react";
 import {
   ArrowUpRight,
+  Check,
   Menu,
   X,
   ChevronDown,
@@ -35,6 +38,7 @@ import { CompanyBrand } from "./company-brand";
 import { ErpEntryLink } from "./erp-entry-link";
 import { SiteThemeToggle } from "./site-theme";
 import "../public-header.css";
+import "../site-language-transition.css";
 
 const navigationGroups = [
   {
@@ -121,6 +125,7 @@ function HeaderCategory({
   activeId: string;
   onJump: (id: string) => void;
 }) {
+  const { t } = useSiteLanguage();
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const location = useLocation();
@@ -162,7 +167,7 @@ function HeaderCategory({
         aria-controls={panelId}
         {...getReferenceProps()}
       >
-        {group.title}
+        <span className="yu-category-label">{t(group.title)}</span>
         <ChevronDown size={13} aria-hidden="true" />
       </button>
       {isMounted && (
@@ -179,15 +184,15 @@ function HeaderCategory({
               className="yu-category-positioner"
               {...getFloatingProps({
                 role: "region",
-                "aria-label": `Разделы: ${group.title}`,
+                "aria-label": t("Разделы: {0}", t(group.title)),
               })}
             >
               <div className="yu-category-panel" style={styles}>
                 <div className="yu-category-heading">
-                  <span>{group.title}</span>
-                  <p>{group.summary}</p>
+                  <span>{t(group.title)}</span>
+                  <p>{t(group.summary)}</p>
                 </div>
-                <nav aria-label={`Разделы: ${group.title}`}>
+                <nav aria-label={t("Разделы: {0}", t(group.title))}>
                   {group.links.map(({ id, title, description, Icon }) => (
                     <Link
                       key={id}
@@ -202,8 +207,8 @@ function HeaderCategory({
                         <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
                       </span>
                       <span className="yu-category-copy">
-                        <strong>{title}</strong>
-                        <small>{description}</small>
+                        <strong>{t(title)}</strong>
+                        <small>{t(description)}</small>
                       </span>
                       <ArrowUpRight
                         className="yu-category-arrow"
@@ -222,7 +227,139 @@ function HeaderCategory({
   );
 }
 
+function LanguageSelector() {
+  const { language, changeLanguage, t } = useSiteLanguage();
+  const selected = siteLanguages.find(({ id }) => id === language)!;
+  const [confirmed, setConfirmed] = useState(false);
+  const activeTransition = useRef<ViewTransition | null>(null);
+
+  useEffect(() => {
+    if (!confirmed) return;
+    const timeout = window.setTimeout(() => setConfirmed(false), 2400);
+    return () => window.clearTimeout(timeout);
+  }, [confirmed, language]);
+
+  useEffect(
+    () => () => {
+      const transition = activeTransition.current;
+      activeTransition.current = null;
+      if (transition) {
+        transition.skipTransition();
+        delete document.documentElement.dataset.siteLanguageTransition;
+      }
+    },
+    [],
+  );
+
+  function selectLanguage(value: string) {
+    if (value === language) return;
+
+    const root = document.documentElement;
+    const apply = () => {
+      changeLanguage(value);
+      setConfirmed(true);
+    };
+
+    activeTransition.current?.skipTransition();
+    activeTransition.current = null;
+    if (
+      !document.startViewTransition ||
+      !CSS.supports("view-transition-name", "match-element") ||
+      !matchMedia("(prefers-reduced-motion: no-preference)").matches ||
+      root.matches("[data-site-theme-reveal], [data-erp-entry-transition]")
+    ) {
+      delete root.dataset.siteLanguageTransition;
+      apply();
+      return;
+    }
+
+    root.dataset.siteLanguageTransition = "";
+    const transition = document.startViewTransition(() => {
+      if (activeTransition.current === transition) flushSync(apply);
+    });
+    activeTransition.current = transition;
+    const finish = () => {
+      if (activeTransition.current !== transition) return;
+      activeTransition.current = null;
+      delete root.dataset.siteLanguageTransition;
+    };
+    void transition.ready.catch(() => {});
+    void transition.finished.then(finish, finish);
+  }
+
+  return (
+    <div className="yu-language">
+      <Dropdown.Root
+        modal={false}
+        onOpenChange={(open) => {
+          if (open) setConfirmed(false);
+        }}
+      >
+        <Dropdown.Trigger
+          className="yu-language-trigger"
+          aria-label={t("Язык сайта: {0}", selected.label)}
+          data-switched={confirmed || undefined}
+        >
+          <Globe2 size={15} aria-hidden="true" />
+          <span className="yu-language-code-window" aria-hidden="true">
+            <span key={language} className="yu-language-code" lang={language}>
+              {selected.code}
+            </span>
+          </span>
+        </Dropdown.Trigger>
+        <Dropdown.Portal>
+          <Dropdown.Content
+            className="yu-audience-menu yu-language-menu"
+            align="end"
+            sideOffset={12}
+            collisionPadding={12}
+            aria-label={t("Язык сайта")}
+          >
+            <Dropdown.Label className="yu-language-heading">
+              {t("Язык сайта")}
+            </Dropdown.Label>
+            <Dropdown.RadioGroup
+              value={language}
+              onValueChange={selectLanguage}
+            >
+              {siteLanguages.map(({ id, code, label }) => (
+                <Dropdown.RadioItem
+                  key={id}
+                  value={id}
+                  className="yu-language-option"
+                  textValue={label}
+                >
+                  <span
+                    className="yu-language-tile"
+                    lang={id}
+                    aria-hidden="true"
+                  >
+                    {code}
+                  </span>
+                  <span lang={id}>{label}</span>
+                  <Dropdown.ItemIndicator className="yu-language-check">
+                    <Check size={15} aria-hidden="true" />
+                  </Dropdown.ItemIndicator>
+                </Dropdown.RadioItem>
+              ))}
+            </Dropdown.RadioGroup>
+          </Dropdown.Content>
+        </Dropdown.Portal>
+      </Dropdown.Root>
+      <div className="yu-language-status" role="status" lang={language}>
+        {confirmed && (
+          <span key={language} className="yu-language-notice">
+            <Check size={14} aria-hidden="true" />
+            {t("Язык изменён · {0}", selected.label)}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function PublicHeader() {
+  const { t } = useSiteLanguage();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeId, setActiveId] = useState(location.hash.slice(1));
@@ -257,7 +394,11 @@ export function PublicHeader() {
   return (
     <header className="lp-header yu-public-header">
       <div className="yu-public-header-inner">
-        <Link to="/" className="lp-home" aria-label="Young Unicorn — главная">
+        <Link
+          to="/"
+          className="lp-home"
+          aria-label={t("Young Unicorn — главная")}
+        >
           <span className="yu-company-chip">
             <CompanyBrand compact />
             <span className="yu-brand-name">
@@ -268,7 +409,7 @@ export function PublicHeader() {
 
         <nav
           className={`yu-section-nav${mobileOpen ? " is-open" : ""}`}
-          aria-label="О компании"
+          aria-label={t("О компании")}
           id="public-section-nav"
         >
           {navigationGroups.map((group) => (
@@ -283,17 +424,19 @@ export function PublicHeader() {
 
         <div className="yu-header-actions">
           <ErpEntryLink className="yu-erp-entry">
-            Войти в ERP <ArrowUpRight size={15} aria-hidden="true" />
+            <span className="yu-erp-label">{t("Войти в ERP")}</span>
+            <ArrowUpRight size={15} aria-hidden="true" />
           </ErpEntryLink>
-          <SiteThemeToggle />
+          <SiteThemeToggle defaultTheme="dark" />
+          <LanguageSelector />
 
           <Dropdown.Root open={mobileOpen} onOpenChange={setMobileOpen}>
             <Dropdown.Trigger
               className="yu-mobile-sections"
-              aria-label={mobileOpen ? "Закрыть меню" : "Открыть меню"}
+              aria-label={mobileOpen ? t("Закрыть меню") : t("Открыть меню")}
             >
               {mobileOpen ? <X size={21} /> : <Menu size={21} />}
-              <span>Разделы</span>
+              <span>{t("Разделы")}</span>
             </Dropdown.Trigger>
             <Dropdown.Portal>
               <Dropdown.Content
@@ -305,7 +448,7 @@ export function PublicHeader() {
                 {navigationGroups.map((group) => (
                   <Dropdown.Group key={group.id}>
                     <Dropdown.Label className="yu-mobile-category-label">
-                      {group.title}
+                      {t(group.title)}
                     </Dropdown.Label>
                     {group.links.map(({ id, title, Icon }) => (
                       <Dropdown.Item asChild key={id}>
@@ -321,7 +464,7 @@ export function PublicHeader() {
                             strokeWidth={1.5}
                             aria-hidden="true"
                           />
-                          <span>{title}</span>
+                          <span>{t(title)}</span>
                           <ArrowUpRight size={13} aria-hidden="true" />
                         </Link>
                       </Dropdown.Item>

@@ -14,8 +14,6 @@ export interface PrinciplesSectionData {
   eyebrow: string;
   headline: string;
   description: string;
-  sculptureAlt: string;
-  sculptureCaption: string;
   principles: CompanyPrinciple[];
 }
 
@@ -23,8 +21,6 @@ export const companyPrinciplesData: PrinciplesSectionData = {
   eyebrow: "Наш подход",
   headline: "Наши принципы и ценности",
   description: "На чём мы строим продукты, команду и отношения с покупателями",
-  sculptureAlt: "Знак Young Unicorn из прозрачного лавандового стекла",
-  sculptureCaption: "Young Unicorn · Философия создания ценности",
   principles: [
     {
       id: "experiment",

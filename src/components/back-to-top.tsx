@@ -1,9 +1,11 @@
+import { useSiteLanguage } from "../lib/site-language";
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import "../back-to-top.css";
 
 export function BackToTop({ footer }: { footer: HTMLElement | null }) {
+  const { t } = useSiteLanguage();
   const [visible, setVisible] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
   const location = useLocation();
@@ -40,7 +42,7 @@ export function BackToTop({ footer }: { footer: HTMLElement | null }) {
       to="/#hero"
       replace
       className="lp-back-to-top"
-      aria-label="Наверх — к навигации по странице"
+      aria-label={t("Наверх — к началу страницы")}
       onClick={(event) => {
         if (
           event.button !== 0 ||
@@ -59,13 +61,11 @@ export function BackToTop({ footer }: { footer: HTMLElement | null }) {
               : "smooth",
           });
         }
-        document
-          .querySelector<HTMLElement>(".hero-expertise-card")
-          ?.focus({ preventScroll: true });
+        document.getElementById("hero-title")?.focus({ preventScroll: true });
       }}
     >
       <ArrowUp size={17} aria-hidden="true" />
-      <span>Наверх</span>
+      <span>{t("Наверх")}</span>
     </Link>
   );
 }

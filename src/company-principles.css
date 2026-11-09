@@ -90,17 +90,6 @@ html[data-site-theme="dark"] .landing .company-principles {
   align-items: start;
 }
 
-/* --------------------------------------------------------------------------
-   Left Column: Editorial Intro & Branded Glass Sculpture
-   -------------------------------------------------------------------------- */
-.cp-editorial {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 0;
-}
-
 .cp-editorial-header {
   display: flex;
   flex-direction: column;
@@ -296,6 +285,31 @@ html[data-site-theme="dark"] .landing .company-principles {
   border-color: var(--cp-border-card-hover);
 }
 
+.cp-card[data-principle="experiment"] {
+  --cp-icon-filter: hue-rotate(150deg) saturate(2.3);
+  --cp-icon-accent: #eeb449;
+}
+.cp-card[data-principle="data-driven"] {
+  --cp-icon-filter: hue-rotate(-116deg) saturate(1.95);
+  --cp-icon-accent: #48ceb0;
+}
+.cp-card[data-principle="growth"] {
+  --cp-icon-filter: hue-rotate(-45deg) saturate(2);
+  --cp-icon-accent: #57aaff;
+}
+.cp-card[data-principle="teamwork"] {
+  --cp-icon-filter: hue-rotate(117deg) saturate(2.05);
+  --cp-icon-accent: #f09369;
+}
+.cp-card[data-principle="value"] {
+  --cp-icon-filter: hue-rotate(72deg) saturate(1.9);
+  --cp-icon-accent: #ee84ad;
+}
+.cp-card[data-principle="responsibility"] {
+  --cp-icon-filter: saturate(1.35);
+  --cp-icon-accent: #ac88f7;
+}
+
 .cp-card-toggle {
   position: absolute;
   top: 19px;
@@ -369,8 +383,8 @@ html[data-site-theme="dark"] .landing .company-principles {
   border-radius: 50%;
   background: radial-gradient(
     circle at 50% 50%,
-    var(--cp-glow) 0%,
-    rgba(165, 110, 245, 0.08) 50%,
+    color-mix(in srgb, var(--cp-icon-accent) 36%, transparent) 0%,
+    color-mix(in srgb, var(--cp-icon-accent) 10%, transparent) 50%,
     transparent 75%
   );
   filter: blur(14px);
@@ -396,6 +410,7 @@ html[data-site-theme="dark"] .landing .company-principles {
   width: 80px;
   height: 80px;
   object-fit: contain;
+  filter: var(--cp-icon-filter, none);
   pointer-events: none;
 }
 
@@ -516,14 +531,6 @@ html[data-site-theme="dark"] .landing .company-principles {
     gap: 40px;
   }
 
-  .cp-editorial {
-    min-height: auto;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 32px;
-    align-items: center;
-  }
-
   .cp-sculpture-wrapper {
     margin-top: 0;
     max-width: 220px;
@@ -544,12 +551,6 @@ html[data-site-theme="dark"] .landing .company-principles {
 
   .cp-layout {
     gap: 28px;
-  }
-
-  .cp-editorial {
-    display: flex;
-    flex-direction: column;
-    min-height: auto;
   }
 
   .landing .cp-headline {

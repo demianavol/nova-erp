@@ -82,7 +82,21 @@ const observations: Record<
 export const getProductEvidence = (id: string) => observations[id];
 const number = new Intl.NumberFormat("ru-RU");
 const plural = new Intl.PluralRules("ru-RU");
-export const ratingsLabel = (count: number) =>
-  `${number.format(count)} ${{ one: "оценка", few: "оценки", many: "оценок", other: "оценки", zero: "оценок", two: "оценки" }[plural.select(count)]}`;
-export const ratingLabel = (rating: number) =>
-  rating.toLocaleString("ru-RU", { minimumFractionDigits: 1 });
+export function ratingsLabel(count: number, locale = "ru") {
+  if (locale === "zh-CN") return `${count.toLocaleString(locale)} 条评分`;
+  if (locale === "en") {
+    return `${count.toLocaleString(locale)} ${count === 1 ? "rating" : "ratings"}`;
+  }
+  return `${number.format(count)} ${{ one: "оценка", few: "оценки", many: "оценок", other: "оценки", zero: "оценок", two: "оценки" }[plural.select(count)]}`;
+}
+export const ratingLabel = (rating: number, locale = "ru") =>
+  rating.toLocaleString(locale, { minimumFractionDigits: 1 });
+
+export function snapshotDateLabel(locale: string) {
+  return locale === "ru"
+    ? marketplaceSnapshot.dateLabel
+    : new Intl.DateTimeFormat(locale, {
+        dateStyle: "medium",
+        timeZone: "UTC",
+      }).format(new Date(marketplaceSnapshot.date));
+}

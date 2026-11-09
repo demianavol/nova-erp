@@ -19,7 +19,8 @@ out vec4 color;
 
 vec3 tile(float row) {
   // Stay inside the tile even at the outermost half texel.
-  vec2 point = clamp(uv, vec2(0.5/512.0, 0.5/432.0), vec2(1.0)-vec2(0.5/512.0, 0.5/432.0));
+  vec2 halfTexel = vec2(0.5, 1.5) / vec2(textureSize(film, 0));
+  vec2 point = clamp(uv, halfTexel, 1.0 - halfTexel);
   return texture(film, vec2(point.x, (point.y + row) / 3.0)).rgb;
 }
 
@@ -146,5 +147,41 @@ export function createElectricLogoFilm(
       return "drawn";
     },
     dispose,
+  };
+}
+
+export function createGlassFilm2D(
+  canvas: HTMLCanvasElement,
+  video: HTMLVideoElement,
+) {
+  const output = canvas.getContext("2d");
+  const buffer = document.createElement("canvas");
+  const source = buffer.getContext("2d", { willReadFrequently: true });
+  if (!output || !source) return;
+
+  return {
+    draw() {
+      const width = video.videoWidth;
+      const height = video.videoHeight / 3;
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = buffer.width = width;
+        canvas.height = height;
+        buffer.height = height * 2;
+      }
+      // The film stacks RGB, alpha and glow data. Use the first two planes
+      // to keep the original motion and glass highlights without WebGL.
+      source.drawImage(video, 0, 0);
+      const frame = source.getImageData(0, 0, width, height * 2);
+      const alphaOffset = width * height * 4;
+      for (let pixel = 0; pixel < alphaOffset; pixel += 4) {
+        const alpha = frame.data[pixel + alphaOffset];
+        frame.data[pixel + 3] = alpha < 4 ? 0 : alpha;
+      }
+      output.putImageData(frame, 0, 0, 0, 0, width, height);
+      return "drawn" as const;
+    },
+    dispose() {
+      buffer.width = buffer.height = 0;
+    },
   };
 }

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1440" viewBox="0 0 1024 1440">
+  <defs>
+    <linearGradient id="glass" x2="1" y2="1">
+      <stop stop-color="#e7ceff"/><stop offset=".5" stop-color="#b48bd9"/><stop offset="1" stop-color="#e4c9ff"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#glass)" opacity=".34" d="M0 0h1024v1440H0z"/>
+  <path d="M-50 1220C380 1450 650 1070 1090 1170" fill="none" stroke="#f8edff" stroke-opacity=".4" stroke-width="4"/>
+  <g fill="#fff" font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="512" y="594" font-size="68" font-weight="500">We’re looking</text>
+    <text x="512" y="685" font-size="77" font-weight="700">for you!</text>
+  </g>
+</svg>

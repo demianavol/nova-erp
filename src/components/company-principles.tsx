@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import {
   useCallback,
   useEffect,
@@ -12,7 +13,6 @@ import {
   type CompanyPrinciple,
 } from "../data/company-principles";
 import "../company-principles.css";
-import { PrinciplesSculpture } from "./principles-sculpture";
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}media/${name}`;
 
@@ -27,6 +27,7 @@ function PrincipleCard({
   onTogglePin: () => void;
   onDismissPin: () => void;
 }) {
+  const { t } = useSiteLanguage();
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const cardId = useId();
@@ -64,12 +65,13 @@ function PrincipleCard({
   return (
     <div
       id={`cp-card-${principle.id}`}
+      data-principle={principle.id}
       className={`cp-card${isExpanded ? " is-expanded" : ""}${isPinned ? " is-pinned" : ""}`}
       role="button"
       tabIndex={0}
       aria-expanded={isExpanded}
       aria-controls={`cp-desc-${cardId}`}
-      aria-label={`${principle.number} ${principle.title}: ${principle.description}`}
+      aria-label={`${principle.number} ${t(principle.title)}: ${t(principle.description)}`}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onClick={onTogglePin}
@@ -95,7 +97,7 @@ function PrincipleCard({
           strokeLinejoin="round"
         />
       </svg>
-      {isPinned && <span className="cp-card-pin-tag">Закреплено</span>}
+      {isPinned && <span className="cp-card-pin-tag">{t("Закреплено")}</span>}
 
       {/* Icon and ambient glow container */}
       <div className="cp-card-icon-area">
@@ -125,7 +127,7 @@ function PrincipleCard({
       {/* Title & Index */}
       <div className="cp-card-heading">
         <span className="cp-card-number">{principle.number}</span>
-        <h3 className="cp-card-title">{principle.title}</h3>
+        <h3 className="cp-card-title">{t(principle.title)}</h3>
       </div>
 
       {/* Composited reveal keeps the grid stable throughout the transition. */}
@@ -136,9 +138,9 @@ function PrincipleCard({
       >
         <div className="cp-card-drawer-inner">
           <div className="cp-card-details">
-            <p className="cp-card-description">{principle.description}</p>
+            <p className="cp-card-description">{t(principle.description)}</p>
             <div className="cp-card-meta">
-              <span className="cp-card-slide">{principle.welcomeSlide}</span>
+              <span className="cp-card-slide">{t(principle.welcomeSlide)}</span>
             </div>
           </div>
         </div>
@@ -148,7 +150,8 @@ function PrincipleCard({
 }
 
 export function CompanyPrinciples() {
-  const { eyebrow, headline, description, sculptureAlt, principles } =
+  const { t } = useSiteLanguage();
+  const { eyebrow, headline, description, principles } =
     companyPrinciplesData;
 
   const [pinnedId, setPinnedId] = useState<string | null>(null);
@@ -190,29 +193,24 @@ export function CompanyPrinciples() {
       aria-labelledby="principles-title"
     >
       <div className="cp-layout">
-        {/* Left Column: Editorial Introduction & Branded Glass Sculpture */}
-        <div className="cp-editorial">
-          <div className="cp-editorial-header">
-            <span className="cp-eyebrow">
-              <span className="cp-eyebrow-dash" aria-hidden="true">
-                —
-              </span>{" "}
-              {eyebrow}
-            </span>
-            <h2 id="principles-title" className="cp-headline">
-              {headline}
-            </h2>
-            <p className="cp-lead">{description}</p>
-          </div>
-
-          <PrinciplesSculpture alt={sculptureAlt} />
+        <div className="cp-editorial-header">
+          <span className="cp-eyebrow">
+            <span className="cp-eyebrow-dash" aria-hidden="true">
+              —
+            </span>{" "}
+            {t(eyebrow)}
+          </span>
+          <h2 id="principles-title" className="cp-headline">
+            {t(headline)}
+          </h2>
+          <p className="cp-lead">{t(description)}</p>
         </div>
 
         {/* Right Column: 3 Columns x 2 Rows Glassmorphism Cards Grid */}
         <div
           className="cp-grid"
           role="region"
-          aria-label="Карточки принципов и ценностей"
+          aria-label={t("Карточки принципов и ценностей")}
         >
           {principles.map((principle) => (
             <PrincipleCard

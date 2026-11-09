@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import {
   experienceCountries,
@@ -9,6 +10,7 @@ import { ExperienceTypewriter } from "./experience-typewriter";
 import "../global-experience.css";
 
 export function GlobalExperience() {
+  const { language, t } = useSiteLanguage();
   const root = useRef<HTMLElement>(null);
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
   const [selected, setSelected] = useState<ExperienceCountryId | null>(null);
@@ -72,14 +74,16 @@ export function GlobalExperience() {
         <div className="ge-copy">
           <p className="ge-eyebrow">
             <span aria-hidden="true" />
-            YUC / GLOBAL EXPERIENCE
+            {t("YUC / GLOBAL EXPERIENCE")}
           </p>
           <h2 id="global-experience-title">
-            Опыт без <span className="ge-title-accent">границ</span>
+            {t("Опыт без") + (language === "zh-CN" ? "" : " ")}
+            <span className="ge-title-accent">{t("границ")}</span>
           </h2>
           <p className="ge-lead">
-            Международное сотрудничество
-            <br />и развитие брендов вместе.
+            {t("Международное сотрудничество")}
+            <br />
+            {t("и развитие брендов вместе.")}
           </p>
         </div>
 
@@ -91,7 +95,7 @@ export function GlobalExperience() {
           <div
             className="ge-selectors"
             role="group"
-            aria-label="Выбрать страну"
+            aria-label={t("Выбрать страну")}
           >
             {experienceCountries.map((item, index) => (
               <button
@@ -119,7 +123,7 @@ export function GlobalExperience() {
                 onKeyDown={(event) => navigateCountries(event, index)}
               >
                 <span className="ge-country-dot" aria-hidden="true" />
-                {item.name}
+                {t(item.name)}
               </button>
             ))}
           </div>
@@ -132,12 +136,12 @@ export function GlobalExperience() {
             {country && (
               <div key={country.id} className="ge-panel-content">
                 <div className="ge-panel-heading">
-                  <h3>{country.name}</h3>
-                  <span>{country.status}</span>
+                  <h3>{t(country.name)}</h3>
+                  <span>{t(country.status)}</span>
                 </div>
                 <p>
                   <ExperienceTypewriter
-                    text={country.description}
+                    text={t(country.description)}
                     pace={14}
                     delay={80}
                   />

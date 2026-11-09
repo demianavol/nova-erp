@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, FlaskConical } from "lucide-react";
 import { company } from "../data/company";
@@ -14,11 +15,11 @@ const BrandExplorerModal = lazy(() =>
 
 const directionHints: Record<string, string> = {
   fashion: "Коллекция Enmoone · 18 моделей в каталоге",
-  selfcare: "Ежедневный уход · Запуск новой категории",
-  oralcare: "Продукты ухода · Открыты к сотрудничеству",
+  selfcare: "Уход за собой и полостью рта",
 };
 
 export function DirectionsExplorer() {
+  const { t } = useSiteLanguage();
   const { position, go, close, open } = useExplorerRoute();
   const section = useRef<HTMLElement>(null);
   const near = useNearViewport(section);
@@ -37,9 +38,9 @@ export function DirectionsExplorer() {
       >
         <header className="explorer-heading">
           <h2 className="lp-block-title" id="directions-title">
-            Наши направления
+            {t("Наши направления")}
           </h2>
-          <span>От направления — к продукту</span>
+          <span>{t("От направления — к продукту")}</span>
         </header>
         <div className="explorer-viewport">
           <div className="explorer-scene explorer-scene-directions">
@@ -49,7 +50,7 @@ export function DirectionsExplorer() {
                   key={item.id}
                   className={`explorer-direction${item.id !== "fashion" ? " is-development" : ""}`}
                   type="button"
-                  aria-label={`Исследовать направление: ${item.title}`}
+                  aria-label={t("Исследовать направление: {0}", t(item.title))}
                   data-direction={item.id}
                   aria-haspopup="dialog"
                   onClick={() => go({ directionId: item.id })}
@@ -57,30 +58,31 @@ export function DirectionsExplorer() {
                   <span className="explorer-direction-visual">
                     <img
                       src={near ? asset(item.image) : undefined}
-                      alt={item.alt}
+                      alt={t(item.alt)}
                       width="1536"
                       height="1024"
                       decoding="async"
                     />
                   </span>
                   <span className="explorer-direction-index">
-                    0{index + 1} / НАПРАВЛЕНИЕ
+                    0{index + 1} {t("/ НАПРАВЛЕНИЕ")}
                   </span>
                   {item.id !== "fashion" && (
                     <span className="explorer-development">
-                      <FlaskConical size={13} aria-hidden="true" />В разработке
+                      <FlaskConical size={13} aria-hidden="true" />
+                      {t(item.status)}
                     </span>
                   )}
                   <span className="explorer-direction-copy">
-                    <strong>{item.title}</strong>
+                    <strong>{t(item.title)}</strong>
                     <span className="explorer-direction-hint">
-                      {directionHints[item.id]}
+                      {t(directionHints[item.id])}
                     </span>
                     <span className="explorer-direction-action">
                       <span>
                         {item.id === "fashion"
-                          ? "Смотреть бренды"
-                          : "О направлении"}
+                          ? t("Смотреть бренды")
+                          : t("О направлении")}
                       </span>
                       <span
                         className="explorer-direction-arrow"

@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   arrow,
@@ -35,6 +36,7 @@ function FuturePoint({
   selected: string | null;
   onSelect: (id: string | null) => void;
 }) {
+  const { t } = useSiteLanguage();
   const open = selected === priority.id;
   const arrowRef = useRef<SVGSVGElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -94,7 +96,7 @@ function FuturePoint({
         type="button"
         className="future-point"
         data-priority={priority.id}
-        aria-label={`${priority.number}. ${priority.title}`}
+        aria-label={`${priority.number}. ${t(priority.title)}`}
         aria-expanded={open}
         aria-controls={`future-detail-${priority.id}`}
         onClick={() => onSelect(open ? null : priority.id)}
@@ -102,7 +104,7 @@ function FuturePoint({
         <span className="future-point-ring" aria-hidden="true" />
         <span>{priority.number}</span>
         <span className="future-point-label" aria-hidden="true">
-          {priority.title}
+          {t(priority.title)}
         </span>
       </button>
       {isMounted && (selected === null || open) && (
@@ -135,6 +137,7 @@ function FuturePoint({
             <div className="future-detail-heading">
               <img
                 className="future-detail-icon"
+                data-icon-priority={priority.id}
                 src={`${import.meta.env.BASE_URL}${priority.icon}`}
                 width={44}
                 height={44}
@@ -142,18 +145,18 @@ function FuturePoint({
               />
               <div>
                 <span className="future-detail-kicker">
-                  Приоритет {priority.number}
+                  {t("Приоритет") + " "}{priority.number}
                 </span>
                 <h3 id={`future-detail-${priority.id}-title`}>
-                  {priority.title}
+                  {t(priority.title)}
                 </h3>
               </div>
             </div>
-            <p>{priority.description}</p>
+            <p>{t(priority.description)}</p>
             <button
               type="button"
               className="future-detail-close"
-              aria-label="Закрыть приоритет"
+              aria-label={t("Закрыть приоритет")}
               onClick={close}
             >
               <X size={16} />
@@ -166,6 +169,7 @@ function FuturePoint({
 }
 
 export function CompanyFuture() {
+  const { language, t } = useSiteLanguage();
   const section = useRef<HTMLElement>(null);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -266,13 +270,14 @@ export function CompanyFuture() {
       <FutureAtmosphere paused={false} />
       <header className="future-heading">
         <span className="future-eyebrow">
-          <span aria-hidden="true">—</span> {companyFuture.eyebrow}
+          <span aria-hidden="true">—</span> {t(companyFuture.eyebrow)}
         </span>
         <h2 id="future-title">
-          {companyFuture.headline.lead}{" "}
-          <span>{companyFuture.headline.accent}</span>
+          {t(companyFuture.headline.lead)}
+          {language === "zh-CN" ? "" : " "}
+          <span>{t(companyFuture.headline.accent)}</span>
         </h2>
-        <p>{companyFuture.description}</p>
+        <p>{t(companyFuture.description)}</p>
       </header>
 
       <div
@@ -290,7 +295,7 @@ export function CompanyFuture() {
       >
         <div className="future-mountain">
           <img
-            src={`${import.meta.env.BASE_URL}media/future/mountain-flag.png`}
+            src={`${import.meta.env.BASE_URL}media/future/mountain-bicolor.webp`}
             alt=""
             width={1536}
             height={1024}
@@ -300,7 +305,7 @@ export function CompanyFuture() {
           <div
             className="future-points"
             role="group"
-            aria-label="Выбрать приоритет развития"
+            aria-label={t("Выбрать приоритет развития")}
           >
             {companyFuture.priorities.map((priority, index) => (
               <FuturePoint
@@ -315,7 +320,7 @@ export function CompanyFuture() {
         </div>
         <ol
           className="future-priorities"
-          aria-label="Приоритеты развития Young Unicorn"
+          aria-label={t("Приоритеты развития Young Unicorn")}
         >
           {companyFuture.priorities.map((priority) => (
             <li
@@ -336,6 +341,7 @@ export function CompanyFuture() {
               >
                 <span className="future-priority-icon" aria-hidden="true">
                   <img
+                    data-icon-priority={priority.id}
                     src={`${import.meta.env.BASE_URL}${priority.icon}`}
                     alt=""
                     width={120}
@@ -352,7 +358,7 @@ export function CompanyFuture() {
                     className="future-priority-title"
                     id={`future-${priority.id}-title`}
                   >
-                    {priority.title}
+                    {t(priority.title)}
                   </span>
                   <ArrowUpRight
                     size={16}

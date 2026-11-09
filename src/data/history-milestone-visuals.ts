@@ -8,7 +8,7 @@ export type HistoryMilestoneVisual = {
     | "expansion"
     | "future";
   label: string;
-  /** BASE_URL-relative path to the lossless copy of the approved artwork. */
+  /** BASE_URL-relative path to the milestone illustration. */
   asset: string;
 };
 
@@ -18,7 +18,7 @@ export const historyMilestoneVisuals: Record<string, HistoryMilestoneVisual> = {
   "2020": {
     metaphor: "foundation",
     label: "Основание",
-    asset: directory + "lavender_glass_unicorn_token.webp",
+    asset: directory + "foundation-cornerstone.webp",
   },
   "2021": {
     metaphor: "collection",

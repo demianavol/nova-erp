@@ -1,4 +1,297 @@
-/* Preserve the original grid and separate card motion from the info target. */
+/* Figures and their artwork form the main hierarchy of the results block. */
+.lp-results {
+  color-scheme: light;
+  --metric-surface: #fbfafc;
+  --metric-rim: #fff;
+  --metric-tint: 9%;
+}
+html[data-site-theme="dark"] .lp-results {
+  color-scheme: dark;
+  --metric-surface: #111216;
+  --metric-rim: #ffffff14;
+  --metric-tint: 12%;
+}
+.lp-results .lp-metrics {
+  gap: clamp(8px, 1.15vw, 18px);
+  padding: 0;
+  border: 0;
+}
+.lp-results .lp-metric {
+  container-type: inline-size;
+  padding: clamp(12px, 1.8vw, 26px);
+  border: 1px solid var(--yu-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(
+      ellipse 95% 108% at 17% -14%,
+      color-mix(in srgb, var(--metric-color) var(--metric-tint), transparent),
+      transparent 72%
+    ),
+    var(--metric-surface);
+  box-shadow: inset 0 1px 0 var(--metric-rim);
+}
+.lp-results [data-company-metric="customers"] {
+  --metric-color: #54b9f1;
+  --metric-value-color: light-dark(#155b85, #9edcff);
+}
+.lp-results [data-company-metric="orders"] {
+  --metric-color: #f69a73;
+  --metric-value-color: light-dark(#963e2d, #ffb698);
+}
+.lp-results [data-company-metric="brands"] {
+  --metric-color: #ad87fa;
+  --metric-value-color: light-dark(#5e428f, #d0b7ff);
+}
+.lp-results [data-company-metric="growth"] {
+  --metric-color: #54dcb9;
+  --metric-value-color: light-dark(#236b58, #9de9d1);
+}
+.lp-results [data-company-metric="achievements"] {
+  --metric-color: #ebaf56;
+  --metric-value-color: light-dark(#7b5019, #f5ce88);
+}
+.lp-results [data-company-metric="rating"] {
+  --metric-color: #939af4;
+  --metric-value-color: light-dark(#454d8f, #c5caff);
+}
+.lp-results [data-company-metric="reviews"] {
+  --metric-color: #eb8fbe;
+  --metric-value-color: light-dark(#883d68, #f6b9d9);
+}
+.lp-results .metric-emblem {
+  display: block;
+  position: relative;
+  width: clamp(56px, 6.4vw, 84px);
+  height: auto;
+  margin: 0 0 clamp(13px, 1.8vw, 25px);
+  filter: drop-shadow(
+    0 5px 9px color-mix(in srgb, var(--metric-color) 30%, transparent)
+  );
+}
+.metric-emblem-spark {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .metric-emblem {
+    --emblem-duration: 1280ms;
+    overflow: visible;
+  }
+  .metric-emblem[data-emblem-playing] {
+    animation: metric-emblem-play var(--emblem-duration) ease-in-out;
+  }
+  .metric-emblem[data-emblem-playing] [data-part] {
+    transform-box: fill-box;
+    transform-origin: var(--part-origin, center);
+    animation: metric-emblem-part
+      calc(var(--emblem-duration) - var(--part-delay, 0ms))
+      cubic-bezier(0.25, 0.7, 0.3, 1) var(--part-delay, 0ms) both;
+  }
+  .metric-emblem [data-part="person-left"] {
+    --part-x: 7px;
+    --part-y: -3px;
+  }
+  .metric-emblem [data-part="person-right"] {
+    --part-x: -7px;
+    --part-y: -3px;
+    --part-delay: 95ms;
+  }
+  .metric-emblem [data-part="person-center"] {
+    --part-y: -2px;
+    --part-scale: 1.08;
+    --part-delay: 160ms;
+  }
+  .metric-emblem [data-part="lid-front"] {
+    --part-x: -3px;
+    --part-y: -1px;
+    --part-angle: -26deg;
+    --part-origin: 12% 80%;
+    --part-delay: 70ms;
+  }
+  .metric-emblem [data-part="lid-back"] {
+    --part-x: 2px;
+    --part-y: -6px;
+    --part-angle: 16deg;
+    --part-origin: 92% 65%;
+  }
+  .metric-emblem [data-part="card-left"] {
+    --part-x: -8px;
+    --part-angle: -12deg;
+    --part-origin: bottom center;
+  }
+  .metric-emblem [data-part="card-right"] {
+    --part-x: 7px;
+    --part-angle: 13deg;
+    --part-origin: bottom center;
+    --part-delay: 70ms;
+  }
+  .metric-emblem [data-part="card-top"] {
+    --part-y: -8px;
+    --part-angle: 5deg;
+    --part-delay: 135ms;
+  }
+  .metric-emblem [data-part="card-front"] {
+    --part-y: 3px;
+    --part-delay: 135ms;
+  }
+  .metric-emblem [data-part="cup"] {
+    --part-y: -6px;
+    --part-angle: -8deg;
+    --part-scale: 1.04;
+  }
+  .metric-emblem [data-part="rating-star"] {
+    --part-x: -4px;
+    --part-angle: -13deg;
+    --part-scale: 1.08;
+  }
+  .metric-emblem [data-part="review-back"] {
+    --part-x: 4px;
+    --part-y: -5px;
+  }
+  .metric-emblem [data-part="review-front"] {
+    --part-x: -3px;
+    --part-y: 2px;
+    --part-delay: 60ms;
+  }
+  .metric-emblem [data-part="review-heart"] {
+    --part-y: -4px;
+    --part-scale: 1.24;
+    --part-delay: 200ms;
+  }
+  .metric-emblem[data-emblem-playing] .metric-emblem-spark {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: metric-emblem-spark 900ms ease-out 190ms both;
+  }
+  .metric-emblem[data-emblem-playing] .metric-growth-bar {
+    transform-box: fill-box;
+    transform-origin: bottom;
+    animation: metric-emblem-bar 780ms ease-in-out var(--bar-delay, 0ms) both;
+  }
+  .metric-growth-bar:nth-child(2) {
+    --bar-delay: 105ms;
+  }
+  .metric-growth-bar:nth-child(3) {
+    --bar-delay: 210ms;
+  }
+  .metric-emblem[data-emblem-playing] .metric-growth-line {
+    stroke-dasharray: 1;
+    animation: metric-emblem-draw 770ms ease-in-out both;
+  }
+  .metric-emblem[data-emblem-playing] .metric-growth-tip {
+    animation: metric-emblem-tip 230ms ease-out 670ms both;
+  }
+
+  @keyframes metric-emblem-play {
+    0%,
+    100% {
+      translate: 0;
+    }
+    46% {
+      translate: 0 -2px;
+    }
+  }
+  @keyframes metric-emblem-part {
+    0%,
+    100% {
+      transform: none;
+    }
+    43%,
+    61% {
+      transform: translate(var(--part-x, 0px), var(--part-y, 0px))
+        rotate(var(--part-angle, 0deg)) scale(var(--part-scale, 1));
+    }
+  }
+  @keyframes metric-emblem-spark {
+    0%,
+    100% {
+      opacity: 0;
+      scale: 0.35;
+    }
+    37% {
+      opacity: 1;
+      scale: 1.12;
+    }
+    68% {
+      opacity: 0.92;
+      scale: 1;
+    }
+  }
+  @keyframes metric-emblem-bar {
+    0%,
+    100% {
+      scale: 1;
+    }
+    28% {
+      scale: 1 0.22;
+    }
+    85% {
+      scale: 1 1.04;
+    }
+  }
+  @keyframes metric-emblem-draw {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    26%,
+    40% {
+      stroke-dashoffset: 1;
+    }
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes metric-emblem-tip {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+.lp-results .lp-metric-number {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: clamp(3px, 2cqw, 7px);
+  font-size: clamp(32px, 27cqw, 86px);
+  font-weight: 800;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.075em;
+  line-height: 0.96;
+}
+.lp-results .lp-metric-number .lp-metric-value {
+  color: var(--metric-value-color, var(--yu-ink));
+  line-height: inherit;
+}
+.lp-results .lp-metric-number .lp-metric-unit {
+  color: var(--yu-muted);
+  font-size: 0.26em;
+  font-weight: 680;
+  letter-spacing: 0;
+}
+.lp-results [data-company-metric="growth"] .lp-metric-number .lp-metric-unit {
+  color: var(--metric-value-color, var(--yu-ink));
+  font-size: 0.54em;
+}
+.lp-results .lp-metric h3 {
+  position: relative;
+  margin-top: 12px;
+  font-weight: 680;
+}
+.lp-results .lp-evidence-item .metric-emblem {
+  flex: 0 0 auto;
+  width: clamp(34px, 4vw, 56px);
+  margin: 0;
+}
+.lp-results .lp-evidence-item .evidence-copy > strong {
+  color: var(--metric-value-color, var(--yu-ink));
+  font-size: clamp(20px, 2.5vw, 36px);
+  font-weight: 780;
+  letter-spacing: -0.055em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
 .lp-results .lp-metrics-prototype {
   color: var(--yu-muted);
   font-size: 10px;
@@ -19,6 +312,15 @@
   opacity: 0;
   transition: opacity 240ms ease;
 }
+.lp-results .lp-metric::before {
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--metric-color) 8%, transparent),
+    transparent 62%
+  );
+}
 .lp-results .is-engaged::before {
   opacity: 1;
 }
@@ -35,6 +337,9 @@
   box-shadow: none;
   transition: background 240ms ease;
 }
+.lp-results .lp-metric .lp-metric-trigger {
+  inset: 4px 4px auto auto;
+}
 .lp-results .lp-metric-trigger:hover,
 .lp-results .is-expanded .lp-metric-trigger {
   background: color-mix(in srgb, var(--yu-accent) 7%, transparent);
@@ -50,32 +355,11 @@
   opacity: 1;
   transform: scale(1.08);
 }
-.lp-results .lp-metric-motion,
-.lp-results .evidence-icon {
-  transition:
-    transform 260ms ease,
-    color 260ms ease;
-}
-.lp-results .is-engaged .evidence-icon {
-  transform: translateY(-2px) rotate(-2deg);
-}
-.lp-results .lp-metric.has-motion .lp-metric-value > span {
-  animation: none;
-}
-.lp-results .lp-evidence-item strong {
-  transition: color 240ms ease;
-}
-.lp-results .is-engaged :is(.lp-metric-value, .evidence-copy > strong) {
-  color: var(--yu-accent);
-}
 .lp-results .lp-metric-kind-3 .lp-metric-value::after {
   display: none;
 }
 .lp-results .evidence-copy {
   padding-right: 26px;
-}
-.lp-results .lp-evidence-item small {
-  font-size: 10px;
 }
 .lp-results .lp-evidence-item {
   cursor: default;

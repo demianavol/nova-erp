@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import {
   useMemo,
   useId,
@@ -12,7 +13,7 @@ import { brandPortfolio, type BrandProfile } from "../data/brand-portfolio";
 import { fashionProducts } from "../data/fashion-catalog";
 import {
   getProductEvidence,
-  marketplaceSnapshot,
+  snapshotDateLabel,
 } from "../data/product-evidence";
 import { ProductRating } from "./product-rating";
 import { BrandSwitcher } from "./brand-switcher";
@@ -44,15 +45,17 @@ function Collection({
   panelId: string;
   tabId: string;
 }) {
+  const { language, t } = useSiteLanguage();
+  const snapshotDate = snapshotDateLabel(language);
   const items = useMemo(
     () =>
       products.map(({ id, title, image, alt }) => ({
         id,
-        title,
+        title: t(title),
         src: asset(image),
-        alt,
+        alt: t(alt),
       })),
-    [products],
+    [products, t],
   );
   const initialIndex = Math.max(
     0,
@@ -68,14 +71,17 @@ function Collection({
       {items.length ? (
         <div className="bex-grid-current" data-category={category}>
           <div className="bex-collection-kicker">
-            <span>Коллекция / {brandName}</span>
-            <span>Листайте или тяните карточки</span>
+            <span>
+              {t("Коллекция /") + " "}
+              {brandName}
+            </span>
+            <span>{t("Листайте или тяните карточки")}</span>
           </div>
           <CircularCarousel
             items={items}
             initialIndex={initialIndex}
             className="bex-orbit"
-            label="Модели коллекции"
+            label={t("Модели коллекции")}
             preset="orbit"
             intro="none"
             autoplay="off"
@@ -100,7 +106,7 @@ function Collection({
                     <div
                       id={`${panelId}-rating-${item.id}`}
                       className="bex-rating-chip"
-                      title={`Снимок Wildberries · ${marketplaceSnapshot.dateLabel}`}
+                      title={t("Снимок Wildberries · {0}", snapshotDate)}
                     >
                       <ProductRating productId={item.id} />
                     </div>
@@ -115,7 +121,7 @@ function Collection({
                       ? `${panelId}-rating-${item.id}`
                       : undefined
                   }
-                  aria-label={`Исследовать модель: ${item.title}`}
+                  aria-label={t("Исследовать модель: {0}", item.title)}
                   tabIndex={active ? 0 : -1}
                 >
                   <span className="bex-product-name">{item.title}</span>
@@ -126,7 +132,9 @@ function Collection({
           />
         </div>
       ) : (
-        <p className="bex-empty">Товары этой категории пока не представлены</p>
+        <p className="bex-empty">
+          {t("Товары этой категории пока не представлены")}
+        </p>
       )}
     </div>
   );
@@ -143,6 +151,8 @@ export function BrandExplorerModal({
   go: (position: ExplorerPosition, options?: ExplorerNavigationOptions) => void;
   close: () => void;
 }) {
+  const { language, t } = useSiteLanguage();
+  const snapshotDate = snapshotDateLabel(language);
   const last = useRef(position);
   if (position) last.current = position;
   const visible = position ?? last.current;
@@ -298,7 +308,7 @@ export function BrandExplorerModal({
               <button
                 className="bex-back"
                 type="button"
-                aria-label="К коллекции"
+                aria-label={t("К коллекции")}
                 onClick={() => go(collectionPosition, { replace: true })}
               >
                 <ArrowLeft size={19} aria-hidden="true" />
@@ -327,12 +337,15 @@ export function BrandExplorerModal({
                 </>
                 <Dialog.Description className="bex-introduction">
                   {brand?.id === "enmoone"
-                    ? "Женская одежда · Wildberries"
-                    : (brand?.introduction ?? "В разработке")}
+                    ? t("Женская одежда · Wildberries")
+                    : t(brand?.introduction ?? "В разработке")}
                 </Dialog.Description>
               </div>
             )}
-            <Dialog.Close className="bex-close" aria-label="Закрыть коллекцию">
+            <Dialog.Close
+              className="bex-close"
+              aria-label={t("Закрыть коллекцию")}
+            >
               <X size={20} strokeWidth={1.5} aria-hidden="true" />
             </Dialog.Close>
           </header>
@@ -340,7 +353,7 @@ export function BrandExplorerModal({
             <nav
               className="bex-tabs"
               role="tablist"
-              aria-label={`Категории ${brand.name}`}
+              aria-label={t("Категории {0}", brand.name)}
               ref={tabs}
             >
               <button
@@ -354,7 +367,7 @@ export function BrandExplorerModal({
                 onClick={() => selectCategory("all")}
                 onKeyDown={(event) => onTabKey(event, 0)}
               >
-                Все модели
+                {t("Все модели")}
               </button>
               {brand.categories.map((item, index) => (
                 <button
@@ -369,7 +382,7 @@ export function BrandExplorerModal({
                   onClick={() => selectCategory(item.id)}
                   onKeyDown={(event) => onTabKey(event, index + 1)}
                 >
-                  {item.label}
+                  {t(item.label)}
                 </button>
               ))}
             </nav>
@@ -394,7 +407,7 @@ export function BrandExplorerModal({
                     key={product.id}
                     className="bex-detail-image"
                     image={asset(product.image)}
-                    alt={product.alt}
+                    alt={t(product.alt)}
                     preset="shards"
                     radius={20}
                     intensity={0.27}
@@ -407,28 +420,30 @@ export function BrandExplorerModal({
                     shadow={false}
                   />
                   <figcaption>
-                    {brand?.name} / {productCategory?.label}
+                    {brand?.name} /{" "}
+                    {productCategory && t(productCategory.label)}
                   </figcaption>
                 </figure>
                 <div className="bex-detail-copy">
                   <div className="bex-detail-kicker">
-                    {brand?.name} <span /> {productCategory?.label}
+                    {brand?.name} <span />{" "}
+                    {productCategory && t(productCategory.label)}
                   </div>
                   <h2 className="bex-detail-title" tabIndex={-1}>
-                    {product.title}
+                    {t(product.title)}
                   </h2>
                   {getProductEvidence(product.id) && (
                     <div className="bex-detail-evidence">
                       <ProductRating productId={product.id} />
                       <small>
-                        Wildberries · снимок {marketplaceSnapshot.dateLabel}
+                        {t("Wildberries · снимок {0}", snapshotDate)}
                       </small>
                     </div>
                   )}
                   {catalogProduct && (
                     <>
-                      <p className="bex-fabric">{catalogProduct.fabric}</p>
-                      <p>{catalogProduct.description}</p>
+                      <p className="bex-fabric">{t(catalogProduct.fabric)}</p>
+                      <p>{t(catalogProduct.description)}</p>
                     </>
                   )}
                   <a
@@ -437,7 +452,7 @@ export function BrandExplorerModal({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Обсудить продукт{" "}
+                    {t("Обсудить продукт")}{" "}
                     <ArrowUpRight size={16} aria-hidden="true" />
                   </a>
                 </div>
@@ -447,28 +462,31 @@ export function BrandExplorerModal({
               <div className="bex-development">
                 <img
                   src={asset(direction.image)}
-                  alt={`Визуальная концепция направления «${direction.title}», в разработке`}
+                  alt={t(
+                    "Визуальная концепция направления «{0}», в разработке",
+                    t(direction.title),
+                  )}
                   width="1536"
                   height="1024"
                 />
                 <div className="bex-development-copy">
                   <div className="bex-development-heading">
                     <Dialog.Title className="bex-wordmark">
-                      {direction.title}
+                      {t(direction.title)}
                     </Dialog.Title>
                     <Dialog.Description className="bex-introduction bex-development-status">
-                      В разработке
+                      {t(direction.status)}
                     </Dialog.Description>
                   </div>
                   <p className="bex-development-description">
-                    {direction.description.split("\n")[0]}
+                    {t(direction.description).split("\n")[0]}
                   </p>
                   <a
                     href={company.partnerUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Обсудить направление{" "}
+                    {t("Обсудить направление")}{" "}
                     <ArrowUpRight size={16} aria-hidden="true" />
                   </a>
                 </div>

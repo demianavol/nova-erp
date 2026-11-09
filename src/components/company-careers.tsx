@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import {
   useEffect,
   useLayoutEffect,
@@ -62,6 +63,7 @@ function BenefitIcon({ benefit }: { benefit: CareerBenefit }) {
 }
 
 export function CompanyCareers() {
+  const { language, t } = useSiteLanguage();
   const sectionRef = useRef<HTMLElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const dotRef = useRef<SVGCircleElement>(null);
@@ -81,14 +83,17 @@ export function CompanyCareers() {
   const motionReduced = useRef(reduced);
   useEffect(() => {
     if (reduced || !badgeTrigger.current) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      preloadCareerBadge();
-      observer.disconnect();
-    }, { rootMargin: "420px" });
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        preloadCareerBadge(language);
+        observer.disconnect();
+      },
+      { rootMargin: "420px" },
+    );
     observer.observe(badgeTrigger.current);
     return () => observer.disconnect();
-  }, [reduced]);
+  }, [language, reduced]);
   const animation = useRef(0);
   const selectedIndex = useRef(0);
   const orbit = useRef({
@@ -297,20 +302,20 @@ export function CompanyCareers() {
       <div ref={pinRef} className="career-pin">
         <div className="career-stage">
           <header className="career-heading">
-            <span className="career-eyebrow">— {content.eyebrow}</span>
+            <span className="career-eyebrow">— {t(content.eyebrow)}</span>
             <h2 id="careers-title">
-              {content.title}
+              {t(content.title)}
               <br />
               <span>{content.accent}</span>
             </h2>
-            <p className="career-subtitle">{content.subtitle}</p>
+            <p className="career-subtitle">{t(content.subtitle)}</p>
           </header>
           <CareersAtmosphere benefit={content.benefits[activeIndex].id} />
 
           <div
             ref={orbitRef}
             className="career-orbit"
-            aria-label="Возможности в команде"
+            aria-label={t("Возможности в команде")}
           >
             <svg
               className="career-orbit-svg"
@@ -372,7 +377,9 @@ export function CompanyCareers() {
             </svg>
 
             <div className="career-orbit-center" aria-hidden="true">
-              <span className="career-orbit-center-label">Твоя траектория</span>
+              <span className="career-orbit-center-label">
+                {t("Твоя траектория")}
+              </span>
               <span className="career-orbit-center-count">
                 {String(activeIndex + 1).padStart(2, "0")}
                 <small>
@@ -437,7 +444,7 @@ export function CompanyCareers() {
                   <BenefitIcon benefit={benefit} />
                   <span className="career-benefit-text">
                     <span className="career-benefit-title">
-                      {benefit.title}
+                      {t(benefit.title)}
                     </span>
                     <span
                       className="career-benefit-reveal"
@@ -447,7 +454,7 @@ export function CompanyCareers() {
                         className="career-benefit-desc"
                         id={`career-description-${benefit.id}`}
                       >
-                        {benefit.description}
+                        {t(benefit.description)}
                       </span>
                     </span>
                   </span>
@@ -465,7 +472,7 @@ export function CompanyCareers() {
               onPointerMove={reflectButton}
             >
               <Briefcase size={16} aria-hidden="true" />
-              <span>Открытые вакансии</span>
+              <span>{t("Открытые вакансии")}</span>
               <ArrowUpRight
                 size={16}
                 className="career-btn-arrow"
@@ -477,15 +484,15 @@ export function CompanyCareers() {
                 ref={badgeTrigger}
                 className="career-btn career-btn-secondary"
                 onFocus={() => {
-                  if (!reduced) preloadCareerBadge();
+                  if (!reduced) preloadCareerBadge(language);
                 }}
                 onPointerEnter={() => {
-                  if (!reduced) preloadCareerBadge();
+                  if (!reduced) preloadCareerBadge(language);
                 }}
                 onPointerMove={reflectButton}
               >
                 <Users size={16} aria-hidden="true" />
-                <span>Твой пропуск в команду</span>
+                <span>{t("Твой пропуск в команду")}</span>
                 <ArrowRight
                   size={16}
                   className="career-btn-arrow"
@@ -496,14 +503,18 @@ export function CompanyCareers() {
                 <Dialog.Overlay className="career-dialog-overlay" />
                 <Dialog.Content className="career-dialog career-badge-dialog">
                   <div className="career-dialog-copy">
-                    <span className="career-eyebrow">Давай знакомиться</span>
+                    <span className="career-eyebrow">
+                      {t("Давай знакомиться")}
+                    </span>
                     <Dialog.Title>
-                      Твой пропуск
-                      <br />в Young Unicorn
+                      {t("Твой пропуск")}
+                      <br />
+                      {t("в Young Unicorn")}
                     </Dialog.Title>
                     <Dialog.Description>
-                      Отправь HR пару строк о себе и ссылку на резюме или
-                      портфолио. Начнём со знакомства.
+                      {t(
+                        "Отправь HR пару строк о себе и ссылку на резюме или портфолио. Начнём со знакомства.",
+                      )}
                     </Dialog.Description>
                     <div className="career-dialog-actions">
                       <a
@@ -511,7 +522,7 @@ export function CompanyCareers() {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Написать HR{" "}
+                        {t("Написать HR")}{" "}
                         <ArrowUpRight size={16} aria-hidden="true" />
                       </a>
                     </div>
@@ -523,7 +534,7 @@ export function CompanyCareers() {
                   />
                   <Dialog.Close
                     className="career-dialog-close"
-                    aria-label="Закрыть пропуск в команду"
+                    aria-label={t("Закрыть пропуск в команду")}
                   >
                     <X size={20} />
                   </Dialog.Close>

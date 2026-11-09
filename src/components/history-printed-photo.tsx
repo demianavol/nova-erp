@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import type { CSSProperties } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
@@ -22,6 +23,7 @@ export function HistoryPrintedPhoto({
   placement?: HistoryPhotoPlacement;
   visible?: boolean;
 }) {
+  const { t } = useSiteLanguage();
   const verified = photograph.verification === "verified" && !!photograph.asset;
   const example = photograph.verification === "example";
   const hasImage = !!photograph.asset && (verified || example);
@@ -40,9 +42,9 @@ export function HistoryPrintedPhoto({
         />
       ) : (
         <span className="history-photo-placeholder">
-          <span>Архивное фото</span>
+          <span>{t("Архивное фото")}</span>
           <strong>{year}</strong>
-          <span>Материалы ожидаются</span>
+          <span>{t("Материалы ожидаются")}</span>
         </span>
       )}
     </span>
@@ -74,8 +76,8 @@ export function HistoryPrintedPhoto({
               className="history-print-open"
               aria-label={
                 example
-                  ? `Открыть пример фото для ${year} года`
-                  : `Открыть фотографию ${year} года`
+                  ? t("Открыть пример фото для {0} года", year)
+                  : t("Открыть фотографию {0} года", year)
               }
             >
               {visual}
@@ -88,12 +90,12 @@ export function HistoryPrintedPhoto({
           <span className="history-print-year">{year}</span>
           <span>
             {example
-              ? "Пример фото"
+              ? t("Пример фото")
               : draft
-                ? "Черновик истории"
+                ? t("Черновик истории")
                 : verified
-                  ? "Архив компании"
-                  : "Фото ожидается"}
+                  ? t("Архив компании")
+                  : t("Фото ожидается")}
           </span>
         </figcaption>
       </figure>
@@ -102,7 +104,7 @@ export function HistoryPrintedPhoto({
           <Dialog.Overlay className="history-lightbox-overlay" />
           <Dialog.Content className="history-lightbox">
             <Dialog.Title>
-              {year} · {example ? "Пример фото" : "Young Unicorn"}
+              {year} · {example ? t("Пример фото") : "Young Unicorn"}
             </Dialog.Title>
             <img src={src} alt={photograph.alt} />
             <Dialog.Description>
@@ -111,7 +113,7 @@ export function HistoryPrintedPhoto({
             </Dialog.Description>
             <Dialog.Close
               className="history-lightbox-close"
-              aria-label="Закрыть фотографию"
+              aria-label={t("Закрыть фотографию")}
             >
               <X size={20} aria-hidden="true" />
             </Dialog.Close>

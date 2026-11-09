@@ -1,5 +1,19 @@
 .directions-explorer {
+  --direction-caption: #fcfcfc;
+  --direction-ink: #242426;
+  --direction-muted: #55565a;
+  --direction-border: #25262b26;
+  --direction-development-caption: #eceef0;
+  --direction-development-ink: #36393d;
   color: var(--yu-ink);
+}
+html[data-site-theme="dark"] .directions-explorer {
+  --direction-caption: #151517;
+  --direction-ink: #f5f5f6;
+  --direction-muted: #b9babe;
+  --direction-border: #ffffff26;
+  --direction-development-caption: #232528;
+  --direction-development-ink: #dbdde0;
 }
 .explorer-heading {
   display: flex;
@@ -17,11 +31,10 @@
 }
 .directions-explorer :is(button, a):focus-visible {
   outline: 2px solid var(--yu-accent);
-  outline-offset: 4px;
-  border-radius: 6px;
+  outline-offset: -3px;
 }
 .explorer-viewport {
-  height: 680px;
+  height: clamp(390px, 39vw, 550px);
   overflow: hidden;
   scrollbar-width: thin;
   scrollbar-color: var(--yu-story-border) transparent;
@@ -39,35 +52,28 @@
 .explorer-directions-grid {
   display: grid;
   height: 100%;
-  grid-template-columns: 1.4fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 .explorer-direction {
   position: relative;
-  isolation: isolate;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   overflow: hidden;
   min-width: 0;
   min-height: 0;
   padding: 0;
-  border: 0;
+  border: 1px solid var(--direction-border);
   border-radius: 14px;
-  color: #fff;
-  background: #130b21;
+  color: var(--direction-ink);
+  background: var(--direction-caption);
   text-align: left;
   cursor: pointer;
   transition: box-shadow 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.explorer-direction:first-child {
-  grid-row: span 2;
-}
 .explorer-direction-visual {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+  position: relative;
   overflow: hidden;
-  will-change: transform;
-  transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .explorer-direction-visual > img {
   position: absolute;
@@ -75,138 +81,62 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
+  transition: transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .explorer-direction[data-direction="fashion"] .explorer-direction-visual > img {
   object-position: right top;
-}
-.explorer-direction[data-direction="fashion"] .explorer-direction-visual {
   transform-origin: right top;
-}
-/* Image and vignette share ONE transformed visual layer. Independent GPU
-   image clipping exposed a pale source-pixel fringe at fractional zoom. */
-.explorer-direction-visual::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(32, 17, 44, 0.2) 0%,
-    transparent 28%,
-    rgba(23, 14, 39, 0.6) 65%,
-    rgba(19, 11, 33, 0.94) 100%
-  );
-  pointer-events: none;
-  /* The contrast vignette stays fully painted during every hover reversal. */
-  opacity: 1;
-}
-/* One isolated tint layer; no interpolated gradient or backdrop sampling. */
-.explorer-direction-visual::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: radial-gradient(
-    ellipse 90% 70% at 50% 100%,
-    rgb(131 93 183 / 0.12),
-    transparent 80%
-  );
-  opacity: 0;
-  pointer-events: none;
-  will-change: opacity;
-  transition: opacity 300ms ease;
 }
 @media (hover: hover) and (pointer: fine) {
   .explorer-direction:hover {
-    /* Keep the clipped frame stationary: lifting it exposed a 2px pale strip. */
-    box-shadow: 0 16px 36px -10px rgba(16, 9, 28, 0.46);
+    box-shadow: 0 16px 36px -10px #0004;
   }
-  .explorer-direction:hover .explorer-direction-visual::before {
-    opacity: 1;
-  }
-  .explorer-direction:hover .explorer-direction-visual {
+  .explorer-direction:hover .explorer-direction-visual > img {
     transform: scale(1.018);
   }
-  .explorer-direction:hover .explorer-direction-copy {
-    transform: translateY(-4px);
-  }
-  .explorer-direction:hover .explorer-direction-hint {
-    opacity: 1;
-    max-height: 40px;
-    margin-top: 6px;
-    transform: translateY(0);
-  }
   .explorer-direction:hover .explorer-direction-action {
-    color: #ffffff;
+    color: inherit;
   }
   .explorer-direction:hover .explorer-direction-arrow {
     transform: translate(3px, -3px) scale(1.06);
-    background: rgba(59, 39, 83, 0.8);
-    border-color: rgba(230, 215, 255, 0.4);
-    color: #ffffff;
-  }
-  .explorer-direction:hover .explorer-development {
-    color: #ffffff;
-    border-color: rgba(230, 215, 255, 0.85);
-    background: rgba(33, 24, 43, 0.85);
-    box-shadow: 0 4px 14px rgba(160, 110, 240, 0.22);
-    transform: translateY(-1px);
-  }
-  .explorer-direction:hover .explorer-development svg {
-    transform: rotate(-8deg);
+    border-color: currentColor;
   }
 }
 .explorer-direction:focus-visible {
-  box-shadow: 0 16px 36px -10px rgba(16, 9, 28, 0.46);
+  box-shadow: 0 16px 36px -10px #0004;
 }
-.explorer-direction:focus-visible .explorer-direction-visual::before {
-  opacity: 1;
-}
-.explorer-direction:focus-visible .explorer-direction-visual {
+.explorer-direction:focus-visible .explorer-direction-visual > img {
   transform: scale(1.018);
 }
-.explorer-direction:focus-visible .explorer-direction-copy {
-  transform: translateY(-4px);
-}
-.explorer-direction:focus-visible .explorer-direction-hint {
-  opacity: 1;
-  max-height: 40px;
-  margin-top: 6px;
-  transform: translateY(0);
-}
 .explorer-direction:focus-visible .explorer-direction-action {
-  color: #ffffff;
+  color: inherit;
 }
 .explorer-direction:focus-visible .explorer-direction-arrow {
   transform: translate(3px, -3px) scale(1.06);
-  background: rgba(59, 39, 83, 0.8);
-  border-color: rgba(230, 215, 255, 0.4);
-  color: #ffffff;
+  border-color: currentColor;
+}
+.explorer-direction.is-development {
+  background: var(--direction-development-caption);
+  color: var(--direction-development-ink);
 }
 .explorer-direction.is-development .explorer-direction-visual > img {
-  filter: saturate(0.3) contrast(0.9);
-  opacity: 0.8;
+  filter: grayscale(1) brightness(0.75) contrast(0.9);
 }
 .explorer-direction-index {
   position: absolute;
-  top: 22px;
+  top: 20px;
   left: 24px;
   z-index: 3;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #161618d9;
   font-size: 10px;
   letter-spacing: 0.1em;
-  color: #ffffffc9;
+  color: #fff;
 }
 .explorer-direction-copy {
-  position: absolute;
-  bottom: 28px;
-  left: 28px;
-  right: 28px;
-  z-index: 3;
-  background: transparent;
-  will-change: transform;
-  backface-visibility: hidden;
-  transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+  display: block;
+  padding: 16px 24px;
 }
 .explorer-direction-copy > strong {
   display: block;
@@ -218,28 +148,19 @@
 }
 .explorer-direction-hint {
   display: block;
+  margin-top: 4px;
   font-size: 11px;
   line-height: 1.45;
-  color: #ede4f8d0;
+  color: var(--direction-muted);
   letter-spacing: 0.01em;
-  opacity: 0;
-  max-height: 0;
-  margin-top: 0;
-  transform: translateY(6px);
-  overflow: hidden;
-  transition:
-    opacity 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 340ms cubic-bezier(0.22, 1, 0.36, 1),
-    max-height 340ms cubic-bezier(0.22, 1, 0.36, 1),
-    margin-top 340ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .explorer-direction-action {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 14px;
+  margin-top: 8px;
   font-size: 11px;
-  color: #ede4f8;
+  color: var(--direction-muted);
   transition: color 240ms ease;
 }
 .explorer-direction-arrow {
@@ -249,86 +170,36 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(33, 24, 43, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #ede4f8;
+  border: 1px solid var(--direction-border);
   transition:
     transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    background 240ms ease,
-    border-color 240ms ease,
-    color 240ms ease;
+    border-color 240ms ease;
 }
 .explorer-development {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 5px 10px;
-  border: 1px dashed var(--yu-story-border);
-  border-radius: 20px;
-  color: var(--yu-accent);
-  font-size: 10px;
-}
-.explorer-direction .explorer-development {
   position: absolute;
   top: 20px;
   right: 20px;
   z-index: 3;
-  color: #f0e5ff;
-  border-color: #e4d4ff99;
-  background: #21182b65;
-  /* Avoid backdrop-filter repaint flashes over the moving photograph. */
-  transition:
-    background 300ms ease,
-    border-color 300ms ease,
-    box-shadow 300ms ease,
-    transform 300ms cubic-bezier(0.22, 1, 0.36, 1),
-    color 300ms ease;
-}
-.explorer-direction .explorer-development svg {
-  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-@media (hover: none) {
-  .explorer-direction-hint {
-    opacity: 0.92;
-    max-height: 38px;
-    margin-top: 5px;
-    transform: none;
-  }
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  border: 1px solid #94979a;
+  border-radius: 20px;
+  background: #2b2d30;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 650;
 }
 @media (prefers-reduced-motion: reduce) {
   .explorer-direction,
-  .explorer-direction-visual::before,
-  .explorer-direction-visual::after,
-  .explorer-direction-visual,
   .explorer-direction-visual > img,
-  .explorer-direction-copy,
-  .explorer-direction-hint,
-  .explorer-direction-arrow,
-  .explorer-direction .explorer-development,
-  .explorer-direction .explorer-development svg {
-    transition: none !important;
-    animation: none !important;
+  .explorer-direction-arrow {
+    transition: none;
   }
-  .explorer-direction:is(:hover, :focus-visible) {
-    transform: none !important;
-  }
-  .explorer-direction:is(:hover, :focus-visible) .explorer-direction-visual {
-    transform: none !important;
-  }
-  .explorer-direction:is(:hover, :focus-visible) .explorer-direction-copy {
-    transform: none !important;
-  }
-  .explorer-direction:is(:hover, :focus-visible) .explorer-direction-arrow {
-    transform: none !important;
-  }
-  .explorer-direction:is(:hover, :focus-visible) .explorer-development {
-    transform: none !important;
-  }
-  .explorer-direction-hint {
-    opacity: 1;
-    max-height: none;
+  .explorer-direction:is(:hover, :focus-visible)
+    :is(.explorer-direction-visual > img, .explorer-direction-arrow) {
     transform: none;
-    margin-top: 6px;
   }
 }
 @media (max-width: 1000px) {
@@ -346,7 +217,7 @@
     gap: 8px;
   }
   .explorer-viewport {
-    height: 720px;
+    height: auto;
     border-radius: 12px;
   }
   .explorer-scene {
@@ -357,26 +228,21 @@
   }
   .explorer-directions-grid {
     grid-template-columns: 1fr;
-    grid-template-rows: 1.4fr 1fr 1fr;
+    grid-auto-rows: clamp(285px, 83vw, 410px);
     gap: 12px;
   }
-  .explorer-direction:first-child {
-    grid-row: auto;
-  }
   .explorer-direction-index {
-    top: 16px;
+    top: 13px;
     left: 18px;
     font-size: 9px;
   }
-  .explorer-direction .explorer-development {
+  .explorer-development {
     top: 13px;
     right: 13px;
     font-size: 9px;
   }
   .explorer-direction-copy {
-    bottom: 19px;
-    left: 20px;
-    right: 20px;
+    padding: 13px 16px;
   }
   .explorer-direction-copy > strong {
     font-size: 24px;
@@ -387,7 +253,7 @@
     line-height: 1.4;
   }
   .explorer-direction-action {
-    margin-top: 10px;
+    margin-top: 7px;
     font-size: 10px;
   }
   .explorer-direction-arrow {

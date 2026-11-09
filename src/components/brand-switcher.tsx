@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Check, ChevronDown } from "lucide-react";
 import type { BrandProfile } from "../data/brand-portfolio";
@@ -25,6 +26,7 @@ export function BrandSwitcher({
   selected: BrandProfile;
   onSelect: (brand: BrandProfile) => void;
 }) {
+  const { t } = useSiteLanguage();
   // A single real brand is an identity, not a disabled or empty menu.
   if (brands.length < 2)
     return (
@@ -37,7 +39,7 @@ export function BrandSwitcher({
       <DropdownMenu.Root modal={false}>
         <DropdownMenu.Trigger
           className="bex-brand-trigger"
-          aria-label={`Выбрать бренд: ${selected.name}`}
+          aria-label={t("Выбрать бренд: {0}", selected.name)}
         >
           <BrandMark brand={selected} />
           <ChevronDown
@@ -52,7 +54,7 @@ export function BrandSwitcher({
           align="start"
           sideOffset={8}
           collisionPadding={20}
-          aria-label="Бренды"
+          aria-label={t("Бренды")}
         >
           <DropdownMenu.RadioGroup
             value={selected.id}

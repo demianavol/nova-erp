@@ -1,0 +1,104 @@
+.landing-font-preview {
+  position: fixed;
+  z-index: 40;
+  left: max(16px, env(safe-area-inset-left));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  width: min(270px, calc(100% - 32px));
+  border: 1px solid var(--yu-line);
+  border-radius: 16px;
+  color: var(--yu-ink);
+  background: var(--yu-story-panel, #fff);
+  box-shadow: 0 8px 36px #0002;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.landing-font-preview:not([open]) {
+  width: max-content;
+}
+
+.landing-font-preview summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 13px;
+  border-radius: 15px;
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+}
+
+.landing-font-preview summary::-webkit-details-marker {
+  display: none;
+}
+
+.landing-font-preview summary svg {
+  color: var(--yu-accent);
+  flex: 0 0 auto;
+}
+
+.landing-font-preview .font-preview-chevron {
+  margin-inline-start: auto;
+  rotate: 180deg;
+}
+
+.landing-font-preview[open] .font-preview-chevron {
+  rotate: 0deg;
+}
+
+.font-preview-controls {
+  display: grid;
+  gap: 7px;
+  padding: 10px 13px 13px;
+  border-top: 1px solid var(--yu-line);
+}
+
+.font-preview-controls select {
+  width: 100%;
+  min-height: 44px;
+  padding: 5px 9px;
+  border: 1px solid var(--yu-line);
+  border-radius: 9px;
+  color: inherit;
+  background: var(--yu-story-panel, #fff);
+  font: inherit;
+  font-size: 16px;
+}
+
+.landing-font-preview :is(summary, select):focus-visible {
+  outline: 2px solid var(--yu-accent);
+  outline-offset: 2px;
+}
+
+.font-preview-controls p {
+  margin: 0;
+  color: var(--yu-muted);
+}
+
+.font-preview-sample {
+  --yu-public-font: var(--yu-preview-stack);
+  display: grid;
+  gap: 3px;
+  margin-top: 3px;
+  padding: 9px 10px;
+  border: 1px solid var(--yu-line);
+  border-radius: 9px;
+}
+
+.font-preview-sample strong {
+  font-size: 20px;
+  font-weight: 650;
+  line-height: 1.15;
+}
+
+.font-preview-sample span {
+  color: var(--yu-muted);
+  font-size: 13px;
+}
+
+@media print {
+  .landing-font-preview {
+    display: none;
+  }
+}

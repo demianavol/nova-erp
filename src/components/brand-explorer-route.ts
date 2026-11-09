@@ -23,7 +23,10 @@ export function parseExplorerPath(
   path: string | null,
 ): ExplorerPosition | null {
   if (!path) return null;
-  const [directionId, brandId, categoryId, productId, extra] = path.split("/");
+  const [requestedDirection, brandId, categoryId, productId, extra] =
+    path.split("/");
+  const directionId =
+    requestedDirection === "oralcare" ? "selfcare" : requestedDirection;
   if (
     extra !== undefined ||
     !company.directions.some((item) => item.id === directionId)

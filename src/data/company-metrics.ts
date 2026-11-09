@@ -3,6 +3,11 @@ import {
   marketplaceSnapshot,
   ratingLabel,
 } from "./product-evidence";
+import {
+  russianSiteCopy,
+  type SiteLanguage,
+  type SiteTranslate,
+} from "../lib/site-language";
 
 export type MetricScope =
   | { kind: "company"; label: string }
@@ -313,15 +318,8 @@ export const demoYearlyActivity = [
     revenue: null,
   },
 ] as const;
-const number = (value: number) => value.toLocaleString("ru-RU");
 const sum = (key: "newCustomers" | "orders" | "ratings") =>
   demoYearlyActivity.reduce((total, row) => total + row[key], 0);
-const annual = (key: "newCustomers" | "orders" | "ratings") =>
-  demoYearlyActivity.map((row) => ({
-    year: row.year,
-    value: number(row[key]),
-    detail: row.year === 2026 ? "по 02.11" : undefined,
-  }));
 const yearlyGrowth = demoYearlyActivity.map((row, index) => ({
   year: row.year,
   value:
@@ -337,85 +335,111 @@ const weightedRating =
     (total, row) => total + row.rating * row.ratings,
     0,
   ) / totalRatings;
-const demoValues: Record<
+function getDemoValues(
+  language: SiteLanguage,
+  t: SiteTranslate,
+): Record<
   CompanyMetricId,
   Partial<CompanyMetricData> & { value: string; unit: string }
-> = {
-  customers: {
-    value: number(sum("newCustomers") / 1000),
-    unit: "тыс.",
-    yearlyBreakdown: annual("newCustomers"),
-  },
-  orders: {
-    value: number(sum("orders") / 1000),
-    unit: "тыс.",
-    yearlyBreakdown: annual("orders"),
-  },
-  brands: {
-    value: "4",
-    unit: "",
-    detail: "2 активных сейчас",
-    brandCounts: { historical: 4, active: 2 },
-    yearlyBreakdown: demoYearlyActivity.map((row) => ({
+> {
+  const number = (value: number) => value.toLocaleString(language);
+  const divisor = language === "zh-CN" ? 10_000 : 1_000;
+  const unit = language === "zh-CN" ? "万" : "тыс.";
+  const annual = (key: "newCustomers" | "orders" | "ratings") =>
+    demoYearlyActivity.map((row) => ({
       year: row.year,
-      value: `${row.historicalBrands} в истории`,
-      detail: `${row.activeBrands} ${row.activeBrands === 1 ? "активный" : "активных"}`,
-    })),
-  },
-  growth: {
-    value: `+${Math.round((51.48 / 10 - 1) * 100)}`,
-    unit: "%",
-    period: "2025 к 2020 · полные годы",
-    detail: "2025 к 2020 · полные годы",
-    methodology: "2026 год ещё не завершён и не включён в сравнение",
-    yearlyBreakdown: yearlyGrowth,
-  },
-  achievements: {
-    value: "3",
-    unit: "",
-    marketplaceAchievements: demoAchievements,
-    detail: "за всю историю · 2 бренда",
-    yearlyBreakdown: demoYearlyActivity.map((row) => ({
-      year: row.year,
-      value: String(
-        demoAchievements.filter((item) =>
-          item.period?.startsWith(String(row.year)),
-        ).length,
-      ),
-    })),
-  },
-  rating: {
-    value: weightedRating.toLocaleString("ru-RU", {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    }),
-    unit: "из 5",
-    yearlyBreakdown: demoYearlyActivity.map((row) => ({
-      year: row.year,
-      value: row.rating.toLocaleString("ru-RU", { minimumFractionDigits: 1 }),
-      detail: `${number(row.ratings)} оценок`,
-    })),
-  },
-  reviews: {
-    value: number(totalRatings),
-    unit: "",
-    yearlyBreakdown: annual("ratings"),
-  },
-};
+      value: number(row[key]),
+      detail: row.year === 2026 ? "по 02.11" : undefined,
+    }));
+  return {
+    customers: {
+      value: number(sum("newCustomers") / divisor),
+      unit,
+      yearlyBreakdown: annual("newCustomers"),
+    },
+    orders: {
+      value: number(sum("orders") / divisor),
+      unit,
+      yearlyBreakdown: annual("orders"),
+    },
+    brands: {
+      value: "4",
+      unit: "",
+      detail: "2 активных сейчас",
+      brandCounts: { historical: 4, active: 2 },
+      yearlyBreakdown: demoYearlyActivity.map((row) => ({
+        year: row.year,
+        value: t("{0} в истории", row.historicalBrands),
+        detail: t(
+          row.activeBrands === 1 ? "{0} активный" : "{0} активных",
+          row.activeBrands,
+        ),
+      })),
+    },
+    growth: {
+      value: `+${Math.round((51.48 / 10 - 1) * 100)}`,
+      unit: "%",
+      period: "2025 к 2020 · полные годы",
+      detail: "2025 к 2020 · полные годы",
+      methodology: "2026 год ещё не завершён и не включён в сравнение",
+      yearlyBreakdown: yearlyGrowth,
+    },
+    achievements: {
+      value: "3",
+      unit: "",
+      marketplaceAchievements: demoAchievements,
+      detail: "за всю историю · 2 бренда",
+      yearlyBreakdown: demoYearlyActivity.map((row) => ({
+        year: row.year,
+        value: String(
+          demoAchievements.filter((item) =>
+            item.period?.startsWith(String(row.year)),
+          ).length,
+        ),
+      })),
+    },
+    rating: {
+      value: weightedRating.toLocaleString(language, {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      }),
+      unit: "из 5",
+      yearlyBreakdown: demoYearlyActivity.map((row) => ({
+        year: row.year,
+        value: row.rating.toLocaleString(language, {
+          minimumFractionDigits: 1,
+        }),
+        detail: t("{0} оценок", number(row.ratings)),
+      })),
+    },
+    reviews: {
+      value: number(totalRatings),
+      unit: "",
+      yearlyBreakdown: annual("ratings"),
+    },
+  };
+}
 
 // Explicitly requested synthetic figures for design review. This switch restores
 // the pending prototype without altering approved definitions or source evidence.
 export const companyMetricsMode: "demo" | "pending" = "demo";
-export const companyMetrics: readonly CompanyMetricData[] =
-  companyMetricsMode === "demo"
+export function getCompanyMetrics(
+  language: SiteLanguage,
+  t: SiteTranslate,
+): readonly CompanyMetricData[] {
+  const demoValues = getDemoValues(language, t);
+  return companyMetricsMode === "demo"
     ? companyMetricDefinitions.map((metric) => ({
         ...metric,
         ...demoValues[metric.id],
-        period: demoValues[metric.id].period ?? "2020–02.11.2026",
+        period: demoValues[metric.id].period ?? t("2020–02.11.2026"),
         source: demoSource,
         verification: "demo",
       }))
     : companyMetricDefinitions;
+}
+
+export const companyMetrics = getCompanyMetrics("ru", russianSiteCopy);
 
 export const metricVerificationLabels: Record<MetricVerification, string> = {
   demo: "Демо-данные · Не фактические показатели",

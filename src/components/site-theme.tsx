@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { Moon, Sun } from "lucide-react";
@@ -7,7 +8,7 @@ const key = "yuc-site-theme";
 const eventName = "yuc-theme-change";
 type Theme = "light" | "dark";
 let sessionTheme: Theme | undefined;
-function readTheme(): Theme {
+function readTheme(defaultTheme?: Theme): Theme {
   if (sessionTheme) return sessionTheme;
   try {
     const saved = localStorage.getItem(key);
@@ -15,13 +16,16 @@ function readTheme(): Theme {
   } catch {
     /* The switch also works when browser storage is unavailable. */
   }
-  return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return (
+    defaultTheme ??
+    (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+  );
 }
-export function useSiteTheme() {
+export function useSiteTheme(defaultTheme?: Theme) {
   useEffect(() => {
     const media = matchMedia("(prefers-color-scheme: dark)");
     const apply = () => {
-      document.documentElement.dataset.siteTheme = readTheme();
+      document.documentElement.dataset.siteTheme = readTheme(defaultTheme);
     };
     apply();
     window.addEventListener(eventName, apply);
@@ -33,13 +37,14 @@ export function useSiteTheme() {
       window.removeEventListener("storage", apply);
       media.removeEventListener("change", apply);
     };
-  }, []);
+  }, [defaultTheme]);
 }
-export function SiteThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(readTheme);
+export function SiteThemeToggle({ defaultTheme }: { defaultTheme?: Theme }) {
+  const { t } = useSiteLanguage();
+  const [theme, setTheme] = useState(() => readTheme(defaultTheme));
   const activeReveal = useRef<ViewTransition | null>(null);
   useEffect(() => {
-    const update = () => setTheme(readTheme());
+    const update = () => setTheme(readTheme(defaultTheme));
     const media = matchMedia("(prefers-color-scheme: dark)");
     window.addEventListener(eventName, update);
     window.addEventListener("storage", update);
@@ -50,17 +55,17 @@ export function SiteThemeToggle() {
       window.removeEventListener("storage", update);
       media.removeEventListener("change", update);
     };
-  }, []);
+  }, [defaultTheme]);
   return (
     <button
       type="button"
       className="yu-theme-toggle"
       aria-label={
-        theme === "light" ? "Включить тёмную тему" : "Включить светлую тему"
+        theme === "light" ? t("Включить тёмную тему") : t("Включить светлую тему")
       }
       onClick={(event) => {
         const root = document.documentElement;
-        const next = readTheme() === "light" ? "dark" : "light";
+        const next = readTheme(defaultTheme) === "light" ? "dark" : "light";
         const apply = () => {
           try {
             localStorage.setItem(key, next);

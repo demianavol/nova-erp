@@ -1,3 +1,4 @@
+import { useSiteLanguage, type SiteLanguage } from "../lib/site-language";
 import {
   lazy,
   Suspense,
@@ -17,19 +18,20 @@ function UnavailableLanyard({ onError }: { onError?: () => void }) {
   return null;
 }
 const frontImage = `${import.meta.env.BASE_URL}media/careers/badge-front.svg`;
-const backImage = `${import.meta.env.BASE_URL}media/careers/badge-back.svg`;
+const backImage = (language: SiteLanguage) =>
+  `${import.meta.env.BASE_URL}media/careers/badge-back${language === "ru" ? "" : "-" + language}.svg`;
 let lanyardModule: Promise<typeof import("./react-bits/Lanyard")> | undefined;
-let facesPreloaded = false;
+const preloadedFaces = new Set<SiteLanguage>();
 const loadLanyard = () => (lanyardModule ??= import("./react-bits/Lanyard"));
 const Lanyard = lazy(() =>
   loadLanyard().catch(() => ({ default: UnavailableLanyard })),
 );
 
-export function preloadCareerBadge() {
-  if (facesPreloaded) return;
-  facesPreloaded = true;
+export function preloadCareerBadge(language: SiteLanguage) {
+  if (preloadedFaces.has(language)) return;
+  preloadedFaces.add(language);
   void loadLanyard().catch(() => {});
-  for (const url of [frontImage, backImage]) {
+  for (const url of [frontImage, backImage(language)]) {
     const image = new Image();
     image.crossOrigin = "anonymous";
     image.src = url;
@@ -49,6 +51,7 @@ function StaticCareerBadge({
   reduced: boolean;
   embedded?: boolean;
 }) {
+  const { t } = useSiteLanguage();
   const surfaceRef = useRef<HTMLButtonElement>(null);
   const cardRef = useRef<HTMLSpanElement>(null);
   const hint = useId();
@@ -229,8 +232,8 @@ function StaticCareerBadge({
         className="career-badge-control"
         aria-label={
           flipped
-            ? "Вернуть лицевую сторону бейджа Young Unicorn"
-            : "Перевернуть бейдж Young Unicorn"
+            ? t("Вернуть лицевую сторону бейджа Young Unicorn")
+            : t("Перевернуть бейдж Young Unicorn")
         }
         aria-pressed={flipped}
         aria-describedby={hint}
@@ -267,9 +270,9 @@ function StaticCareerBadge({
                   />
                   {back ? (
                     <span className="career-badge-back-message">
-                      Мы ждём
+                      {t("Мы ждём")}
                       <br />
-                      <strong>именно тебя!</strong>
+                      <strong>{t("именно тебя!")}</strong>
                     </span>
                   ) : (
                     <span className="career-badge-brand">
@@ -299,9 +302,9 @@ function StaticCareerBadge({
         </span>
       </button>
       <span id={hint} className="sr-only">
-        Нажатие или Enter переворачивает бейдж. На обороте — «Мы ждём именно
-        тебя!». Перетаскивание вращает бейдж. Стрелки — поворот и наклон, Home
-        или Escape — лицевая сторона.
+        {t(
+          "Нажатие или Enter переворачивает бейдж. На обороте — «Мы ждём именно тебя!». Перетаскивание вращает бейдж. Стрелки — поворот и наклон, Home или Escape — лицевая сторона.",
+        )}
       </span>
     </div>
   );
@@ -317,6 +320,7 @@ export function CareerBadge({
   reduced: boolean;
   renderSpace?: "viewport" | "local";
 }) {
+  const { language, t } = useSiteLanguage();
   const root = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
   const [ready, setReady] = useState(false);
@@ -375,7 +379,7 @@ export function CareerBadge({
               constrainToCanvas={renderSpace === "local"}
               ariaDescribedBy={hint}
               frontImage={frontImage}
-              backImage={backImage}
+              backImage={backImage(language)}
               cardColor="#c09ade"
               strapColor="#7851ac"
               finish="glass"
@@ -401,20 +405,25 @@ export function CareerBadge({
       {!visible && !fallback && (
         <div className="career-badge-poster" aria-hidden="true">
           <span className="career-badge-poster-strap" />
-          <img src={frontImage} alt="" width={1024} height={1440} draggable={false} />
+          <img
+            src={frontImage}
+            alt=""
+            width={1024}
+            height={1440}
+            draggable={false}
+          />
         </div>
       )}
       {visible && (
         <span className="career-badge-drag-hint" aria-hidden="true">
-          Потяни за бейдж · Нажми, чтобы перевернуть
+          {t("Потяни за бейдж · Нажми, чтобы перевернуть")}
         </span>
       )}
       <span id={hint} className="sr-only">
-        {!visible && !fallback ? "Бейдж загружается. " : ""}
-        Бейдж на гибком подвесе. Потяните и отпустите его мышью или в сторону на
-        сенсорном экране. Нажатие, Enter или пробел переворачивают бейдж.
-        Стрелки раскачивают его, Home или Escape возвращают в исходное
-        положение. На обороте — «Мы ждём именно тебя!».
+        {!visible && !fallback ? t("Бейдж загружается.") + " " : ""}
+        {t(
+          "Бейдж на гибком подвесе. Потяните и отпустите его мышью или в сторону на сенсорном экране. Нажатие, Enter или пробел переворачивают бейдж. Стрелки раскачивают его, Home или Escape возвращают в исходное положение. На обороте — «Мы ждём именно тебя!».",
+        )}
       </span>
     </div>
   );

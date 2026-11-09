@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import { useLayoutEffect, useRef, type RefObject } from "react";
 import {
   historyMilestoneVisuals,
@@ -75,6 +76,7 @@ function HistoryMilestoneStack({
         <img
           key={item.asset}
           data-asset={item.asset}
+          data-metaphor={item.metaphor}
           src={
             loadArtwork ? `${import.meta.env.BASE_URL}${item.asset}` : undefined
           }
@@ -98,6 +100,7 @@ export function HistoryMilestoneVisual({
   interactionArea?: RefObject<HTMLDivElement | null>;
   loadArtwork: boolean;
 }) {
+  const { t } = useSiteLanguage();
   const root = useRef<HTMLSpanElement>(null);
   const object = useRef<HTMLSpanElement>(null);
   const frame = useRef(0);
@@ -184,7 +187,7 @@ export function HistoryMilestoneVisual({
       data-render="approved-asset"
       data-active-asset={visual.asset}
       role="img"
-      aria-label={`Визуальная метафора: ${visual.label}`}
+      aria-label={t("Визуальная метафора: {0}", t(visual.label))}
     >
       <span ref={object} className="journey-emblem-object">
         <HistoryMilestoneStack visual={visual} loadArtwork={loadArtwork} />

@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import "./tech-title.css";
 
@@ -85,11 +86,22 @@ export function TechTitleLine({
 }
 
 export function HeroTitle() {
+  const { language, t } = useSiteLanguage();
   const motion = useTechTitleMotion();
   return (
-    <h1 id="hero-title">
-      <TechTitleLine text="Создаём " motion={motion} />
-      <TechTitleLine text="бренды" motion={motion} />
+    <h1 id="hero-title" tabIndex={-1}>
+      <TechTitleLine
+        text={t("Создаём") + (language === "zh-CN" ? "" : " ")}
+        motion={motion}
+        intro="none"
+        nativeMetrics
+      />
+      <TechTitleLine
+        text={t("бренды")}
+        motion={motion}
+        intro="none"
+        nativeMetrics
+      />
     </h1>
   );
 }

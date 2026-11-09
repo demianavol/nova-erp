@@ -1,31 +1,33 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useSiteLanguage } from "../lib/site-language";
+import { useEffect, useRef, useState } from "react";
 import { Play } from "lucide-react";
-import { createElectricLogoFilm } from "./react-bits/electric-logo-film";
+import {
+  createElectricLogoFilm,
+  createGlassFilm2D,
+} from "./react-bits/electric-logo-film";
+import { HeroFigureLabels } from "./hero-figure-labels";
 
-const LiquidEther = lazy(() =>
-  import("./react-bits/LiquidEther").catch(() => ({ default: () => null })),
-);
 const asset = (name: string) => `${import.meta.env.BASE_URL}brand/${name}`;
-const lightPalette = ["#9060c7", "#c491e8", "#a883df"];
-const darkPalette = ["#7542c5", "#ba78e8", "#8a5bdd"];
+const poster = asset("young-unicorn-glass.webp");
 
 export function HeroFilm() {
+  const { t } = useSiteLanguage();
   const stage = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  const spotlight = useRef<HTMLCanvasElement>(null);
   const retry = useRef<() => void>(() => {});
   const [staticMode, setStaticMode] = useState(true);
   const [posterLoaded, setPosterLoaded] = useState(false);
   const [posterPainted, setPosterPainted] = useState(false);
-  const [light, setLight] = useState(true);
   const [ready, setReady] = useState(false);
+  const [software, setSoftware] = useState(false);
   const [failed, setFailed] = useState(false);
   const [blocked, setBlocked] = useState(false);
 
   useEffect(() => {
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const print = matchMedia("print");
-    const page = document.documentElement;
     const landing = stage.current?.closest(".landing");
     const update = () => {
       setStaticMode(
@@ -33,13 +35,8 @@ export function HeroFilm() {
           print.matches ||
           landing?.getAttribute("data-export") === "pdf",
       );
-      setLight(page.dataset.siteTheme !== "dark");
     };
     const observer = new MutationObserver(update);
-    observer.observe(page, {
-      attributes: true,
-      attributeFilter: ["data-site-theme"],
-    });
     if (landing)
       observer.observe(landing, {
         attributes: true,
@@ -57,7 +54,7 @@ export function HeroFilm() {
 
   useEffect(() => {
     if (!posterLoaded) return;
-    // Let the browser paint the hero before initializing either WebGL effect.
+    // Let the browser paint the hero before initializing the renderer.
     let frame = requestAnimationFrame(() => {
       frame = requestAnimationFrame(() => setPosterPainted(true));
     });
@@ -70,9 +67,16 @@ export function HeroFilm() {
     const surface = canvas.current;
     const hero = stage.current?.closest<HTMLElement>("#hero");
     if (!animated || !element || !surface || !hero) return;
-    const renderer = createElectricLogoFilm(surface, element);
+    const recover = () => {
+      setReady(false);
+      if (software) setFailed(true);
+      else setSoftware(true);
+    };
+    const renderer = software
+      ? createGlassFilm2D(surface, element)
+      : createElectricLogoFilm(surface, element);
     if (!renderer) {
-      setFailed(true);
+      recover();
       return;
     }
     let alive = true;
@@ -92,8 +96,19 @@ export function HeroFilm() {
         mediaTime,
         document.documentElement.dataset.siteTheme !== "dark",
       );
-      if (result === "failed") setFailed(true);
+      if (result === "failed") recover();
       if (result !== "drawn") return;
+      const detail = spotlight.current;
+      const detailContext = detail?.getContext("2d");
+      if (detail && detailContext) {
+        if (detail.width !== surface.width || detail.height !== surface.height) {
+          detail.width = surface.width;
+          detail.height = surface.height;
+        }
+        detailContext.globalCompositeOperation = "copy";
+        detailContext.drawImage(surface, 0, 0);
+        detail.dataset.ready = "true";
+      }
       if (!revealed) {
         revealed = true;
         setReady(true);
@@ -161,8 +176,8 @@ export function HeroFilm() {
       const height = entry.contentRect.height;
       const ratio = Math.min(
         devicePixelRatio || 1,
-        1.35,
-        768 / Math.max(1, width),
+        2,
+        1280 / Math.max(1, width),
       );
       const pixelWidth = Math.max(1, Math.round(width * ratio));
       const pixelHeight = Math.max(1, Math.round(height * ratio));
@@ -171,10 +186,10 @@ export function HeroFilm() {
         surface.height = pixelHeight;
       }
     });
-    resize.observe(surface);
+    if (!software) resize.observe(surface);
     const lost = (event: Event) => {
       event.preventDefault();
-      setFailed(true);
+      recover();
     };
     const gesture = () => {
       if (element.paused) sync();
@@ -203,40 +218,21 @@ export function HeroFilm() {
       setReady(false);
       setBlocked(false);
     };
-  }, [animated]);
+  }, [animated, software]);
 
   return (
     <>
-      <div className="lp-hero-atmosphere" aria-hidden="true">
-        {animated && (ready || blocked) && (
-          <Suspense fallback={null}>
-            <LiquidEther
-              colors={light ? lightPalette : darkPalette}
-              lightMode={light}
-              intensity={1.55}
-              mouseForce={12}
-              cursorSize={125}
-              resolution={0.24}
-              maxDevicePixelRatio={1}
-              autoSpeed={0.34}
-              autoIntensity={1.65}
-              clickBurst={false}
-              intro={false}
-            />
-          </Suspense>
-        )}
-      </div>
+      <div className="lp-hero-atmosphere" aria-hidden="true" />
       <div
         ref={stage}
         className="lp-hero-mark"
         data-ready={animated && ready}
-        aria-hidden="true"
       >
         <img
           className="lp-hero-mark-poster"
-          src={asset("young-unicorn-glass.webp")}
-          width={512}
-          height={432}
+          src={poster}
+          width={640}
+          height={540}
           alt=""
           fetchPriority="high"
           onLoad={() => setPosterLoaded(true)}
@@ -244,7 +240,13 @@ export function HeroFilm() {
         />
         {animated && (
           <>
-            <canvas ref={canvas} className="lp-hero-mark-canvas" />
+            <canvas
+              key={software ? "2d" : "webgl"}
+              ref={canvas}
+              className="lp-hero-mark-canvas"
+              data-renderer={software ? "2d" : "webgl"}
+              aria-hidden="true"
+            />
             <video
               ref={video}
               className="lp-hero-mark-source"
@@ -254,10 +256,12 @@ export function HeroFilm() {
               playsInline
               preload="metadata"
               tabIndex={-1}
+              aria-hidden="true"
               onError={() => setFailed(true)}
             />
           </>
         )}
+        <HeroFigureLabels poster={poster} spotlightCanvas={spotlight} />
       </div>
       {blocked && animated && (
         <button
@@ -266,8 +270,7 @@ export function HeroFilm() {
           onClick={() => retry.current()}
         >
           <Play size={14} aria-hidden="true" />
-          Запустить видео
-        </button>
+          {t("Запустить видео")}</button>
       )}
     </>
   );

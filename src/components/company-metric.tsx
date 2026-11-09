@@ -5,7 +5,8 @@ import {
   type CompanyMetricData,
 } from "../data/company-metrics";
 import { MetricDetails } from "./company-metric-details";
-import { MetricMotion } from "./metric-motion";
+import { MetricEmblem } from "./metric-emblem";
+import { useSiteLanguage } from "../lib/site-language";
 
 export function CompanyMetric({
   metric,
@@ -14,23 +15,22 @@ export function CompanyMetric({
   metric: CompanyMetricData;
   index: number;
 }) {
+  const { t } = useSiteLanguage();
+  const unit = t(metricDisplayUnit(metric));
   return (
     <MetricDetails
       metric={metric}
-      className={`lp-metric lp-metric-kind-${index}${index === 3 ? " lp-metric-compact" : ""}`}
+      className={`lp-metric lp-metric-kind-${index}`}
       style={{ "--metric-delay": `${index * 100}ms` } as CSSProperties}
     >
       {(engaged) => (
         <>
-          <MetricMotion index={index} active={engaged} />
+          <MetricEmblem kind={metric.icon} active={engaged} />
           <div className="lp-metric-number">
-            <div className="lp-metric-value">
-              <span>{metricDisplayValue(metric)}</span>
-            </div>
-            <span>{metricDisplayUnit(metric)}</span>
+            <div className="lp-metric-value">{metricDisplayValue(metric)}</div>
+            {unit && <span className="lp-metric-unit">{unit}</span>}
           </div>
-          <h3>{metric.label}</h3>
-          <p>{metric.detail}</p>
+          <h3>{t(metric.label)}</h3>
         </>
       )}
     </MetricDetails>

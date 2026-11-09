@@ -13,6 +13,7 @@ import {
   lanyardTouchIntent,
 } from "./lanyard-viewport";
 
+import { useSiteLanguage } from "../../lib/site-language";
 import "./Lanyard.css";
 
 const CARD_SIZES = {
@@ -869,6 +870,7 @@ const Lanyard = ({
   constrainToCanvas = false,
   ariaDescribedBy,
 }) => {
+  const { t } = useSiteLanguage();
   const containerRef = useRef(null);
   const portalRef = useRef(null);
   const controlRef = useRef(null);
@@ -936,7 +938,7 @@ const Lanyard = ({
     else canvas.setAttribute("role", "button");
     keyboardControl.setAttribute(
       "aria-label",
-      "Перевернуть бейдж Young Unicorn",
+      t("Перевернуть бейдж Young Unicorn"),
     );
     keyboardControl.setAttribute("aria-pressed", "false");
     if (ariaDescribedBy)
@@ -1529,14 +1531,14 @@ const Lanyard = ({
       keyboardControl.setAttribute(
         "aria-description",
         sim.turn
-          ? "На обороте — Мы ждём именно тебя!"
-          : "Лицевая сторона Young Unicorn Company",
+          ? t("На обороте — Мы ждём именно тебя!")
+          : t("Лицевая сторона Young Unicorn Company"),
       );
       keyboardControl.setAttribute(
         "aria-label",
         sim.turn
-          ? "Вернуть лицевую сторону бейджа Young Unicorn"
-          : "Перевернуть бейдж Young Unicorn",
+          ? t("Вернуть лицевую сторону бейджа Young Unicorn")
+          : t("Перевернуть бейдж Young Unicorn"),
       );
     };
 
@@ -1691,11 +1693,11 @@ const Lanyard = ({
       keyboardControl.setAttribute("aria-pressed", "false");
       keyboardControl.setAttribute(
         "aria-description",
-        "Лицевая сторона Young Unicorn Company",
+        t("Лицевая сторона Young Unicorn Company"),
       );
       keyboardControl.setAttribute(
         "aria-label",
-        "Перевернуть бейдж Young Unicorn",
+        t("Перевернуть бейдж Young Unicorn"),
       );
       start();
     };
@@ -1968,7 +1970,7 @@ const Lanyard = ({
       renderer.dispose();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
-  }, [renderSpace, constrainToCanvas]);
+  }, [renderSpace, constrainToCanvas, t]);
 
   return (
     <>
@@ -1983,7 +1985,7 @@ const Lanyard = ({
             type="button"
             className="lanyard-keyboard-control"
             tabIndex={-1}
-            aria-label="Перевернуть бейдж Young Unicorn"
+            aria-label={t("Перевернуть бейдж Young Unicorn")}
             aria-describedby={ariaDescribedBy}
           />
         )}

@@ -1,3 +1,4 @@
+import { useSiteLanguage } from "../lib/site-language";
 import { useId, type Ref } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
@@ -35,6 +36,7 @@ export function CompanyFooter({
   onJump: (id: string) => void;
   footerRef?: Ref<HTMLElement>;
 }) {
+  const { t } = useSiteLanguage();
   const glow = useId().replace(/:/g, "");
   return (
     <footer
@@ -77,26 +79,25 @@ export function CompanyFooter({
             <Link
               to="/"
               className="company-footer-signature"
-              aria-label="Young Unicorn — главная"
+              aria-label={t("Young Unicorn — главная")}
             >
               <CompanyBrand compact />
               <span>Young Unicorn</span>
             </Link>
           </div>
-          <nav className="company-footer-nav" aria-label="Навигация в подвале">
+          <nav className="company-footer-nav" aria-label={t("Навигация в подвале")}>
             {sectionGroups.map((group) => (
               <div className="company-footer-group" key={group.title}>
-                <h2 className="company-footer-heading">{group.title}</h2>
+                <h2 className="company-footer-heading">{t(group.title)}</h2>
                 <div className="company-footer-links">
                   {group.links.map(([id, title]) => (
                     <Link key={id} to={`/#${id}`} onClick={() => onJump(id)}>
-                      {title}
+                      {t(title)}
                     </Link>
                   ))}
                   {group.staff && (
                     <ErpEntryLink className="company-footer-staff">
-                      Сотрудникам
-                      <ArrowUpRight size={12} aria-hidden="true" />
+                      {t("Сотрудникам")}<ArrowUpRight size={12} aria-hidden="true" />
                     </ErpEntryLink>
                   )}
                 </div>
@@ -108,8 +109,7 @@ export function CompanyFooter({
             aria-labelledby="contacts-title"
           >
             <h2 id="contacts-title" className="company-footer-heading">
-              Контакты
-            </h2>
+              {t("Контакты")}</h2>
             <a
               className="company-footer-telegram"
               href={company.partnerUrl}

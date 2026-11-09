@@ -1,3 +1,5 @@
+import { russianSiteCopy, type SiteTranslate } from "../lib/site-language";
+
 export type HistoryPhotograph = {
   asset: string | null;
   alt: string;
@@ -44,20 +46,29 @@ const examples = [
     "center",
   ],
 ];
-export const historyPhotographs: Record<string, HistoryPhotograph> =
-  Object.fromEntries(
+function createHistoryPhotographs(
+  t: SiteTranslate,
+): Record<string, HistoryPhotograph> {
+  return Object.fromEntries(
     examples.map(([year, file, label, position]) => [
       year,
       {
         asset: `brand/${file}`,
-        alt: `${label} · Пример фото, не исторический архив`,
-        caption: `${label}. Визуальный пример для макета, не архивная фотография ${year} года.`,
-        source: "Материалы текущего сайта · Демонстрационный пример",
+        alt: t("{0} · Пример фото, не исторический архив", t(label)),
+        caption: t(
+          "{0}. Визуальный пример для макета, не архивная фотография {1} года.",
+          t(label),
+          year,
+        ),
+        source: t("Материалы текущего сайта · Демонстрационный пример"),
         verification: "example" as const,
         position,
       },
     ]),
   );
+}
+
+export const historyPhotographs = createHistoryPhotographs(russianSiteCopy);
 
 export type HistoryPhotoVariant = "main" | "wide" | "portrait";
 export type HistoryPhotoPlacement = {
@@ -128,8 +139,7 @@ const layouts: Record<
     ],
   },
 };
-const previewPool = Object.values(historyPhotographs);
-export const historyPhotoCollections: Record<
+export function getHistoryPhotoCollections(t: SiteTranslate): Record<
   string,
   {
     variant: HistoryPhotoVariant;
@@ -137,21 +147,31 @@ export const historyPhotoCollections: Record<
     placement: HistoryPhotoPlacement;
     visible: boolean;
   }[]
-> = Object.fromEntries(
-  Object.entries(historyPhotographs).map(([year, photograph], index) => [
-    year,
-    (["main", "wide", "portrait"] as const).map((variant, offset) => ({
-      variant,
-      photograph:
-        offset === 0
-          ? photograph
-          : {
-              ...previewPool[(index + offset) % previewPool.length],
-              verification: "example" as const,
-              caption: `Визуальный пример к этапу ${year}. Не архивная фотография компании.`,
-            },
-      placement: layouts[year].placements[offset],
-      visible: layouts[year].show.includes(variant),
-    })),
-  ]),
-);
+> {
+  const photographs = createHistoryPhotographs(t);
+  const previewPool = Object.values(photographs);
+  return Object.fromEntries(
+    Object.entries(photographs).map(([year, photograph], index) => [
+      year,
+      (["main", "wide", "portrait"] as const).map((variant, offset) => ({
+        variant,
+        photograph:
+          offset === 0
+            ? photograph
+            : {
+                ...previewPool[(index + offset) % previewPool.length],
+                verification: "example" as const,
+                caption: t(
+                  "Визуальный пример к этапу {0}. Не архивная фотография компании.",
+                  year,
+                ),
+              },
+        placement: layouts[year].placements[offset],
+        visible: layouts[year].show.includes(variant),
+      })),
+    ]),
+  );
+}
+
+export const historyPhotoCollections =
+  getHistoryPhotoCollections(russianSiteCopy);

@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
+import { useSiteLanguage } from "../../lib/site-language";
 import './CircularCarousel.css';
 
 const photo = id => `https://images.unsplash.com/${id}?w=900&q=80&auto=format&fit=max&sat=-100`;
@@ -211,6 +212,7 @@ const CircularCarousel = ({
   className = '',
   style
 }) => {
+  const { t } = useSiteLanguage();
   const incoming = items && items.length ? items : DEFAULT_ITEMS;
   const [list, setList] = useState(incoming);
   const [leaving, setLeaving] = useState(null);
@@ -963,9 +965,9 @@ const CircularCarousel = ({
       </div>
       {renderCard && count > 1 && (
         <div className="circular-carousel__controls" onPointerDown={event => event.stopPropagation()}>
-          <button type="button" aria-label="Предыдущая модель" onClick={() => stepBy(-1)}>‹</button>
+          <button type="button" aria-label={t("Предыдущая модель")} onClick={() => stepBy(-1)}>‹</button>
           <span aria-hidden="true">{String(active + 1).padStart(2, '0')} / {String(count).padStart(2, '0')}</span>
-          <button type="button" aria-label="Следующая модель" onClick={() => stepBy(1)}>›</button>
+          <button type="button" aria-label={t("Следующая модель")} onClick={() => stepBy(1)}>›</button>
         </div>
       )}
       {captions && current && (

@@ -62,6 +62,10 @@ html[data-site-theme="dark"] {
   background: var(--yu-site-surface);
   scrollbar-color: #6c607f var(--yu-site-surface);
 }
+html[data-site-theme="dark"]:has(.landing-home) {
+  --yu-site-surface: #080809;
+  scrollbar-color: #626268 var(--yu-site-surface);
+}
 html[data-site-theme="dark"] .landing {
   --yu-ink: #eeeaf5;
   --yu-muted: #b9adc8;

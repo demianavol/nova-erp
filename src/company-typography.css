@@ -1,4 +1,69 @@
-/* Shared homepage type scale; the hero keeps its own display heading. */
+/* Include landing overlays that render in portals outside the page wrapper. */
+:root:has(.landing-home) {
+  --yu-default-font: "Sofia Sans Variable", "Segoe UI", sans-serif;
+  --yu-preview-stack:
+    var(--yu-preview-font, "Sofia Sans Variable"), "Segoe UI", sans-serif;
+  --yu-public-font: var(--yu-default-font);
+}
+:root:has(.landing-home[data-font-preview="all"]) {
+  --yu-public-font: var(--yu-preview-stack);
+}
+:root:has(.landing-home)
+  :is(
+    .landing-home,
+    .bex-dialog,
+    .career-dialog,
+    .company-metric-positioner,
+    .yu-category-positioner,
+    .yu-mobile-menu
+  ),
+:root:has(.landing-home)
+  :is(
+    .landing-home,
+    .bex-dialog,
+    .career-dialog,
+    .company-metric-positioner,
+    .yu-category-positioner,
+    .yu-mobile-menu
+  )
+  * {
+  /* Keep the family consistent where older rules use the font shorthand. */
+  font-family: var(--yu-public-font) !important;
+}
+
+.landing-home[data-font-preview="headings"] main :is(h1, h2) {
+  --yu-public-font: var(--yu-preview-stack);
+}
+
+.landing-home[data-font-preview="text"] main,
+:root:has(.landing-home[data-font-preview="text"])
+  :is(
+    .bex-dialog,
+    .career-dialog,
+    .company-metric-positioner,
+    .yu-category-positioner
+  ) {
+  --yu-public-font: var(--yu-preview-stack);
+}
+
+/* Metric labels are text; the large figures and actual headings stay put. */
+.landing-home[data-font-preview="text"]
+  main
+  :is(h1, h2, h3, h4, h5, h6, .lp-metric-number, .evidence-copy > strong):not(
+    .lp-metric > h3
+  ),
+:root:has(.landing-home[data-font-preview="text"])
+  :is(
+    .bex-dialog,
+    .career-dialog,
+    .company-metric-positioner,
+    .yu-category-positioner
+  )
+  :is(h1, h2, h3, h4, h5, h6, .cmp-value) {
+  --yu-public-font: var(--yu-default-font);
+}
+
+/* Shared homepage type scale; the hero keeps its own display size. */
 .landing.landing-home {
   --yu-section-title-size: clamp(28px, 3vw, 40px);
   --yu-card-title-size: 19px;

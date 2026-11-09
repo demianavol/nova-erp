@@ -375,8 +375,24 @@ html[data-site-theme="light"]
   height: 40px;
   flex-shrink: 0;
 }
+.career-icon-fx-growth {
+  --career-icon-hue: -45deg;
+}
+.career-icon-fx-impact {
+  --career-icon-hue: 145deg;
+}
 .career-icon-fx-team {
+  --career-icon-hue: -105deg;
   transform: scale(1.12);
+}
+.career-icon-fx-projects {
+  --career-icon-hue: 175deg;
+}
+.career-icon-fx-freedom {
+  --career-icon-hue: 65deg;
+}
+.career-icon-fx-learning {
+  --career-icon-hue: 220deg;
 }
 .career-icon-fx-impact,
 .career-icon-fx-projects {
@@ -388,6 +404,7 @@ html[data-site-theme="light"]
   height: 100%;
   object-fit: contain;
   display: block;
+  filter: hue-rotate(var(--career-icon-hue)) saturate(1.4);
 }
 .career-icon-piece {
   position: absolute;

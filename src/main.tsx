@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { Inbox } from "lucide-react";
 import { CompanyBrand } from "./components/company-brand";
+import { SiteLanguageProvider, useSiteLanguage } from "./lib/site-language";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/manrope";
 import "./styles.css";
@@ -54,7 +55,7 @@ const FinancePage = lazy(() =>
 );
 
 class ErrorBoundary extends Component<
-  { children: ReactNode },
+  { children: ReactNode; t: (source: string) => string },
   { failed: boolean }
 > {
   state = { failed: false };
@@ -62,23 +63,25 @@ class ErrorBoundary extends Component<
     return { failed: true };
   }
   render() {
+    const { t } = this.props;
     return this.state.failed ? (
       <div className="fatal-error">
         <div className="empty-state">
           <span>
             <Inbox size={26} aria-hidden="true" />
           </span>
-          <h3>Не удалось открыть страницу</h3>
+          <h3>{t("Не удалось открыть страницу")}</h3>
           <p>
-            Перезагрузите приложение. Если ошибка повторится, восстановите
-            демоданные.
+            {t(
+              "Перезагрузите приложение. Если ошибка повторится, восстановите демоданные.",
+            )}
           </p>
           <button
             type="button"
             className="btn btn-primary"
             onClick={() => window.location.reload()}
           >
-            Перезагрузить
+            {t("Перезагрузить")}
           </button>
           <button
             type="button"
@@ -93,7 +96,7 @@ class ErrorBoundary extends Component<
               window.location.reload();
             }}
           >
-            Восстановить демоданные
+            {t("Восстановить демоданные")}
           </button>
         </div>
       </div>
@@ -111,9 +114,10 @@ function LegacyERPRedirect() {
     />
   );
 }
-function App() {
+function AppContent() {
+  const { t } = useSiteLanguage();
   return (
-    <ErrorBoundary>
+    <ErrorBoundary t={t}>
       <a
         href="#main-content"
         className="skip-link"
@@ -122,50 +126,59 @@ function App() {
           document.getElementById("main-content")?.focus();
         }}
       >
-        Перейти к содержимому
+        {t("Перейти к содержимому")}
       </a>
-      <HashRouter>
-        <Suspense
-          fallback={
-            <div className="app-loading">
-              <CompanyBrand compact />
-              <p>Собираем ваше пространство…</p>
-            </div>
-          }
-        >
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/employees" element={<LegacyERPRedirect />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/erp" element={<Protected />}>
-              <Route index element={<Dashboard />} />
-              <Route path="sales" element={<Dashboard sales />} />
-              <Route path="sales/orders" element={<Orders />} />
-              <Route path="sales/customers" element={<Customers />} />
-              <Route path="sales/pipeline" element={<Pipeline />} />
-              <Route path="tasks" element={<Tasks />} />
-              <Route path="employees" element={<Employees />} />
-              <Route path="departments/finance" element={<FinancePage />} />
-              <Route path="departments/:department" element={<Department />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="*" element={<Navigate to="/erp" replace />} />
-            </Route>
-            {["sales", "tasks", "departments", "settings"].map((path) => (
-              <Route
-                key={path}
-                path={`/${path}/*`}
-                element={<LegacyERPRedirect />}
-              />
-            ))}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
-      </HashRouter>
+      <Suspense
+        fallback={
+          <div className="app-loading">
+            <CompanyBrand compact />
+            <p>{t("Собираем ваше пространство…")}</p>
+          </div>
+        }
+      >
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/employees" element={<LegacyERPRedirect />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/erp" element={<Protected />}>
+            <Route index element={<Dashboard />} />
+            <Route path="sales" element={<Dashboard sales />} />
+            <Route path="sales/orders" element={<Orders />} />
+            <Route path="sales/customers" element={<Customers />} />
+            <Route path="sales/pipeline" element={<Pipeline />} />
+            <Route path="tasks" element={<Tasks />} />
+            <Route path="employees" element={<Employees />} />
+            <Route path="departments/finance" element={<FinancePage />} />
+            <Route path="departments/:department" element={<Department />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="*" element={<Navigate to="/erp" replace />} />
+          </Route>
+          {["sales", "tasks", "departments", "settings"].map((path) => (
+            <Route
+              key={path}
+              path={`/${path}/*`}
+              element={<LegacyERPRedirect />}
+            />
+          ))}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </ErrorBoundary>
   );
 }
+function LocalizedApp() {
+  const { pathname } = useLocation();
+  return (
+    <SiteLanguageProvider enabled={pathname === "/"}>
+      <AppContent />
+    </SiteLanguageProvider>
+  );
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <HashRouter>
+      <LocalizedApp />
+    </HashRouter>
   </React.StrictMode>,
 );

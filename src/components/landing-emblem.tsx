@@ -23,7 +23,9 @@ export function LandingEmblem({
   const near = useNearViewport(root);
   const [readySheet, setReadySheet] = useState<string>();
   const media = `${import.meta.env.BASE_URL}media/emblems/${kind}`;
-  const sheet = `${media}-sheet.webp?layout=12x7`;
+  // CSS resolves a URL in a custom property against the consuming stylesheet.
+  const sheet = new URL(`${media}-sheet.webp?layout=12x7`, document.baseURI)
+    .href;
   const ready = readySheet === sheet;
 
   useEffect(() => {

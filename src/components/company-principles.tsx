@@ -87,6 +87,10 @@ function PrincipleCard({
   const cardId = useId();
   const titleId = `${cardId}-title`;
   const detailId = `${cardId}-details`;
+  const iconMask = new URL(
+    asset(`principles-icons/${principle.iconWebp}`),
+    document.baseURI,
+  ).href;
 
   return (
     <article
@@ -123,7 +127,7 @@ function PrincipleCard({
           className="cp-card-icon-object"
           style={
             {
-              "--cp-icon-mask": `url("${asset(`principles-icons/${principle.iconWebp}`)}")`,
+              "--cp-icon-mask": `url("${iconMask}")`,
             } as CSSProperties
           }
         >

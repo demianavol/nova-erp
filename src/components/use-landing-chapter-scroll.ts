@@ -7,45 +7,63 @@ const wheelQuietMs = 400;
 type Swipe = {
   x: number;
   y: number;
-  scrollY: number;
+  startedAt: number;
   axis?: "vertical" | "horizontal";
+  drag?: {
+    origin: number;
+    top: number;
+    up: ChapterEdge;
+    down: ChapterEdge;
+  };
 };
 
-function chapterDestination(root: HTMLElement, y: number, distance: number) {
+type Chapter = { start: number; end: number };
+type ChapterEdge = { top: number; free: boolean };
+
+function measureChapters(root: HTMLElement) {
   const scroller = document.scrollingElement;
-  if (!scroller) return y;
+  if (!scroller) return null;
   const viewport = scroller.clientHeight;
   const limit = scroller.scrollHeight - viewport;
+  const y = window.scrollY;
   const clamp = (value: number) => Math.min(limit, Math.max(0, value));
   const chapters = Array.from(
     root.querySelectorAll(":scope > main > section, :scope > .company-footer"),
     (section) => {
       const bounds = section.getBoundingClientRect();
       const margin = parseFloat(getComputedStyle(section).scrollMarginTop) || 0;
-      const start = clamp(bounds.top + window.scrollY - margin);
-      const end = Math.max(
-        start,
-        clamp(bounds.bottom + window.scrollY - viewport),
-      );
+      const start = clamp(bounds.top + y - margin);
+      const end = Math.max(start, clamp(bounds.bottom + y - viewport));
       return { start, end };
     },
   );
+  return { chapters, viewport, y };
+}
+
+function chapterEdge(
+  chapters: Chapter[],
+  y: number,
+  down: boolean,
+): ChapterEdge {
   let index = chapters.length - 1;
   while (index >= 0 && chapters[index].start > y + 2) index--;
   const current = chapters[index];
-  if (!current) return chapters[0]?.start ?? y;
-  const step = Math.min(
-    Math.max(Math.abs(distance), viewport / 2),
-    viewport * 0.8,
-  );
-  if (distance > 0) {
+  if (!current) return { top: chapters[0]?.start ?? y, free: false };
+  if (down) {
     // A chapter taller than the screen stays readable before advancing.
-    if (y + 2 < current.end) return Math.min(y + step, current.end);
-    return chapters[index + 1]?.start ?? y;
+    if (y + 2 < current.end) return { top: current.end, free: true };
+    return { top: chapters[index + 1]?.start ?? y, free: false };
   }
-  if (y > current.end + 2) return current.end;
-  if (y > current.start + 2) return Math.max(y - step, current.start);
-  return chapters[index - 1]?.end ?? y;
+  if (y > current.end + 2) return { top: current.end, free: false };
+  if (y > current.start + 2) return { top: current.start, free: true };
+  return { top: chapters[index - 1]?.end ?? y, free: false };
+}
+
+function dragTop(drag: NonNullable<Swipe["drag"]>, distance: number) {
+  return Math.min(
+    Math.max(drag.origin, drag.down.top),
+    Math.max(Math.min(drag.origin, drag.up.top), drag.origin + distance),
+  );
 }
 
 export function useLandingChapterScroll(
@@ -56,6 +74,7 @@ export function useLandingChapterScroll(
     if (!root) return;
     const mobile = matchMedia(portraitChapters);
     let swipe: Swipe | undefined;
+    let dragFrame = 0;
     let wheelAt = -Infinity;
     let wheelDistance = 0;
     let wheelCommitted = false;
@@ -63,6 +82,8 @@ export function useLandingChapterScroll(
     let navigationAt = -Infinity;
     const cancel = () => {
       swipe = undefined;
+      cancelAnimationFrame(dragFrame);
+      dragFrame = 0;
     };
     const canTurn = (target: EventTarget | null) => {
       if (
@@ -101,8 +122,7 @@ export function useLandingChapterScroll(
       }
       return true;
     };
-    const turn = (scrollY: number, distance: number) => {
-      const top = chapterDestination(root, scrollY, distance);
+    const settle = (top: number) => {
       if (Math.abs(top - window.scrollY) <= 2) return;
       destination = top;
       navigationAt = performance.now();
@@ -112,7 +132,11 @@ export function useLandingChapterScroll(
       cancel();
       if (event.touches.length !== 1 || !canTurn(event.target)) return;
       const touch = event.touches[0];
-      swipe = { x: touch.clientX, y: touch.clientY, scrollY: window.scrollY };
+      swipe = {
+        x: touch.clientX,
+        y: touch.clientY,
+        startedAt: event.timeStamp,
+      };
     };
     const move = (event: TouchEvent) => {
       if (!swipe) return;
@@ -121,23 +145,58 @@ export function useLandingChapterScroll(
         return;
       }
       const touch = event.touches[0];
+      const distance = swipe.y - touch.clientY;
       const x = Math.abs(touch.clientX - swipe.x);
-      const y = Math.abs(touch.clientY - swipe.y);
-      if (!swipe.axis && Math.max(x, y) >= 8)
+      const y = Math.abs(distance);
+      if (!swipe.axis && Math.max(x, y) >= 8) {
         swipe.axis = y > x ? "vertical" : "horizontal";
-      if (swipe.axis === "vertical" && event.cancelable) event.preventDefault();
+        if (swipe.axis === "vertical") {
+          const layout = measureChapters(root);
+          if (!layout) return;
+          const { chapters, y: origin } = layout;
+          swipe.drag = {
+            origin,
+            top: origin,
+            up: chapterEdge(chapters, origin, false),
+            down: chapterEdge(chapters, origin, true),
+          };
+          // A new drag takes over at the currently visible position.
+          if (destination !== undefined)
+            window.scrollTo({ top: origin, behavior: "instant" });
+          destination = undefined;
+        }
+      }
+      const drag = swipe.drag;
+      if (!drag) return;
+      if (event.cancelable) event.preventDefault();
+      drag.top = dragTop(drag, distance);
+      if (!dragFrame) {
+        dragFrame = requestAnimationFrame(() => {
+          dragFrame = 0;
+          window.scrollTo({ top: drag.top, behavior: "instant" });
+        });
+      }
     };
     const end = (event: TouchEvent) => {
       const gesture = swipe;
       cancel();
-      if (!mobile.matches || gesture?.axis !== "vertical") return;
+      const drag = gesture?.drag;
+      if (!mobile.matches || !gesture || !drag) return;
       const touch = event.changedTouches[0];
       if (!touch) return;
       const distance = gesture.y - touch.clientY;
-      if (Math.abs(distance) < 36) return;
+      const edge = distance > 0 ? drag.down : drag.up;
+      const travelled = Math.abs(distance);
+      const flick =
+        travelled >= 24 && event.timeStamp - gesture.startedAt < 180;
+      const top = edge.free
+        ? dragTop(drag, distance)
+        : travelled >= 56 || flick
+          ? edge.top
+          : drag.origin;
       wheelAt = event.timeStamp;
       wheelCommitted = true;
-      turn(gesture.scrollY, distance);
+      settle(top);
     };
     const wheel = (event: WheelEvent) => {
       if (
@@ -167,7 +226,21 @@ export function useLandingChapterScroll(
       wheelDistance += event.deltaY * unit;
       if (Math.abs(wheelDistance) < 24) return;
       wheelCommitted = true;
-      turn(window.scrollY, wheelDistance);
+      const layout = measureChapters(root);
+      if (!layout) return;
+      const { chapters, viewport, y } = layout;
+      const down = wheelDistance > 0;
+      const edge = chapterEdge(chapters, y, down);
+      const step = Math.min(
+        Math.max(Math.abs(wheelDistance), viewport / 2),
+        viewport * 0.8,
+      );
+      const top = edge.free
+        ? down
+          ? Math.min(y + step, edge.top)
+          : Math.max(y - step, edge.top)
+        : edge.top;
+      settle(top);
     };
     const detach = () => {
       cancel();

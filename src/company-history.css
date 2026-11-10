@@ -256,8 +256,8 @@ html[data-site-theme="dark"] .landing .company-journey {
 }
 @keyframes journey-copy-in {
   from {
-    opacity: 0;
-    transform: translateY(9px);
+    opacity: 0.86;
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -367,34 +367,11 @@ html[data-site-theme="dark"] .landing .company-journey {
   display: flow-root;
   z-index: 3;
 }
-.journey-narrative.is-leaving {
-  position: absolute;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  animation: journey-copy-out 450ms ease both;
-}
-.journey-narrative.is-leaving .journey-year {
-  visibility: hidden;
-}
-@keyframes journey-copy-out {
-  from {
-    opacity: 1;
-    transform: none;
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-}
 .journey-copy-shell {
   pointer-events: none;
 }
 .journey-narrative {
   pointer-events: auto;
-}
-.journey-narrative.is-leaving {
-  pointer-events: none;
 }
 
 .journey-fixed-dot {
@@ -536,9 +513,9 @@ html[data-site-theme="dark"] .journey-milestone.is-active .journey-point-year {
 .journey-emblem-stack > img[data-metaphor="package"] {
   filter: hue-rotate(126deg) saturate(1.65);
 }
-.journey-narrative:not(.is-leaving) > :is(.journey-stage-label, h3, p),
-.journey-narrative:not(.is-leaving) .journey-year {
-  animation: journey-copy-in 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+.journey-narrative > :is(.journey-stage-label, h3, p),
+.journey-narrative .journey-year {
+  animation: journey-copy-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 .journey-stage-progress {
   display: flex;

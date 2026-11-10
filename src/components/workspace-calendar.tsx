@@ -9,6 +9,7 @@ import {
 } from "../data/workspace";
 import { shiftDate, today, dateLabel } from "../lib/utils";
 import { Avatar, Empty } from "./ui";
+import { DashboardWidgetActions } from "./dashboard-widgets";
 
 export function WorkspaceCalendar({ project }: { project?: WorkspaceProject }) {
   const [selected, setSelected] = useState(today()),
@@ -34,6 +35,7 @@ export function WorkspaceCalendar({ project }: { project?: WorkspaceProject }) {
             timeZone: "UTC",
           }).format(new Date(week + "T12:00:00Z"))}
         </span>
+        <DashboardWidgetActions />
       </header>
       <div className="calendar-week">
         <button

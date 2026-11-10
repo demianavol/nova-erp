@@ -102,25 +102,14 @@ export function mountPartnershipInvitation(
       return;
     }
     const duration = reduced.matches ? 160 : opening ? 1600 : 1250;
-    const animate = (
-      element: HTMLElement,
-      frames: Keyframe[],
-      easing = "linear",
-    ) => {
-      const physicalFrames = frames.map((frame) => ({
-        ...frame,
-        easing: "ease-in-out",
-      }));
-      const animation = element.animate(
-        opening
-          ? physicalFrames
-          : [...physicalFrames].reverse().map((frame) => ({
-              ...frame,
-              offset: frame.offset == null ? undefined : 1 - frame.offset,
-            })),
-        { duration, fill: "both", easing },
+    const animate = (element: HTMLElement, frames: Keyframe[]) => {
+      animations.push(
+        element.animate(frames, {
+          duration,
+          fill: "both",
+          direction: opening ? "normal" : "reverse",
+        }),
       );
-      animations.push(animation);
     };
     if (reduced.matches) {
       // Lay out the target first; reduced motion only fades, with no spatial travel.
@@ -136,57 +125,67 @@ export function mountPartnershipInvitation(
     } else {
       letter.style.visibility = "visible";
       trigger.style.visibility = "visible";
+      // The pocket, its mask and the surrounding layout travel together.
+      const pocketTravel = (property: string, from: string, to: string) => [
+        { [property]: from, offset: 0 },
+        { [property]: from, offset: 0.29, easing: "cubic-bezier(.36,0,.24,1)" },
+        { [property]: to, offset: 0.9 },
+        { [property]: to, offset: 1 },
+      ];
       animate(
         stage,
-        [{ height: `${m.closedHeight}px` }, { height: `${m.openHeight}px` }],
-        "cubic-bezier(.4,0,.2,1)",
+        pocketTravel("height", `${m.closedHeight}px`, `${m.openHeight}px`),
       );
-      layers.forEach((layer) =>
-        animate(layer, [
-          { transform: "translateY(0) scale(1)", offset: 0 },
-          { transform: "translateY(2px) scale(.995)", offset: 0.08 },
-          { transform: "translateY(0) scale(1)", offset: 0.18 },
-          { transform: "translateY(0) scale(1)", offset: 0.3 },
-          { transform: `translateY(${m.offset}px) scale(1)`, offset: 0.9 },
-          { transform: `translateY(${m.offset}px) scale(1)`, offset: 1 },
-        ]),
+      layers.forEach((layer) => {
+        animate(
+          layer,
+          pocketTravel("transform", "translateY(0px)", `translateY(${m.offset}px)`),
+        );
+      });
+      animate(
+        sleeve,
+        pocketTravel(
+          "clipPath",
+          invitationPocketClip(width, 0),
+          invitationPocketClip(width, m.offset),
+        ),
       );
       animate(hinge, [
         { transform: "rotateX(0deg)", offset: 0 },
-        { transform: "rotateX(0deg)", offset: 0.12 },
+        { transform: "rotateX(0deg)", offset: 0.1, easing: "ease-in-out" },
         { transform: "rotateX(180deg)", offset: 0.42 },
         { transform: "rotateX(180deg)", offset: 1 },
       ]);
+      // Switch layers at 90°, when the flap is edge-on at the hinge.
       animate(flap, [
-        { zIndex: 4, offset: 0 },
-        { zIndex: 4, offset: 0.27 },
-        { zIndex: 0, offset: 0.28 },
+        { zIndex: 4, offset: 0, easing: "steps(1, end)" },
+        { zIndex: 0, offset: 0.26 },
         { zIndex: 0, offset: 1 },
-      ]);
-      // The opening hides the paper's inserted corners, independently of glass opacity.
-      animate(sleeve, [
-        { clipPath: invitationPocketClip(width, 0), offset: 0 },
-        { clipPath: invitationPocketClip(width, 0), offset: 0.3 },
-        { clipPath: invitationPocketClip(width, m.offset), offset: 0.9 },
-        { clipPath: invitationPocketClip(width, m.offset), offset: 1 },
       ]);
       const pose = invitationPaperMotion(m.envelopeHeight);
       animate(letter, [
-        { transform: pose.tucked, opacity: 0, offset: 0 },
-        { transform: pose.tucked, opacity: 0, offset: 0.22 },
-        { transform: pose.tucked, opacity: 1, offset: 0.3 },
-        { transform: pose.approaching, opacity: 1, offset: 0.62 },
-        { transform: pose.reading, opacity: 1, offset: 0.82 },
-        { transform: pose.reading, opacity: 1, offset: 1 },
+        { transform: pose.tucked, offset: 0 },
+        {
+          transform: pose.tucked,
+          offset: 0.29,
+          easing: "cubic-bezier(.25,0,.55,.8)",
+        },
+        {
+          transform: pose.approaching,
+          offset: 0.65,
+          easing: "cubic-bezier(.32,.43,.55,1)",
+        },
+        { transform: pose.reading, offset: 0.86 },
+        { transform: pose.reading, offset: 1 },
       ]);
       animate(copy, [
         { opacity: 0, offset: 0 },
-        { opacity: 0, offset: 0.84 },
+        { opacity: 0, offset: 0.86, easing: "ease-out" },
         { opacity: 1, offset: 1 },
       ]);
       animate(trigger, [
-        { opacity: 1, offset: 0 },
-        { opacity: 0, offset: 0.15 },
+        { opacity: 1, offset: 0, easing: "ease-in-out" },
+        { opacity: 0, offset: 0.18 },
         { opacity: 0, offset: 1 },
       ]);
     }

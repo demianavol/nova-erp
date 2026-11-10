@@ -1,9 +1,16 @@
 /* Compact glass navigation with a quiet, flat edge. */
-html[data-site-theme] .landing .lp-header.yu-public-header {
+.landing {
   --header-edge: #a88acb18;
   --header-glass: #ffffffb8;
-  --header-glow: #bb95e51c;
   --header-accent: var(--yu-accent);
+}
+html[data-site-theme="dark"] .landing {
+  --header-edge: #ffffff1c;
+  --header-glass: #111114d9;
+  --header-accent: #e3e3e8;
+}
+html[data-site-theme] .landing .lp-header.yu-public-header {
+  --header-glow: #bb95e51c;
   --header-control: #a880c90a;
   --header-erp-fill: linear-gradient(135deg, #b88bdd20, #b88bdd08);
   position: sticky;
@@ -16,10 +23,7 @@ html[data-site-theme] .landing .lp-header.yu-public-header {
   backdrop-filter: none;
 }
 html[data-site-theme="dark"] .landing .lp-header.yu-public-header {
-  --header-edge: #ffffff1c;
-  --header-glass: #111114d9;
   --header-glow: #ffffff12;
-  --header-accent: #e3e3e8;
   --header-control: #ffffff08;
   --header-erp-fill: var(--header-control);
 }

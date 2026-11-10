@@ -23,9 +23,9 @@ export function CompanyMetric({
       className={`lp-metric lp-metric-kind-${index}`}
       style={{ "--metric-delay": `${index * 100}ms` } as CSSProperties}
     >
-      {(engaged) => (
+      {(engaged, taps) => (
         <>
-          <MetricEmblem kind={metric.icon} active={engaged} />
+          <MetricEmblem kind={metric.icon} active={engaged} taps={taps} />
           <div className="lp-metric-number">
             <div className="lp-metric-value">{metricDisplayValue(metric)}</div>
             {unit && <span className="lp-metric-unit">{unit}</span>}

@@ -12,9 +12,13 @@ import {
   Layers3,
 } from "lucide-react";
 import { useERP } from "../data/store";
-import { channels, departmentNames, type Task } from "../data/schema";
 import {
-  chartData,
+  channels,
+  departmentNames,
+  type Order,
+  type Task,
+} from "../data/schema";
+import {
   inPeriod,
   isRevenue,
   orderTotal,
@@ -33,7 +37,7 @@ import {
   SectionHeading,
   TextLink,
 } from "../components/ui";
-import { ChannelDonut, KPIGrid, RevenueChart } from "../components/charts";
+import { ChannelDonut, KPIGrid } from "../components/charts";
 import {
   FinancialChartPanel,
   FinancialSummary,
@@ -45,6 +49,11 @@ import { ActivityFeed } from "../components/activity-feed";
 import { WorkspacePulse } from "../components/workspace-pulse";
 import { useWorkspace, projectTasks } from "../data/workspace";
 import { HomeDealBoard } from "../components/home-deal-board";
+import {
+  DashboardWidgetActions,
+  DashboardWidgets,
+  type WidgetContent,
+} from "../components/dashboard-widgets";
 
 export function PeriodPicker({
   period,
@@ -160,7 +169,178 @@ export function TaskRow({ task }: { task: Task }) {
   );
 }
 
-export function Dashboard({ sales = false }: { sales?: boolean }) {
+function BusinessOverview({
+  period,
+  onChange,
+  sales = false,
+}: {
+  period: Period;
+  onChange: (period: Period) => void;
+  sales?: boolean;
+}) {
+  return (
+    <>
+      <div className="overview-heading">
+        <div>
+          <h2>
+            {sales ? "Ключевые показатели" : "Обзор бизнеса"}
+            <Badge tone="green">
+              <span className="live-dot" />
+              Обновлено
+            </Badge>
+          </h2>
+          <p>
+            {dateLabel(period.from)} — {dateLabel(period.to, true)}
+          </p>
+        </div>
+        <div className="erp-widget-heading-actions">
+          <PeriodPicker period={period} onChange={onChange} />
+          <DashboardWidgetActions />
+        </div>
+      </div>
+      <KPIGrid period={period} />
+      <FinancialSummary period={period} />
+    </>
+  );
+}
+
+function RecentOrders({ orders }: { orders: Order[] }) {
+  const customers = useERP((state) => state.data.customers);
+  const navigate = useNavigate();
+  return (
+    <section className="card recent-orders">
+      <SectionHeading
+        title="Последние заказы"
+        description="Новые покупки и их статус"
+        action={
+          <div className="erp-widget-heading-actions">
+            <TextLink onClick={() => navigate("/erp/sales/orders")}>
+              Все заказы
+            </TextLink>
+            <DashboardWidgetActions />
+          </div>
+        }
+      />
+      <div className="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Заказ / клиент</th>
+              <th>Канал</th>
+              <th>Сумма</th>
+              <th>Оплата</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {orders.slice(0, 5).map((o) => {
+              const customer = customers.find((c) => c.id === o.customerId)!;
+              return (
+                <tr
+                  key={o.id}
+                  onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
+                >
+                  <td>
+                    <button
+                      className="table-entity"
+                      onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
+                    >
+                      <span className="order-mini-icon">
+                        <ShoppingBag size={15} />
+                      </span>
+                      <span>
+                        <strong>{o.number}</strong>
+                        <small>
+                          {customer.name.split(" ").slice(0, 2).join(" ")}
+                        </small>
+                      </span>
+                    </button>
+                  </td>
+                  <td>
+                    <span className="channel-text">
+                      <i
+                        className={cn("channel-dot", o.channel.toLowerCase())}
+                      />
+                      {o.channel}
+                    </span>
+                  </td>
+                  <td className="nowrap font-medium">{money(orderTotal(o))}</td>
+                  <td>
+                    <Badge
+                      tone={
+                        o.shipping === "cancelled"
+                          ? "neutral"
+                          : o.payment === "paid"
+                            ? "green"
+                            : "orange"
+                      }
+                    >
+                      {o.shipping === "cancelled"
+                        ? "Отменён"
+                        : o.payment === "paid"
+                          ? "Оплачен"
+                          : "Ожидание"}
+                    </Badge>
+                  </td>
+                  <td>
+                    <ArrowUpRight size={15} />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {!orders.length && (
+          <Empty
+            title="Заказов пока нет"
+            description="За выбранный период нет заказов."
+          />
+        )}
+      </div>
+    </section>
+  );
+}
+
+export function HomeDashboard({
+  extras,
+}: {
+  extras: Pick<WidgetContent, "shortcuts" | "profile" | "message" | "learning">;
+}) {
+  const data = useERP((state) => state.data);
+  const project = useWorkspace((state) =>
+    state.projects.find((item) => item.id === state.selectedProjectId),
+  );
+  const [period, setPeriod] = useState<Period>(() => periodFor(30));
+  const orders = data.orders.filter((order) =>
+    inPeriod(order.createdAt, period.from, period.to),
+  );
+  const tasks = projectTasks(data.tasks, project)
+    .filter((task) => !task.done)
+    .sort((a, b) => a.dueAt.localeCompare(b.dueAt))
+    .slice(0, 3);
+
+  return (
+    <DashboardWidgets
+      content={{
+        deals: <HomeDealBoard showProjectPicker />,
+        tasks: <HomeTasks tasks={tasks} project={project} />,
+        progress: <WorkspacePulse project={project} />,
+        events: <ActivityFeed project={project} />,
+        calendar: <WorkspaceCalendar project={project} />,
+        finance: <FinancialChartPanel period={period} />,
+        overview: (
+          <div className="erp-business-overview">
+            <BusinessOverview period={period} onChange={setPeriod} />
+          </div>
+        ),
+        orders: <RecentOrders orders={orders} />,
+        ...extras,
+      }}
+    />
+  );
+}
+
+export function Dashboard() {
   const navigate = useNavigate();
   const data = useERP((s) => s.data);
   const [period, setPeriod] = useState<Period>(periodFor(30));
@@ -190,321 +370,183 @@ export function Dashboard({ sales = false }: { sales?: boolean }) {
     }))
     .sort((a, b) => b.sales - a.sales)
     .slice(0, 5);
-  const workspace = useWorkspace();
-  const project = workspace.projects.find(
-    (p) => p.id === workspace.selectedProjectId,
-  );
-  const taskList = projectTasks(data.tasks, sales ? undefined : project)
-    .filter((t) => !t.done && (!sales || t.department === "sales"))
+  const taskList = data.tasks
+    .filter((task) => !task.done && task.department === "sales")
     .sort((a, b) => a.dueAt.localeCompare(b.dueAt))
-    .slice(0, sales ? 4 : 3);
-  const mainRevenue =
-    chartData(data.orders, period).reduce((s, d) => s + d.revenue, 0) * 100;
+    .slice(0, 4);
+
   return (
-    <div className={sales ? "sales-dashboard" : "home-dashboard"}>
-      {sales && (
-        <PageHeading
-          eyebrow="ОТДЕЛ ПРОДАЖ"
-          title="Продажи в деталях"
-          description="Вся картина продаж. От первого контакта до повторной покупки."
-          actions={
-            <>
-              <Button variant="outline" onClick={() => navigate("/erp/tasks")}>
-                <CalendarDays size={16} />
-                Задачи команды
-              </Button>
-              <Button onClick={() => navigate("/erp/sales/orders?create=1")}>
-                <Plus size={17} />
-                Новый заказ
-              </Button>
-            </>
-          }
-        />
-      )}
-      {!sales && <HomeDealBoard />}
-      <div className="overview-heading">
-        <div>
-          <h2>
-            {sales ? "Ключевые показатели" : "Обзор бизнеса"}
-            <Badge tone="green">
-              <span className="live-dot" />
-              Обновлено
-            </Badge>
-          </h2>
-          <p>
-            {dateLabel(period.from)} — {dateLabel(period.to, true)}
-          </p>
-        </div>
-        <PeriodPicker period={period} onChange={setPeriod} />
-      </div>
-      <KPIGrid period={period} />
-      <FinancialSummary period={period} />
+    <div className="sales-dashboard">
+      <PageHeading
+        eyebrow="ОТДЕЛ ПРОДАЖ"
+        title="Продажи в деталях"
+        description="Вся картина продаж. От первого контакта до повторной покупки."
+        actions={
+          <>
+            <Button variant="outline" onClick={() => navigate("/erp/tasks")}>
+              <CalendarDays size={16} />
+              Задачи команды
+            </Button>
+            <Button onClick={() => navigate("/erp/sales/orders?create=1")}>
+              <Plus size={17} />
+              Новый заказ
+            </Button>
+          </>
+        }
+      />
+      <BusinessOverview sales period={period} onChange={setPeriod} />
       <div className="dashboard-middle">
         <FinancialChartPanel period={period} />
-        {sales ? (
-          <section className="card">
-            <SectionHeading
-              title="Каналы продаж"
-              description="Доля в общей выручке"
-            />
-            <ChannelDonut data={channelData} />
-            <div className="card-footnote">
-              Выручка с учётом скидок и доставки
-            </div>
-          </section>
-        ) : (
-          <WorkspacePulse project={project} />
-        )}
-      </div>
-      {sales && (
-        <div className="dashboard-middle sales-bottom">
-          <section className="card">
-            <SectionHeading
-              title="Товары, которые выбирают"
-              description="Продажи товаров без скидок и доставки"
-              action={<Badge>Топ-5</Badge>}
-            />
-            <div className="top-products">
-              {topProducts.some((p) => p.sales > 0) ? (
-                topProducts
-                  .filter((p) => p.sales > 0)
-                  .map((p, i) => (
-                    <div className="product-row" key={p.id}>
-                      <span className="product-rank">0{i + 1}</span>
-                      <span
-                        className="product-thumb"
-                        style={
-                          { "--product-color": p.color } as React.CSSProperties
-                        }
-                      >
-                        <Layers3 size={22} />
-                      </span>
-                      <div>
-                        <strong>{p.name}</strong>
-                        <span>
-                          {p.category} · {p.units} шт.
-                        </span>
-                      </div>
-                      <strong>{money(p.sales)}</strong>
-                    </div>
-                  ))
-              ) : (
-                <Empty
-                  title="Нет продаж за период"
-                  description="Выберите другой диапазон дат."
-                />
-              )}
-            </div>
-          </section>
-          <section className="card funnel-summary">
-            <SectionHeading
-              title="Воронка в цифрах"
-              description="Текущие активные сделки"
-              action={
-                <TextLink onClick={() => navigate("/erp/sales/pipeline")}>
-                  Kanban
-                </TextLink>
-              }
-            />
-            {(["new", "qualified", "proposal", "negotiation"] as const).map(
-              (stage, i) => {
-                const count = data.deals.filter(
-                  (d) => d.stage === stage,
-                ).length;
-                return (
-                  <button
-                    className="funnel-row"
-                    key={stage}
-                    onClick={() => navigate(`/erp/sales/pipeline?stage=${stage}`)}
-                  >
-                    <span>
-                      <i
-                        style={{
-                          background: [
-                            "#a5a3b3",
-                            "#b187f1",
-                            "#70d3e4",
-                            "#ecc180",
-                          ][i],
-                        }}
-                      />
-                      {
-                        [
-                          "Новые лиды",
-                          "Квалификация",
-                          "Предложение",
-                          "Переговоры",
-                        ][i]
-                      }
-                    </span>
-                    <div className="funnel-bar">
-                      <span
-                        style={{
-                          width: `${Math.max(8, (count / Math.max(data.deals.length, 1)) * 220)}%`,
-                          background: [
-                            "#777381",
-                            "#9254ee",
-                            "#43aebd",
-                            "#b48a4b",
-                          ][i],
-                        }}
-                      />
-                    </div>
-                    <strong>{count}</strong>
-                    <ChevronRight size={14} />
-                  </button>
-                );
-              },
-            )}
-            <div className="funnel-callout">
-              <span>Выигранные сделки</span>
-              <strong>
-                {data.deals.filter((d) => d.stage === "won").length}
-                <Badge tone="green">Успешно</Badge>
-              </strong>
-            </div>
-          </section>
-        </div>
-      )}
-      <div className="dashboard-bottom">
-        <section className="card recent-orders">
+        <section className="card">
           <SectionHeading
-            title="Последние заказы"
-            description="Новые покупки и их статус"
-            action={
-              <TextLink onClick={() => navigate("/erp/sales/orders")}>
-                Все заказы
-              </TextLink>
-            }
+            title="Каналы продаж"
+            description="Доля в общей выручке"
           />
-          <div className="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th>Заказ / клиент</th>
-                  <th>Канал</th>
-                  <th>Сумма</th>
-                  <th>Оплата</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {selectedOrders.slice(0, 5).map((o) => {
-                  const customer = data.customers.find(
-                    (c) => c.id === o.customerId,
-                  )!;
-                  return (
-                    <tr
-                      key={o.id}
-                      onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
+          <ChannelDonut data={channelData} />
+          <div className="card-footnote">
+            Выручка с учётом скидок и доставки
+          </div>
+        </section>
+      </div>
+      <div className="dashboard-middle sales-bottom">
+        <section className="card">
+          <SectionHeading
+            title="Товары, которые выбирают"
+            description="Продажи товаров без скидок и доставки"
+            action={<Badge>Топ-5</Badge>}
+          />
+          <div className="top-products">
+            {topProducts.some((p) => p.sales > 0) ? (
+              topProducts
+                .filter((p) => p.sales > 0)
+                .map((p, i) => (
+                  <div className="product-row" key={p.id}>
+                    <span className="product-rank">0{i + 1}</span>
+                    <span
+                      className="product-thumb"
+                      style={
+                        { "--product-color": p.color } as React.CSSProperties
+                      }
                     >
-                      <td>
-                        <button
-                          className="table-entity"
-                          onClick={() => navigate(`/erp/sales/orders?open=${o.id}`)}
-                        >
-                          <span className="order-mini-icon">
-                            <ShoppingBag size={15} />
-                          </span>
-                          <span>
-                            <strong>{o.number}</strong>
-                            <small>
-                              {customer.name.split(" ").slice(0, 2).join(" ")}
-                            </small>
-                          </span>
-                        </button>
-                      </td>
-                      <td>
-                        <span className="channel-text">
-                          <i
-                            className={cn(
-                              "channel-dot",
-                              o.channel.toLowerCase(),
-                            )}
-                          />
-                          {o.channel}
-                        </span>
-                      </td>
-                      <td className="nowrap font-medium">
-                        {money(orderTotal(o))}
-                      </td>
-                      <td>
-                        <Badge
-                          tone={
-                            o.shipping === "cancelled"
-                              ? "neutral"
-                              : o.payment === "paid"
-                                ? "green"
-                                : "orange"
-                          }
-                        >
-                          {o.shipping === "cancelled"
-                            ? "Отменён"
-                            : o.payment === "paid"
-                              ? "Оплачен"
-                              : "Ожидание"}
-                        </Badge>
-                      </td>
-                      <td>
-                        <ArrowUpRight size={15} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            {!selectedOrders.length && (
+                      <Layers3 size={22} />
+                    </span>
+                    <div>
+                      <strong>{p.name}</strong>
+                      <span>
+                        {p.category} · {p.units} шт.
+                      </span>
+                    </div>
+                    <strong>{money(p.sales)}</strong>
+                  </div>
+                ))
+            ) : (
               <Empty
-                title="Заказов пока нет"
-                description="За выбранный период нет заказов."
+                title="Нет продаж за период"
+                description="Выберите другой диапазон дат."
               />
             )}
           </div>
         </section>
-        {sales ? (
-          <section className="card tasks-card">
-            <SectionHeading
-              title="В фокусе команды"
-              description="Ближайшие задачи и приоритеты"
-              action={
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label="Создать задачу"
-                  onClick={() =>
-                    navigate(
-                      "/erp/tasks?create=1" +
-                        (!sales && project
-                          ? "&project=" + encodeURIComponent(project.id)
-                          : ""),
-                    )
-                  }
+        <section className="card funnel-summary">
+          <SectionHeading
+            title="Воронка в цифрах"
+            description="Текущие активные сделки"
+            action={
+              <TextLink onClick={() => navigate("/erp/sales/pipeline")}>
+                Kanban
+              </TextLink>
+            }
+          />
+          {(["new", "qualified", "proposal", "negotiation"] as const).map(
+            (stage, i) => {
+              const count = data.deals.filter((d) => d.stage === stage).length;
+              return (
+                <button
+                  className="funnel-row"
+                  key={stage}
+                  onClick={() => navigate(`/erp/sales/pipeline?stage=${stage}`)}
                 >
-                  <Plus size={18} />
-                </Button>
-              }
-            />
-            <div>
-              {taskList.length ? (
-                taskList.map((t) => <TaskRow task={t} key={t.id} />)
-              ) : (
-                <Empty
-                  title="Всё выполнено"
-                  description="Создайте новую задачу для команды."
-                />
-              )}
-            </div>
-            <button className="all-tasks" onClick={() => navigate("/erp/tasks")}>
-              Все задачи
-              <ArrowRight size={15} />
-            </button>
-          </section>
-        ) : (
-          <HomeTasks tasks={taskList} project={project} />
-        )}
+                  <span>
+                    <i
+                      style={{
+                        background: [
+                          "#a5a3b3",
+                          "#b187f1",
+                          "#70d3e4",
+                          "#ecc180",
+                        ][i],
+                      }}
+                    />
+                    {
+                      [
+                        "Новые лиды",
+                        "Квалификация",
+                        "Предложение",
+                        "Переговоры",
+                      ][i]
+                    }
+                  </span>
+                  <div className="funnel-bar">
+                    <span
+                      style={{
+                        width: `${Math.max(8, (count / Math.max(data.deals.length, 1)) * 220)}%`,
+                        background: [
+                          "#777381",
+                          "#9254ee",
+                          "#43aebd",
+                          "#b48a4b",
+                        ][i],
+                      }}
+                    />
+                  </div>
+                  <strong>{count}</strong>
+                  <ChevronRight size={14} />
+                </button>
+              );
+            },
+          )}
+          <div className="funnel-callout">
+            <span>Выигранные сделки</span>
+            <strong>
+              {data.deals.filter((d) => d.stage === "won").length}
+              <Badge tone="green">Успешно</Badge>
+            </strong>
+          </div>
+        </section>
       </div>
-      {!sales && <WorkspaceCalendar project={project} />}
-      {!sales && <ActivityFeed project={project} />}
+      <div className="dashboard-bottom">
+        <RecentOrders orders={selectedOrders} />
+        <section className="card tasks-card">
+          <SectionHeading
+            title="В фокусе команды"
+            description="Ближайшие задачи и приоритеты"
+            action={
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label="Создать задачу"
+                onClick={() => navigate("/erp/tasks?create=1")}
+              >
+                <Plus size={18} />
+              </Button>
+            }
+          />
+          <div>
+            {taskList.length ? (
+              taskList.map((t) => <TaskRow task={t} key={t.id} />)
+            ) : (
+              <Empty
+                title="Всё выполнено"
+                description="Создайте новую задачу для команды."
+              />
+            )}
+          </div>
+          <button className="all-tasks" onClick={() => navigate("/erp/tasks")}>
+            Все задачи
+            <ArrowRight size={15} />
+          </button>
+        </section>
+      </div>
     </div>
   );
 }

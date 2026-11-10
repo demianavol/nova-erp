@@ -1,13 +1,6 @@
 import { useState } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import {
-  FolderKanban,
-  Layers3,
-  ListTodo,
-  Plus,
-  Users,
-  Zap,
-} from "lucide-react";
+import { Link } from "react-router-dom";
+import { Layers3, ListTodo, Plus, Users, Zap } from "lucide-react";
 import { useERP } from "../data/store";
 import { projectTasks, useWorkspace } from "../data/workspace";
 import { Avatar, Button, Dialog, Field, Input, Select } from "./ui";
@@ -18,8 +11,6 @@ export function ProjectNavigation() {
   const project = workspace.projects.find(
     (p) => p.id === workspace.selectedProjectId,
   );
-  const navigate = useNavigate(),
-    location = useLocation();
   const [creating, setCreating] = useState(false),
     [members, setMembers] = useState(false);
   const [name, setName] = useState(""),
@@ -32,14 +23,12 @@ export function ProjectNavigation() {
   );
   return (
     <>
-      <div className="sidebar-nav-area project-navigation">
+      <div className="card project-navigation erp-project-controls">
         <div className="project-picker">
           <button
             className={!project ? "project-all selected" : "project-all"}
-            onClick={() => {
-              workspace.selectProject(null);
-              navigate("/erp");
-            }}
+            aria-pressed={!project}
+            onClick={() => workspace.selectProject(null)}
           >
             <Layers3 size={14} />
             Все проекты
@@ -64,10 +53,7 @@ export function ProjectNavigation() {
               className={`project-choice project-color-${i % 4}${p.id === project?.id ? " selected" : ""}`}
               title={p.name}
               aria-pressed={p.id === project?.id}
-              onClick={() => {
-                workspace.selectProject(p.id);
-                navigate("/erp");
-              }}
+              onClick={() => workspace.selectProject(p.id)}
             >
               <span>{p.name.slice(0, 1)}</span>
               <strong>{p.name}</strong>
@@ -85,20 +71,11 @@ export function ProjectNavigation() {
           {project ? "Работа по проекту" : "Работа команды"}
         </div>
         <nav className="project-context" aria-label="Работа по проекту">
-          <button onClick={() => navigate("/erp")}>
-            <FolderKanban size={16} />
-            Доска проекта
-          </button>
           <button onClick={() => setMembers(true)}>
             <Users size={16} />
             Ответственные<span>{people.length}</span>
           </button>
-          <NavLink
-            to={`/erp/tasks?view=backlog${suffix}`}
-            className={() =>
-              location.search.includes("view=backlog") ? "selected" : ""
-            }
-          >
+          <Link to={`/erp/tasks?view=backlog${suffix}`}>
             <ListTodo size={16} />
             Бэклог
             <span>
@@ -107,13 +84,8 @@ export function ProjectNavigation() {
                   .length
               }
             </span>
-          </NavLink>
-          <NavLink
-            to={`/erp/tasks?view=sprint${suffix}`}
-            className={() =>
-              location.search.includes("view=sprint") ? "selected" : ""
-            }
-          >
+          </Link>
+          <Link to={`/erp/tasks?view=sprint${suffix}`}>
             <Zap size={16} />
             Спринт недели
             <span>
@@ -122,28 +94,8 @@ export function ProjectNavigation() {
                   .length
               }
             </span>
-          </NavLink>
+          </Link>
         </nav>
-        {location.pathname.startsWith("/erp/sales") && (
-          <>
-            <div className="project-section-label">Продажи</div>
-            <nav
-              className="project-context sales-context"
-              aria-label="Разделы продаж"
-            >
-              {[
-                ["/erp/sales", "Аналитика"],
-                ["/erp/sales/orders", "Заказы"],
-                ["/erp/sales/customers", "Клиенты"],
-                ["/erp/sales/pipeline", "Воронка"],
-              ].map(([to, label]) => (
-                <NavLink to={to} end key={to}>
-                  {label}
-                </NavLink>
-              ))}
-            </nav>
-          </>
-        )}
       </div>
       <Dialog
         open={creating}
@@ -157,7 +109,6 @@ export function ProjectNavigation() {
             try {
               workspace.addProject(name, employee);
               setCreating(false);
-              navigate("/erp");
             } catch (err) {
               setError(
                 (err as Error).message.includes("Выберите")

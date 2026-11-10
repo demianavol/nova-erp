@@ -1,10 +1,11 @@
 import { useSiteLanguage } from "../lib/site-language";
 import { useId, type Ref } from "react";
 import { Link } from "react-router-dom";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { CompanyBrand } from "./company-brand";
 import { ErpEntryLink } from "./erp-entry-link";
 import { company } from "../data/company";
+import { useLandingMobile } from "./use-landing-mobile";
 import "../company-footer.css";
 
 const sectionGroups = [
@@ -37,6 +38,7 @@ export function CompanyFooter({
   footerRef?: Ref<HTMLElement>;
 }) {
   const { t } = useSiteLanguage();
+  const mobile = useLandingMobile();
   const glow = useId().replace(/:/g, "");
   return (
     <footer
@@ -85,10 +87,12 @@ export function CompanyFooter({
               <span>Young Unicorn</span>
             </Link>
           </div>
-          <nav className="company-footer-nav" aria-label={t("Навигация в подвале")}>
-            {sectionGroups.map((group) => (
-              <div className="company-footer-group" key={group.title}>
-                <h2 className="company-footer-heading">{t(group.title)}</h2>
+          <nav
+            className="company-footer-nav"
+            aria-label={t("Навигация в подвале")}
+          >
+            {sectionGroups.map((group) => {
+              const links = (
                 <div className="company-footer-links">
                   {group.links.map(([id, title]) => (
                     <Link key={id} to={`/#${id}`} onClick={() => onJump(id)}>
@@ -97,19 +101,35 @@ export function CompanyFooter({
                   ))}
                   {group.staff && (
                     <ErpEntryLink className="company-footer-staff">
-                      {t("Сотрудникам")}<ArrowUpRight size={12} aria-hidden="true" />
+                      {t("Сотрудникам")}
+                      <ArrowUpRight size={12} aria-hidden="true" />
                     </ErpEntryLink>
                   )}
                 </div>
-              </div>
-            ))}
+              );
+              return mobile ? (
+                <details className="company-footer-group" key={group.title}>
+                  <summary>
+                    {t(group.title)}
+                    <ChevronDown size={16} aria-hidden="true" />
+                  </summary>
+                  {links}
+                </details>
+              ) : (
+                <div className="company-footer-group" key={group.title}>
+                  <h2 className="company-footer-heading">{t(group.title)}</h2>
+                  {links}
+                </div>
+              );
+            })}
           </nav>
           <div
             className="company-footer-contact"
             aria-labelledby="contacts-title"
           >
             <h2 id="contacts-title" className="company-footer-heading">
-              {t("Контакты")}</h2>
+              {t("Контакты")}
+            </h2>
             <a
               className="company-footer-telegram"
               href={company.partnerUrl}

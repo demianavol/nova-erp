@@ -4,8 +4,7 @@
       [data-site-theme-reveal],
       [data-erp-entry-transition]
     ) {
-    --copy-duration: 600ms;
-    --hero-copy-duration: 940ms;
+    --copy-duration: 220ms;
     view-transition-name: none;
 
     .landing-home
@@ -30,85 +29,27 @@
       animation-duration: var(--copy-duration);
       animation-timing-function: cubic-bezier(0.2, 0.75, 0.25, 1);
     }
-    &::view-transition-old(*),
     &::view-transition-new(*) {
       height: 100%;
       object-fit: none;
       object-position: left top;
       mix-blend-mode: normal;
-    }
-    &::view-transition-old(*) {
-      animation: yu-copy-out 520ms ease both;
-    }
-    &::view-transition-new(*) {
       animation: yu-copy-in var(--copy-duration) cubic-bezier(0.2, 0.7, 0.3, 1)
         both;
     }
-    &::view-transition-group(yu-hero-copy) {
-      animation-duration: var(--hero-copy-duration);
+    &::view-transition-old(*) {
+      display: none;
     }
-    &::view-transition-old(yu-hero-copy) {
-      animation: yu-hero-copy-out var(--hero-copy-duration) linear both;
-    }
-    &::view-transition-new(yu-hero-copy) {
-      animation: yu-hero-copy-in var(--hero-copy-duration) ease-in-out both;
-    }
-  }
-}
-
-@keyframes yu-copy-out {
-  18% {
-    opacity: 0.8;
-  }
-  to {
-    opacity: 0;
-    filter: blur(2px);
-    transform: translateY(-7px);
   }
 }
 
 @keyframes yu-copy-in {
   from {
-    opacity: 0;
-    clip-path: inset(-12px 95% -12px -12px);
-    transform: translateY(8px);
-  }
-  45% {
-    opacity: 0.87;
-  }
-  to {
-    opacity: 1;
-    clip-path: inset(-12px);
-  }
-}
-
-@keyframes yu-hero-copy-out {
-  25% {
     opacity: 0.9;
-  }
-  62% {
-    opacity: 0.45;
-    filter: blur(0.75px);
-  }
-  to {
-    opacity: 0;
-    filter: blur(2px);
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes yu-hero-copy-in {
-  from {
-    opacity: 0;
-    clip-path: inset(-12px 100% -12px -12px);
-    transform: translateY(6px);
-  }
-  50% {
-    opacity: 0.72;
-    clip-path: inset(-12px 34% -12px -12px);
+    transform: translateY(3px);
   }
   to {
     opacity: 1;
-    clip-path: inset(-12px);
+    transform: none;
   }
 }

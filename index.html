@@ -4,6 +4,56 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f5f6fa" />
+    <style>
+      html[data-site-theme="light"] {
+        --yu-site-surface: #faf8fd;
+        color-scheme: light;
+      }
+      html[data-site-theme="dark"] {
+        --yu-site-surface: #191526;
+        color-scheme: dark;
+      }
+      html[data-site-theme="dark"][data-site-page="landing"] {
+        --yu-site-surface: #080809;
+      }
+      html[data-site-theme],
+      html[data-site-theme] body {
+        background: var(--yu-site-surface);
+      }
+      html[data-erp-theme="dark"] {
+        background: var(--background, #101112);
+        color-scheme: dark;
+      }
+    </style>
+    <script>
+      (() => {
+        const path = location.hash.slice(1).split(/[?#]/, 1)[0].replace(/^\/|\/+$/g, "").toLowerCase();
+        const root = document.documentElement;
+        if (path === "erp" || path.startsWith("erp/")) {
+          try {
+            const signedIn = localStorage.getItem("nova-session") === "demo" ||
+              sessionStorage.getItem("nova-session") === "demo";
+            const preferences = JSON.parse(localStorage.getItem("nova-preferences") || "{}");
+            if (signedIn && preferences?.theme === "dark") root.dataset.erpTheme = "dark";
+          } catch {
+            /* The ERP loads its defaults when browser storage is unavailable. */
+          }
+          return;
+        }
+        if (path !== "" && path !== "login") return;
+
+        let theme = "dark";
+        try {
+          if (localStorage.getItem("yuc-site-theme") === "light") theme = "light";
+        } catch {
+          /* Browser storage can be unavailable. */
+        }
+        root.dataset.sitePage = path === "login" ? "login" : "landing";
+        root.dataset.siteTheme = theme;
+        document.querySelector('meta[name="theme-color"]').content =
+          getComputedStyle(root).getPropertyValue("--yu-site-surface").trim();
+      })();
+    </script>
     <meta
       name="description"
       content="Young Unicorn — продуктовая медиакомпания. Создаём бренды и развиваем их на маркетплейсах."

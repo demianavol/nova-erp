@@ -21,7 +21,7 @@ import { erpAccessMailto, erpAccessSchema } from "../data/erp-access";
 import { CompanyBrand } from "../components/company-brand";
 import { TechTitleLine, useTechTitleMotion } from "../components/hero-title";
 import { OfficeBackdrop } from "../components/office-backdrop";
-import { SiteThemeToggle, useSiteTheme } from "../components/site-theme";
+import { SiteThemeToggle } from "../components/site-theme";
 import { Button, Field, Input, Textarea } from "../components/ui";
 import "../login.css";
 
@@ -217,7 +217,6 @@ export function Login() {
     clickKick: false,
   } as const;
 
-  useSiteTheme();
   useEffect(() => {
     if (previousMode.current !== requestMode) {
       previousMode.current = requestMode;

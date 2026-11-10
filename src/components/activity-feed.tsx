@@ -16,6 +16,7 @@ import { dateLabel, money, shiftDate, today } from "../lib/utils";
 import { dealValue, orderTotal } from "../data/selectors";
 import { paymentNames, stageNames } from "../data/schema";
 import { Avatar, Dialog, Empty, Select } from "./ui";
+import { DashboardWidgetActions } from "./dashboard-widgets";
 
 type FeedFilter = "all" | "unread" | "today" | "week";
 const filters: [FeedFilter, string][] = [
@@ -228,6 +229,7 @@ export function ActivityFeed({ project }: { project?: WorkspaceProject }) {
             >
               <ExternalLink size={14} />
             </button>
+            <DashboardWidgetActions />
           </div>
         </header>
         {eventList()}

@@ -2,6 +2,7 @@ import { useSiteLanguage } from "../lib/site-language";
 import { useEffect, useRef, useState } from "react";
 import type { ExperienceCountryId } from "../data/global-experience";
 import type { VideoCompositor } from "./global-experience-video-compositor";
+import { useLandingMobile } from "./use-landing-mobile";
 
 const asset = (name: string) =>
   `${import.meta.env.BASE_URL}media/global-experience/${name}`;
@@ -13,6 +14,7 @@ export function GlobalExperienceFilm({
   selected: ExperienceCountryId | null;
 }) {
   const { t } = useSiteLanguage();
+  const mobile = useLandingMobile();
   const root = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -30,11 +32,21 @@ export function GlobalExperienceFilm({
     () => matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
   const [failed, setFailed] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [readyVideo, setReadyVideo] = useState<HTMLVideoElement>();
+  const light = theme === "light";
   const source = asset(
-    theme === "light"
-      ? "flags-film-native-light-v3.mp4"
-      : "flags-film-masked-v3.mp4",
+    mobile
+      ? light
+        ? "flags-mobile-light.mp4"
+        : "flags-mobile-dark.mp4"
+      : light
+        ? "flags-film-native-light-v3.mp4"
+        : "flags-film-masked-v3.mp4",
+  );
+  const poster = asset(
+    light
+      ? "flags-native-light-poster.webp"
+      : "flags-isolated-dark-poster.webp",
   );
   const eligible = near && !reduced && !failed;
   const playing = eligible && visible && tabVisible;
@@ -89,11 +101,7 @@ export function GlobalExperienceFilm({
   }, []);
 
   useEffect(() => {
-    setReady(false);
-    if (!eligible || !video.current || !canvas.current) {
-      setReady(false);
-      return;
-    }
+    if (!eligible || mobile || !video.current || !canvas.current) return;
     const element = video.current,
       surface = canvas.current;
     let disposed = false,
@@ -104,9 +112,9 @@ export function GlobalExperienceFilm({
         renderer = createVideoCompositor(
           element,
           surface,
-          () => setReady(true),
+          () => setReadyVideo(element),
           () => setFailed(true),
-          theme === "light",
+          light,
         );
         if (renderer) {
           compositor.current = renderer;
@@ -121,7 +129,7 @@ export function GlobalExperienceFilm({
       renderer?.dispose();
       compositor.current = null;
     };
-  }, [eligible, source]);
+  }, [eligible, light, mobile, source]);
 
   useEffect(() => {
     compositor.current?.select(selected);
@@ -142,67 +150,71 @@ export function GlobalExperienceFilm({
     };
   }, [playing, source]);
 
+  const film = eligible && (
+    <video
+      ref={video}
+      key={source}
+      className={mobile ? "ge-film-native" : "ge-film-source"}
+      src={source}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      disablePictureInPicture
+      tabIndex={-1}
+      aria-hidden="true"
+      onPlaying={(event) => {
+        if (mobile) setReadyVideo(event.currentTarget);
+      }}
+      onError={() => setFailed(true)}
+      onLoadedMetadata={(event) => {
+        const element = event.currentTarget;
+        const time = Math.min(
+          playhead.current,
+          Math.max(0, element.duration - 0.1),
+        );
+        if (time > 0) element.currentTime = time;
+      }}
+      onTimeUpdate={(event) => {
+        if (event.currentTarget.currentTime > 0.1)
+          playhead.current = event.currentTarget.currentTime;
+      }}
+    />
+  );
   return (
     <div
       ref={root}
       className="ge-film"
       data-playing={playing}
       data-reduced={reduced}
-      data-ready={ready && eligible}
+      data-ready={
+        eligible &&
+        readyVideo === video.current &&
+        readyVideo?.getAttribute("src") === source
+      }
       data-selection={selected ?? "all"}
     >
       <div
         className="ge-film-picture"
         role="img"
-        aria-label={t("Видео: флаги Китая, Кыргызстана и Узбекистана с мягким выделением выбранной страны")}
+        aria-label={t("Флаги Китая, Кыргызстана и Узбекистана")}
       >
         <img
           className="ge-film-poster"
-          src={
-            near
-              ? asset(
-                  theme === "light"
-                    ? "flags-native-light-poster.webp"
-                    : "flags-isolated-dark-poster.webp",
-                )
-              : undefined
-          }
+          src={poster}
           width={896}
           height={720}
           alt=""
+          loading="lazy"
           decoding="async"
         />
-        <canvas ref={canvas} className="ge-film-canvas" aria-hidden="true" />
+        {mobile ? (
+          film
+        ) : (
+          <canvas ref={canvas} className="ge-film-canvas" aria-hidden="true" />
+        )}
       </div>
-      {eligible && (
-        <video
-          ref={video}
-          key={source}
-          className="ge-film-source"
-          src={source}
-          width={896}
-          height={1440}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          disablePictureInPicture
-          tabIndex={-1}
-          aria-hidden="true"
-          onError={() => setFailed(true)}
-          onLoadedMetadata={(event) => {
-            const element = event.currentTarget;
-            element.currentTime = Math.min(
-              playhead.current,
-              Math.max(0, element.duration - 0.1),
-            );
-          }}
-          onTimeUpdate={(event) => {
-            if (event.currentTarget.currentTime > 0.1)
-              playhead.current = event.currentTarget.currentTime;
-          }}
-        />
-      )}
+      {!mobile && film}
     </div>
   );
 }

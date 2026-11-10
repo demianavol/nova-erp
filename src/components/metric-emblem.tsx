@@ -24,9 +24,11 @@ const rearCards = [
 export function MetricEmblem({
   kind,
   active,
+  taps = 0,
 }: {
   kind: MetricKind;
   active: boolean;
+  taps?: number;
 }) {
   const root = useRef<SVGSVGElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -59,6 +61,9 @@ export function MetricEmblem({
   useEffect(() => {
     if (active && !matchMedia(reducedMotion).matches) setPlaying(true);
   }, [active]);
+  useEffect(() => {
+    if (taps && !matchMedia(reducedMotion).matches) setPlaying(true);
+  }, [taps]);
 
   const id = useId();
   const [highlight, shade] = palettes[kind];

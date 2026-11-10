@@ -5,6 +5,7 @@ import type { Task } from "../data/schema";
 import type { WorkspaceProject } from "../data/workspace";
 import { dateLabel, today } from "../lib/utils";
 import { Avatar, Empty } from "./ui";
+import { DashboardWidgetActions } from "./dashboard-widgets";
 
 export function HomeTasks({
   tasks,
@@ -20,12 +21,15 @@ export function HomeTasks({
     <section className="card home-tasks">
       <header>
         <h2>Задачи команды</h2>
-        <button
-          aria-label="Создать задачу"
-          onClick={() => navigate("/erp/tasks?create=1" + suffix)}
-        >
-          <Plus size={17} />
-        </button>
+        <div className="erp-widget-heading-actions">
+          <button
+            aria-label="Создать задачу"
+            onClick={() => navigate("/erp/tasks?create=1" + suffix)}
+          >
+            <Plus size={17} />
+          </button>
+          <DashboardWidgetActions />
+        </div>
       </header>
       <div className="home-task-list">
         {tasks.map((task) => {

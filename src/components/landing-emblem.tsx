@@ -14,10 +14,12 @@ export function LandingEmblem({
   kind,
   active,
   visible,
+  loadOnSelect = false,
 }: {
   kind: CareerEmblemKind;
   active: boolean;
   visible: boolean;
+  loadOnSelect?: boolean;
 }) {
   const root = useRef<HTMLSpanElement>(null);
   const near = useNearViewport(root);
@@ -27,9 +29,10 @@ export function LandingEmblem({
   const sheet = new URL(`${media}-sheet.webp?layout=12x7`, document.baseURI)
     .href;
   const ready = readySheet === sheet;
+  const eligible = near && (!loadOnSelect || active);
 
   useEffect(() => {
-    if (!near || ready) return;
+    if (!eligible || ready) return;
     const preference = matchMedia("(prefers-reduced-motion: no-preference)");
     let mounted = true;
     const load = () => {
@@ -49,7 +52,7 @@ export function LandingEmblem({
       mounted = false;
       preference.removeEventListener("change", load);
     };
-  }, [near, ready, sheet]);
+  }, [eligible, ready, sheet]);
 
   return (
     <span

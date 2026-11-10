@@ -9,9 +9,9 @@ import {
   Search,
   X,
 } from "lucide-react";
-import { EmployeeTeam } from "../components/employee-team";
 import { company } from "../data/company";
-import { guideTopics } from "../data/employee-guide";
+import { EmployeeTeam } from "../components/employee-team";
+import { guideTopics, type GuideTopic } from "../data/employee-guide";
 import {
   GuideVisual,
   GuideTopicIcon,
@@ -22,7 +22,6 @@ import "../employees.css";
 
 const groups = ["Компания", "Работа", "В команде"];
 export function Employees() {
-  const erpRoute = "/erp";
   const location = useLocation();
   const menu = useRef<HTMLDetailsElement>(null);
   const [query, setQuery] = useState("");
@@ -49,7 +48,8 @@ export function Employees() {
       .includes(normalized),
   );
   useEffect(() => {
-    document.title = `${topic ? topic.title : "Сотрудникам"} — Young Unicorn`;
+    document.title = `${topic ? topic.title : "Справочник сотрудника"} — Young Unicorn`;
+    setQuery("");
     window.scrollTo({ top: 0, behavior: "instant" });
     if (location.hash) article.current?.focus({ preventScroll: true });
     return () => {
@@ -85,42 +85,50 @@ export function Employees() {
   return (
     <div className="landing employee-guide employee-guide-erp">
       <div className="eg-content">
+        {!topic && (
+          <div className="erp-guide-heading">
+            <h1 id="eg-directory-title">Справочник сотрудника</h1>
+            <p>Найдите нужный материал о работе в Young Unicorn.</p>
+          </div>
+        )}
         <div className="eg-toolbar">
-          <details className="eg-topics-menu" ref={menu}>
-            <summary>
-              Темы справочника <ChevronDown size={16} />
-            </summary>
-            <nav aria-label="Темы справочника">
-              <Link
-                className="eg-all-topics"
-                to="/erp/employees"
-                onClick={open}
-              >
-                Все темы <ArrowRight size={15} />
-              </Link>
-              <div className="eg-menu-groups">
-                {groups.map((group) => (
-                  <div key={group}>
-                    <h2>{group}</h2>
-                    {guideTopics
-                      .filter((item) => item.group === group)
-                      .map((item) => (
-                        <Link
-                          key={item.id}
-                          to={`/erp/employees#${item.id}`}
-                          aria-current={
-                            topic?.id === item.id ? "page" : undefined
-                          }
-                          onClick={open}
-                        >
-                          {item.title}
-                        </Link>
-                      ))}
-                  </div>
-                ))}
-              </div>
-            </nav>
-          </details>
+          {topic && (
+            <details className="eg-topics-menu" ref={menu}>
+              <summary>
+                Темы справочника <ChevronDown size={16} />
+              </summary>
+              <nav aria-label="Темы справочника">
+                <Link
+                  className="eg-all-topics"
+                  to="/erp/employees"
+                  onClick={open}
+                >
+                  Все темы <ArrowRight size={15} />
+                </Link>
+                <div className="eg-menu-groups">
+                  {groups.map((group) => (
+                    <div key={group}>
+                      <h2>{group}</h2>
+                      {guideTopics
+                        .filter((item) => item.group === group)
+                        .map((item) => (
+                          <Link
+                            key={item.id}
+                            to={`/erp/employees#${item.id}`}
+                            aria-current={
+                              topic?.id === item.id ? "page" : undefined
+                            }
+                            onClick={open}
+                          >
+                            {item.title}
+                          </Link>
+                        ))}
+                    </div>
+                  ))}
+                </div>
+              </nav>
+            </details>
+          )}
           <div className="eg-search">
             <Search size={16} />
             <input
@@ -149,8 +157,11 @@ export function Employees() {
             className="eg-search-results"
             aria-labelledby="eg-search-title"
           >
-            <span className="eg-breadcrumb">Справочник</span>
-            <h1 id="eg-search-title">Результаты поиска</h1>
+            {topic ? (
+              <h1 id="eg-search-title">Результаты поиска</h1>
+            ) : (
+              <h2 id="eg-search-title" className="erp-guide-search-title">Результаты поиска</h2>
+            )}
             <p className="eg-intro" role="status">
               {matches.length
                 ? `Найдено тем: ${matches.length}`
@@ -193,38 +204,7 @@ export function Employees() {
                 </Link>
               )}
             </div>
-            <h1 id="eg-article-title">{topic.title}</h1>
-            <p className="eg-intro">{topic.summary}</p>
-            <GuideVisual key={`visual-${topic.id}`} id={topic.id} />
-            <div
-              className={`eg-sections eg-sections-${topic.id}`}
-              key={`details-${topic.id}`}
-            >
-              {topic.sections.map((section, index) => (
-                <details key={section.title} open={index === 0}>
-                  <summary>
-                    <h2>{section.title}</h2>
-                    <Plus size={18} />
-                  </summary>
-                  <div className="eg-answer">
-                    {section.text && (
-                      <div className="eg-prose">
-                        {section.text.split("\n").map((paragraph) => (
-                          <p key={paragraph}>{paragraph}</p>
-                        ))}
-                      </div>
-                    )}
-                    {section.items && (
-                      <ul>
-                        {section.items.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </details>
-              ))}
-            </div>
+            <GuideArticleContent topic={topic} />
             <nav
               className="eg-topic-pagination"
               aria-label="Переход между темами"
@@ -274,91 +254,45 @@ export function Employees() {
             </nav>
           </article>
         ) : (
-          <>
-            <section className="eg-welcome" aria-labelledby="eg-welcome-title">
-              <span className="eg-breadcrumb">Сотрудникам</span>
-              <h1 id="eg-welcome-title">Как мы работаем</h1>
-              <p className="eg-intro">
-                Всё о работе в Young Unicorn Выбери нужную тему — остальное не
-                будет отвлекать
-              </p>
-              <div className="eg-quick-links">
-                <Link to="/erp/employees#adaptation">
-                  <GuideTopicIcon id="adaptation" size={28} />
-                  <span>
-                    Адаптация
-                    <strong className="eg-quick-value">3 месяца</strong>
-                  </span>
-                  <strong>
-                    С чего начать <ArrowRight size={18} />
-                  </strong>
-                </Link>
-                <Link to="/erp/employees#process">
-                  <GuideTopicIcon id="process" size={28} />
-                  <span>
-                    Рабочий цикл
-                    <strong className="eg-quick-value">2–4 недели</strong>
-                  </span>
-                  <strong>
-                    Как устроен спринт <ArrowRight size={18} />
-                  </strong>
-                </Link>
-                <Link to={erpRoute}>
-                  <GuideTopicIcon id="services" size={28} />
-                  <span>
-                    Задачи и проекты
-                    <strong className="eg-quick-value">ERP</strong>
-                  </span>
-                  <strong>
-                    Открыть ERP <ArrowUpRight size={18} />
-                  </strong>
-                </Link>
-              </div>
-            </section>
-            <EmployeeTeam />
-            <section
-              className="eg-directory"
-              aria-labelledby="eg-directory-title"
+          <section
+            className="eg-directory"
+            aria-labelledby="eg-directory-title"
+          >
+            <div
+              className="eg-topic-filters"
+              role="group"
+              aria-label="Группа тем"
             >
-              <h2 id="eg-directory-title">Справочник сотрудника</h2>
-              <div
-                className="eg-topic-filters"
-                role="group"
-                aria-label="Группа тем"
-              >
-                {["Все", ...groups].map((group) => (
-                  <button
-                    key={group}
-                    type="button"
-                    aria-pressed={topicGroup === group}
-                    onClick={() => setTopicGroup(group)}
-                  >
-                    {group}
-                  </button>
-                ))}
-              </div>
-              <div className="eg-topic-cards">
-                {guideTopics
-                  .filter(
-                    (item) => topicGroup === "Все" || item.group === topicGroup,
-                  )
-                  .map((item) => (
-                    <Link to={`/erp/employees#${item.id}`} key={item.id}>
-                      <div className="eg-card-heading">
-                        <span
-                          className={`eg-topic-symbol eg-symbol-${item.id}`}
-                        >
-                          <GuideTopicIcon id={item.id} size={26} />
-                        </span>
-                        <ArrowUpRight size={17} />
-                      </div>
+              {["Все", ...groups].map((group) => (
+                <button
+                  key={group}
+                  type="button"
+                  aria-pressed={topicGroup === group}
+                  onClick={() => setTopicGroup(group)}
+                >
+                  {group}
+                </button>
+              ))}
+            </div>
+            <div className="eg-topic-cards">
+              {guideTopics
+                .filter(
+                  (item) => topicGroup === "Все" || item.group === topicGroup,
+                )
+                .map((item) => (
+                  <Link to={`/erp/employees#${item.id}`} key={item.id}>
+                    <span className="eg-topic-symbol" aria-hidden="true">
+                      <GuideTopicIcon id={item.id} size={19} />
+                    </span>
+                    <div>
                       <h3>{item.title}</h3>
                       <p>{guideCardNotes[item.id]}</p>
-                    </Link>
-                  ))}
-              </div>
-            </section>
-          </>
+                    </div>
+                    <ArrowRight size={16} aria-hidden="true" />
+                  </Link>
+                ))}
+            </div>
+          </section>
         )}
         <div className="eg-contact">
           <span>
@@ -374,6 +308,53 @@ export function Employees() {
         </div>
         <p className="eg-source">Материалы welcome-презентации Young Unicorn</p>
       </div>
+    </div>
+  );
+}
+
+export function GuideArticleContent({ topic }: { topic: GuideTopic }) {
+  return (
+    <>
+      <h1 id="eg-article-title">{topic.title}</h1>
+      <p className="eg-intro">{topic.summary}</p>
+      <GuideVisual key={`visual-${topic.id}`} id={topic.id} />
+      <div
+        className={`eg-sections eg-sections-${topic.id}`}
+        key={`details-${topic.id}`}
+      >
+        {topic.sections.map((section, index) => (
+          <details key={section.title} open={index === 0}>
+            <summary>
+              <h2>{section.title}</h2>
+              <Plus size={18} />
+            </summary>
+            <div className="eg-answer">
+              {section.text && (
+                <div className="eg-prose">
+                  {section.text.split("\n").map((paragraph) => (
+                    <p key={paragraph}>{paragraph}</p>
+                  ))}
+                </div>
+              )}
+              {section.items && (
+                <ul>
+                  {section.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </details>
+        ))}
+      </div>
+    </>
+  );
+}
+
+export function OrgMap() {
+  return (
+    <div className="landing employee-guide employee-guide-erp">
+      <EmployeeTeam />
     </div>
   );
 }

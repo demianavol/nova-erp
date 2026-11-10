@@ -1,5 +1,6 @@
 import { useSiteLanguage } from "../lib/site-language";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { useLandingMobile } from "./use-landing-mobile";
 import "./tech-title.css";
 
 const TechText = lazy(() =>
@@ -60,6 +61,7 @@ export function TechTitleLine({
         <span className="hero-tech-effect" aria-hidden="true">
           <Suspense fallback={null}>
             <TechText
+              key={text}
               text={text.trimEnd()}
               inline
               nativeMetrics={nativeMetrics}
@@ -87,7 +89,10 @@ export function TechTitleLine({
 
 export function HeroTitle() {
   const { language, t } = useSiteLanguage();
-  const motion = useTechTitleMotion();
+  const mobile = useLandingMobile();
+  const desktopMotion = useTechTitleMotion();
+  // Keep the mobile headline on one renderer so its glyphs don't jump on load.
+  const motion = !mobile && desktopMotion;
   return (
     <h1 id="hero-title" tabIndex={-1}>
       <TechTitleLine

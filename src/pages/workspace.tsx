@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import {
   ArrowUpRight,
   Building2,
@@ -35,6 +40,8 @@ import {
   Select,
 } from "../components/ui";
 import { projectTasks, sprintRange, useWorkspace } from "../data/workspace";
+import { HomeDealBoard } from "../components/home-deal-board";
+import { ProjectNavigation } from "../components/project-navigation";
 import { TaskRow } from "./dashboard";
 import {
   defaultTaskFilters,
@@ -81,10 +88,15 @@ export function Tasks() {
               "Ясные приоритеты. Общий фокус. Видимый результат."
         }
         actions={
-          <Button onClick={() => navigate("/erp/tasks?create=1" + taskQuery)}>
-            <Plus size={17} />
-            Создать задачу
-          </Button>
+          <>
+            <Link className="btn btn-outline" to="/erp/tasks/projects">
+              Проекты
+            </Link>
+            <Button onClick={() => navigate("/erp/tasks?create=1" + taskQuery)}>
+              <Plus size={17} />
+              Создать задачу
+            </Button>
+          </>
         }
       />
       <div className="task-stats">
@@ -478,13 +490,29 @@ export function Department() {
   );
 }
 
-export function Settings() {
+export function Projects() {
+  return (
+    <>
+      <PageHeading
+        title="Проекты"
+        description="Выберите проект, чтобы открыть его доску, бэклог и спринт."
+        actions={
+          <Link className="btn btn-outline" to="/erp/tasks">
+            Все задачи
+          </Link>
+        }
+      />
+      <ProjectNavigation />
+      <HomeDealBoard />
+    </>
+  );
+}
+
+export function Profile() {
   const preferences = usePreferences();
-  const { resetData, data } = useERP();
   const [name, setName] = useState(preferences.name),
     [email, setEmail] = useState(preferences.email),
     [role, setRole] = useState(preferences.role),
-    [confirm, setConfirm] = useState(false),
     [error, setError] = useState("");
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -500,107 +528,135 @@ export function Settings() {
     <>
       <PageHeading
         eyebrow="РАБОЧЕЕ ПРОСТРАНСТВО"
+        title="Личный кабинет"
+        description="Управляйте данными своего профиля."
+      />
+      <form className="card settings-card erp-profile" onSubmit={submit}>
+        <SectionHeading
+          title="Мой профиль"
+          description="Эти данные используются в интерфейсе"
+        />
+        <div className="profile-preview">
+          <Avatar name={preferences.name} size="lg" />
+          <div>
+            <strong>{preferences.name}</strong>
+            <span>{preferences.role}</span>
+          </div>
+          <Badge tone="violet">Демо-аккаунт</Badge>
+        </div>
+        <Field label="Имя и фамилия">
+          <Input
+            required
+            minLength={2}
+            maxLength={60}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </Field>
+        <Field label="Email профиля">
+          <Input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </Field>
+        <Field label="Должность">
+          <Input
+            required
+            minLength={2}
+            maxLength={80}
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          />
+        </Field>
+        <p className="form-hint">
+          Данные для входа остаются: demo@nova.local / Demo2026!
+        </p>
+        {error && (
+          <p className="field-error" role="alert">
+            {error}
+          </p>
+        )}
+        <Button type="submit">
+          <Save size={16} />
+          Сохранить профиль
+        </Button>
+      </form>
+    </>
+  );
+}
+
+export function Settings() {
+  const preferences = usePreferences();
+  const { resetData, data } = useERP();
+  const [confirm, setConfirm] = useState(false);
+  return (
+    <>
+      <PageHeading
+        eyebrow="РАБОЧЕЕ ПРОСТРАНСТВО"
         title="Настройки"
-        description="Ваш профиль, внешний вид и управление демоверсией."
+        description="Внешний вид и управление демоверсией."
+        actions={
+          <Link className="btn btn-outline" to="/erp/profile">
+            Личный кабинет
+          </Link>
+        }
       />
       <div className="settings-grid">
-        <form className="card settings-card" onSubmit={submit}>
+        <section className="card settings-card">
           <SectionHeading
-            title="Мой профиль"
-            description="Эти данные используются в интерфейсе"
+            title="Внешний вид"
+            description="Тема рабочего пространства"
           />
-          <div className="profile-preview">
-            <Avatar name={preferences.name} size="lg" />
-            <div>
-              <strong>{preferences.name}</strong>
-              <span>{preferences.role}</span>
-            </div>
-            <Badge tone="violet">Демо-аккаунт</Badge>
-          </div>
-          <Field label="Имя и фамилия">
-            <Input
-              required
-              minLength={2}
-              maxLength={60}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </Field>
-          <Field label="Email профиля">
-            <Input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </Field>
-          <Field label="Должность">
-            <Input
-              required
-              minLength={2}
-              maxLength={80}
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            />
-          </Field>
-          <p className="form-hint">
-            Данные для входа остаются: demo@nova.local / Demo2026!
-          </p>
-          {error && (
-            <p className="field-error" role="alert">
-              {error}
-            </p>
-          )}
-          <Button type="submit">
-            <Save size={16} />
-            Сохранить профиль
-          </Button>
-        </form>
-        <div className="settings-side">
-          <section className="card settings-card">
-            <SectionHeading
-              title="Внешний вид"
-              description="Настройте содержимое рабочего пространства"
-            />
-            <div className="display-options">
-              <label className="checkbox-label">
+          <fieldset className="erp-theme-options">
+            <legend>Тема ERP</legend>
+            {(["light", "dark"] as const).map((theme) => (
+              <label key={theme}>
                 <input
-                  type="checkbox"
-                  checked={!preferences.promoHidden}
-                  onChange={(e) =>
-                    preferences.update({ promoHidden: !e.target.checked })
-                  }
+                  type="radio"
+                  name="erp-theme"
+                  value={theme}
+                  checked={preferences.theme === theme}
+                  onChange={() => preferences.update({ theme })}
                 />
-                Блок знакомства с ERP в меню
+                {theme === "light" ? "Светлая" : "Чёрная"}
               </label>
-              <p className="form-hint">
-                Скрытые блоки можно вернуть здесь в любой момент.
-              </p>
-            </div>
-          </section>
-          <section className="card settings-card">
-            <SectionHeading
-              title="Демонстрационные данные"
-              description="Все изменения хранятся в этом браузере"
+            ))}
+          </fieldset>
+          <label className="checkbox-label">
+            <input
+              type="checkbox"
+              checked={!preferences.welcomeHidden}
+              onChange={(event) =>
+                preferences.update({ welcomeHidden: !event.target.checked })
+              }
             />
-            <div className="storage-info">
-              <ShieldCheck size={20} />
-              <p>
-                Версия данных: {data.version}
-                <br />
-                {data.orders.length} заказов · {data.customers.length} клиентов
-              </p>
-            </div>
-            <p className="form-hint">
-              Сброс удалит ваши изменения и восстановит исходный набор данных.
-              Профиль и настройки внешнего вида сохранятся.
+            Показывать блок «Впервые в ERP?» на главной
+          </label>
+        </section>
+        <section className="card settings-card">
+          <SectionHeading
+            title="Демонстрационные данные"
+            description="Все изменения хранятся в этом браузере"
+          />
+          <div className="storage-info">
+            <ShieldCheck size={20} />
+            <p>
+              Версия данных: {data.version}
+              <br />
+              {data.orders.length} заказов · {data.customers.length} клиентов
             </p>
-            <Button variant="outline" onClick={() => setConfirm(true)}>
-              <RotateCcw size={15} />
-              Сбросить демоданные
-            </Button>
-          </section>
-        </div>
+          </div>
+          <p className="form-hint">
+            Сброс удалит ваши изменения и восстановит исходный набор данных.
+            Профиль и настройки внешнего вида сохранятся.
+          </p>
+          <Button variant="outline" onClick={() => setConfirm(true)}>
+            <RotateCcw size={15} />
+            Сбросить демоданные
+          </Button>
+        </section>
       </div>
       <Dialog
         open={confirm}

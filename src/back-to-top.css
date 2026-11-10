@@ -9,11 +9,11 @@
   gap: 8px;
   min-height: 44px;
   padding: 11px 16px;
-  border: 1px solid var(--yu-story-border, #e8dff0);
-  border-radius: 24px;
-  color: var(--yu-accent);
-  background: var(--yu-story-panel, #fff);
-  box-shadow: 0 4px 18px #160c2414;
+  border: 1px solid var(--header-edge);
+  border-radius: 16px;
+  color: var(--header-accent);
+  background: var(--header-glass);
+  backdrop-filter: blur(14px);
   font-size: 12px;
   line-height: 1.5;
   animation: lp-back-to-top-in 220ms ease both;

@@ -139,7 +139,26 @@ describe("Управленческая финансовая модель", () =>
   });
 });
 describe("Совместимость настроек интерфейса", () => {
-  it("меняет исходный демо-профиль на руководителя, сохраняя навигацию и применяя светлую тему", () => {
+  it("сохраняет порядок блоков главной и дополняет старую раскладку", () => {
+    const { name, email, role } = usePreferences.getState();
+    const prefs = migratePreferences({
+      name, email, role, collapsed: false, theme: "dark",
+      dashboardLayout: [
+        { id: "tasks", mode: "collapsed" },
+        { id: "deals", mode: "hidden" },
+        { id: "tasks", mode: "open" },
+        { id: "removed", mode: "open" },
+      ],
+    });
+    expect(prefs.dashboardLayout.slice(0, 2)).toEqual([
+      { id: "tasks", mode: "collapsed" },
+      { id: "deals", mode: "hidden" },
+    ]);
+    expect(prefs.dashboardLayout.filter(({ id }) => id === "tasks")).toHaveLength(1);
+    expect(prefs.dashboardLayout).toContainEqual({ id: "learning", mode: "hidden" });
+    expect(prefs.theme).toBe("dark");
+  });
+  it("меняет исходный демо-профиль, сохраняя тему и состояние меню", () => {
     const prefs = migratePreferences({
       theme: "dark",
       collapsed: true,
@@ -150,7 +169,7 @@ describe("Совместимость настроек интерфейса", () 
     expect(prefs).toMatchObject({
       name: "Али Бабаев",
       role: "Руководитель компании",
-      theme: "light",
+      theme: "dark",
       collapsed: true,
       welcomeHidden: false,
       promoHidden: false,
@@ -177,17 +196,19 @@ describe("Совместимость настроек интерфейса", () 
       promoHidden: true,
     });
   });
-  it("переводит старые тёмные настройки в светлую тему", () => {
+  it("позволяет переключить тему независимо от остальных настроек", () => {
     const original = usePreferences.getState();
     try {
       original.update({ theme: "dark", collapsed: true, promoHidden: true });
       expect(usePreferences.getState()).toMatchObject({
-        theme: "light",
+        theme: "dark",
         collapsed: true,
         promoHidden: true,
         name: original.name,
         email: original.email,
       });
+      original.update({ theme: "light" });
+      expect(usePreferences.getState()).toMatchObject({ theme: "light", collapsed: true });
     } finally {
       usePreferences.setState(original);
     }

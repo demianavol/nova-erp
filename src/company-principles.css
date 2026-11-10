@@ -530,6 +530,9 @@ html[data-site-theme="dark"] .landing .company-principles {
   visibility: visible;
   transition-delay: 0s;
 }
+.cp-card-drawer-copy {
+  display: contents;
+}
 
 .cp-card-drawer::before {
   content: "";
@@ -890,7 +893,7 @@ html[data-site-theme="dark"] .landing .company-principles {
   @keyframes cp-hand-settle {
     0%,
     63% {
-      opacity: 0;
+      opacity: var(--cp-hand-base-opacity, 0);
     }
     82%,
     100% {

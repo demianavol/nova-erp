@@ -29,8 +29,9 @@ export const invitationReadingTransform =
 /** About 34% apparent approach, without stretching the paper or its typography. */
 export function invitationPaperMotion(envelopeHeight: number) {
   return {
-    tucked: `perspective(1200px) translate3d(0, ${envelopeHeight * 0.13}px, -180px) rotateX(8deg) scale(.86)`,
-    approaching: `perspective(1200px) translate3d(0, ${envelopeHeight * 0.035}px, -64px) rotateX(2deg) scale(.96)`,
+    // With perspective, the tucked top edge projects below the lowest point of the lip.
+    tucked: `perspective(1200px) translate3d(0, ${envelopeHeight * 0.74}px, -180px) rotateX(8deg) scale(.86)`,
+    approaching: `perspective(1200px) translate3d(0, ${envelopeHeight * 0.11}px, -64px) rotateX(2deg) scale(.96)`,
     reading: invitationReadingTransform,
   };
 }

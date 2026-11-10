@@ -19,14 +19,16 @@ function FilmLayer({
   underlay,
   onReady,
   onError,
+  compact = false,
 }: {
   scene: CareerScene;
   playing: boolean;
   active: boolean;
   selected: boolean;
   underlay: number;
-  onReady: (id: CareerSceneId) => void;
-  onError: (id: CareerSceneId) => void;
+  onReady?: (id: CareerSceneId) => void;
+  onError?: (id: CareerSceneId) => void;
+  compact?: boolean;
 }) {
   const video = useRef<HTMLVideoElement>(null);
   const [readySource, setReadySource] = useState<string>();
@@ -44,7 +46,7 @@ function FilmLayer({
         if (mounted) setReadySource(scene.video);
       })
       .catch((error: DOMException) => {
-        if (mounted && error.name !== "AbortError") onError(scene.id);
+        if (mounted && error.name !== "AbortError") onError?.(scene.id);
       });
     return () => {
       mounted = false;
@@ -54,7 +56,7 @@ function FilmLayer({
 
   // Selecting a still-playing layer changes its order, not its media clock.
   useEffect(() => {
-    if (playing && selected && ready) onReady(scene.id);
+    if (playing && selected && ready) onReady?.(scene.id);
   }, [playing, selected, ready, onReady, scene.id]);
 
   return (
@@ -68,7 +70,7 @@ function FilmLayer({
         zIndex: active ? careerScenes.length + 1 : underlay || undefined,
         opacity: underlay && ready ? 1 : undefined,
       }}
-      src={asset(scene.video)}
+      src={asset(compact ? `mobile/${scene.video}` : scene.video)}
       poster={asset(scene.poster)}
       width={1280}
       height={720}
@@ -78,8 +80,74 @@ function FilmLayer({
       preload="metadata"
       disablePictureInPicture
       tabIndex={-1}
-      onError={() => onError(scene.id)}
+      onError={() => {
+        setReadySource(undefined);
+        onError?.(scene.id);
+      }}
     />
+  );
+}
+
+export function MobileCareersFilm({
+  benefit,
+  reduced,
+}: {
+  benefit: CareerBenefit["id"];
+  reduced: boolean;
+}) {
+  const scene = careerSceneForBenefit(benefit);
+  const frame = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [tabVisible, setTabVisible] = useState(() => !document.hidden);
+  useEffect(() => {
+    if (reduced || !frame.current) return;
+    const update = () => setTabVisible(!document.hidden);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setVisible(entry.isIntersecting);
+      },
+      { rootMargin: "80px 0px" },
+    );
+    observer.observe(frame.current);
+    document.addEventListener("visibilitychange", update);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", update);
+    };
+  }, [reduced]);
+
+  return (
+    <div
+      className="career-team-film career-team-film-mobile"
+      ref={frame}
+      aria-hidden="true"
+      data-requested-scene={scene?.id}
+    >
+      {scene && (
+        <>
+          <img
+            className="career-team-film-poster"
+            src={asset(scene.poster)}
+            alt=""
+            width={1280}
+            height={720}
+            loading="lazy"
+            decoding="async"
+          />
+          {visible && !reduced && (
+            <FilmLayer
+              key={scene.id}
+              scene={scene}
+              playing={tabVisible}
+              active
+              selected
+              underlay={0}
+              compact
+            />
+          )}
+        </>
+      )}
+    </div>
   );
 }
 

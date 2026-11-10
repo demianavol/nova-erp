@@ -14,8 +14,9 @@ import {
 } from "@floating-ui/react";
 import { X, ArrowUpRight } from "lucide-react";
 import { companyFuture } from "../data/company-future";
-import { FutureAtmosphere } from "./future-atmosphere";
+import { FutureAtmosphere, FutureBackgroundFilm } from "./future-atmosphere";
 import { FutureEmblem } from "./future-emblem";
+import { useLandingMobile } from "./use-landing-mobile";
 import "../company-future.css";
 
 type FuturePriority = (typeof companyFuture.priorities)[number];
@@ -31,11 +32,13 @@ function FuturePoint({
   position,
   selected,
   onSelect,
+  mobile,
 }: {
   priority: FuturePriority;
   position: CSSProperties;
   selected: string | null;
   onSelect: (id: string | null) => void;
+  mobile: boolean;
 }) {
   const { t } = useSiteLanguage();
   const open = selected === priority.id;
@@ -52,7 +55,7 @@ function FuturePoint({
           ? "left"
           : "right",
       whileElementsMounted: (reference, floating, update) =>
-        autoUpdate(reference, floating, update, { animationFrame: true }),
+        autoUpdate(reference, floating, update, { animationFrame: !mobile }),
       middleware: [
         offset(20),
         flip({
@@ -69,7 +72,7 @@ function FuturePoint({
   });
   const { getFloatingProps } = useInteractions([dismiss]);
   const { isMounted, styles } = useTransitionStyles(context, {
-    duration: { open: 380, close: 180 },
+    duration: mobile ? { open: 180, close: 100 } : { open: 380, close: 180 },
     initial: ({ side }) => ({
       opacity: 0,
       transform: `translate3d(${side === "right" ? "-12px" : side === "left" ? "12px" : "0"}, ${side === "top" ? "10px" : side === "bottom" ? "-10px" : "0"}, 0) scale(.94)`,
@@ -168,12 +171,13 @@ function FuturePoint({
 
 export function CompanyFuture() {
   const { language, t } = useSiteLanguage();
+  const mobile = useLandingMobile();
   const section = useRef<HTMLElement>(null);
   const [selected, setSelected] = useState<string | null>(null);
 
   useEffect(() => {
     const root = section.current;
-    if (!root) return;
+    if (!root || mobile) return;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     let bounds: DOMRect | null = null;
     let visible = false;
@@ -255,8 +259,13 @@ export function CompanyFuture() {
       window.removeEventListener("resize", enter);
       reduced.removeEventListener("change", activity);
       document.removeEventListener("visibilitychange", activity);
+      delete root.dataset.enhanced;
+      delete root.dataset.revealed;
+      delete root.dataset.motion;
+      root.style.removeProperty("--future-x");
+      root.style.removeProperty("--future-y");
     };
-  }, []);
+  }, [mobile]);
 
   return (
     <section
@@ -265,7 +274,7 @@ export function CompanyFuture() {
       id="future"
       aria-labelledby="future-title"
     >
-      <FutureAtmosphere paused={false} />
+      {mobile ? <FutureBackgroundFilm /> : <FutureAtmosphere paused={false} />}
       <header className="future-heading">
         <span className="future-eyebrow">
           <span aria-hidden="true">—</span> {t(companyFuture.eyebrow)}
@@ -312,6 +321,7 @@ export function CompanyFuture() {
                 position={pointPositions[index]}
                 selected={selected}
                 onSelect={setSelected}
+                mobile={mobile}
               />
             ))}
           </div>

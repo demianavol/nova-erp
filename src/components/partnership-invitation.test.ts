@@ -188,13 +188,18 @@ describe("Partnership invitation", () => {
     h.command("open");
     const paper = h.recorded.find((record) => record.node === 5)!.frames;
     expect(paper.every((frame) => frame.zIndex === undefined)).toBe(true);
+    expect(paper.every((frame) => frame.opacity === undefined)).toBe(true);
     expect(
       paper.every((frame) => /scale\([.\d]+\)/.test(String(frame.transform))),
     ).toBe(true);
     const sleeve = h.recorded.find((record) => record.node === 9)!.frames;
+    const pocket = h.recorded.find((record) => record.node === 2)!.frames;
     expect(
       sleeve.every((frame) => String(frame.clipPath).startsWith("polygon(")),
     ).toBe(true);
+    const travelTiming = (frames: Keyframe[]) =>
+      frames.map(({ offset, easing }) => ({ offset, easing }));
+    expect(travelTiming(sleeve)).toEqual(travelTiming(pocket));
     await h.finish();
     const pocketOffset = parseFloat(
       h.nodes[2].style.transform.replace("translateY(", ""),

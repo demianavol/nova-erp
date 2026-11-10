@@ -4,10 +4,14 @@ import { flushSync } from "react-dom";
 import { Play } from "lucide-react";
 import { companyHistoryInfographic as steps } from "../data/company-journey";
 import { historyMedia } from "../data/history-media";
-import { getHistoryPhotoCollections, historyPhotographs } from "../data/history-photographs";
+import {
+  getHistoryPhotoCollections,
+  historyPhotographs,
+} from "../data/history-photographs";
 import { HistoryMilestoneVisual } from "./history-milestone-visual";
 import { HistoryPrintedPhoto } from "./history-printed-photo";
 import { useNearViewport } from "./use-near-viewport";
+import { useLandingMobile } from "./use-landing-mobile";
 import "../company-history.css";
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}media/${name}`;
@@ -15,6 +19,7 @@ const curve = "M 60 410 C 400 420 730 300 1140 65";
 
 export function CompanyHistory() {
   const { t } = useSiteLanguage();
+  const mobile = useLandingMobile();
   const root = useRef<HTMLDivElement>(null);
   const pin = useRef<HTMLDivElement>(null);
   const near = useNearViewport(pin);
@@ -26,10 +31,13 @@ export function CompanyHistory() {
   const [dark, setDark] = useState(
     () => document.documentElement.dataset.siteTheme === "dark",
   );
+  const themeMedia = dark ? historyMedia.dark : historyMedia.light;
+  const media = mobile ? themeMedia.mobile : themeMedia;
+  const poster = media.poster;
   const [videoBlocked, setVideoBlocked] = useState(false);
   const [videoMoving, setVideoMoving] = useState(false);
   useEffect(() => {
-    if (!near) return;
+    if (!near || mobile) return;
     for (const photo of Object.values(historyPhotographs)) {
       if (!photo.asset || photo.verification === "pending") continue;
       const image = new Image();
@@ -37,7 +45,7 @@ export function CompanyHistory() {
       image.src = `${import.meta.env.BASE_URL}${photo.asset}`;
       void image.decode().catch(() => {});
     }
-  }, [near]);
+  }, [near, mobile]);
   useEffect(() => {
     const observer = new MutationObserver(() =>
       setDark(document.documentElement.dataset.siteTheme === "dark"),
@@ -52,15 +60,6 @@ export function CompanyHistory() {
   const manual = useRef<{ value: number; base: number } | null>(null);
   const [active, setActive] = useState(0);
   const selectedIndex = useRef(0);
-  const [previous, setPrevious] = useState<number | null>(null);
-  const lastActive = useRef(0);
-  useEffect(() => {
-    if (lastActive.current === active) return;
-    setPrevious(lastActive.current);
-    lastActive.current = active;
-    const timer = window.setTimeout(() => setPrevious(null), 450);
-    return () => window.clearTimeout(timer);
-  }, [active]);
   const [points, setPoints] = useState<{ x: number; y: number }[]>([]);
   const [reduced, setReduced] = useState(
     () => matchMedia("(prefers-reduced-motion: reduce)").matches,
@@ -79,7 +78,7 @@ export function CompanyHistory() {
     const bounded = Math.max(0, Math.min(6, value));
     displayed.current = bounded;
     const fraction = bounded / 6;
-    if (path.current) {
+    if (!mobile && path.current) {
       const length = path.current.getTotalLength();
       const point = path.current.getPointAtLength(length * fraction);
       // Dashes use LOCAL geometry units, just like getPointAtLength. A
@@ -101,7 +100,7 @@ export function CompanyHistory() {
     }
   };
   useEffect(() => {
-    if (!near) return;
+    if (!near || mobile) return;
     const recalculate = () => {
       if (!path.current) return;
       const length = path.current.getTotalLength();
@@ -121,7 +120,7 @@ export function CompanyHistory() {
       observer.disconnect();
       cancelAnimationFrame(animation.current);
     };
-  }, [near]);
+  }, [near, mobile]);
   const show = (value: number) => {
     cancelAnimationFrame(animation.current);
     animation.current = 0;
@@ -129,7 +128,7 @@ export function CompanyHistory() {
   };
   useEffect(() => {
     const element = root.current;
-    if (!element || !near) return;
+    if (!element || !near || mobile) return;
     if (reduced) {
       cancelAnimationFrame(animation.current);
       animation.current = 0;
@@ -173,7 +172,7 @@ export function CompanyHistory() {
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
     };
-  }, [near, reduced]);
+  }, [near, reduced, mobile]);
   useEffect(() => {
     const element = video.current;
     const surface = pin.current;
@@ -223,13 +222,13 @@ export function CompanyHistory() {
       window.removeEventListener("pageshow", update);
       document.removeEventListener("visibilitychange", update);
     };
-  }, [near, reduced, dark]);
+  }, [near, reduced, media.video]);
   const select = (index: number) => {
     manual.current = { value: index, base: progress.current };
     cancelAnimationFrame(animation.current);
     animation.current = 0;
-    if (reduced) {
-      renderProgress(index, true);
+    if (reduced || mobile) {
+      renderProgress(index);
       return;
     }
     const start = displayed.current;
@@ -242,40 +241,44 @@ export function CompanyHistory() {
     };
     animation.current = requestAnimationFrame(tick);
   };
-  const narrative = (index: number, leaving = false) => {
-    const item = steps[index];
-    return (
-      <div
-        className={`journey-narrative${leaving ? " is-leaving" : ""}`}
-        key={leaving ? `${item.year}-leaving` : "current"}
-        aria-hidden={leaving || undefined}
-        id={leaving ? undefined : "journey-narrative"}
-      >
-        <span key={`stage-${item.year}`} className="journey-stage-label">
-          {t(item.stageLabel)}
-        </span>
-        <div className="journey-year-row">
-          <span key={item.year} className="journey-year">
-            {item.year}
-          </span>
-        </div>
-        <h3 key={`headline-${item.year}`}>{t(item.headline)}</h3>
-        <p key={`description-${item.year}`}>{t(item.description)}</p>
-        <span className="journey-stage-progress" aria-hidden="true">
-          {steps.map((step, stepIndex) => (
-            <span
-              key={step.year}
-              className={stepIndex <= index ? "is-complete" : undefined}
-            />
-          ))}
-        </span>
-      </div>
-    );
-  };
   const current = steps[active];
+  const milestone = (
+    <div className="journey-glass-scene">
+      <HistoryMilestoneVisual
+        visual={current.milestoneVisual}
+        interactionArea={pin}
+        loadArtwork={near}
+      />
+    </div>
+  );
   const photographs = useMemo(() => getHistoryPhotoCollections(t), [t]);
-  const media = dark ? historyMedia.dark : historyMedia.light;
-  const poster = media.poster;
+  const film = (
+    <div className="journey-film" aria-hidden="true">
+      {near && !reduced ? (
+        <video
+          key={media.video}
+          ref={video}
+          src={asset(media.video)}
+          poster={asset(poster)}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          onPlaying={() => {
+            setVideoMoving(true);
+            setVideoBlocked(false);
+          }}
+          onPause={() => setVideoMoving(false)}
+          onError={() => {
+            setVideoMoving(false);
+            setVideoBlocked(true);
+          }}
+        />
+      ) : (
+        <img src={asset(poster)} alt="" loading="lazy" decoding="async" />
+      )}
+    </div>
+  );
   return (
     <div
       ref={root}
@@ -289,31 +292,27 @@ export function CompanyHistory() {
         <header className="journey-header">
           <h2 id="about-title">{t("Наш путь")}</h2>
         </header>
-        <div className="journey-film" aria-hidden="true">
-          {near && !reduced ? (
-            <video
-              key={media.video}
-              ref={video}
-              src={asset(media.video)}
-              poster={asset(poster)}
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              onPlaying={() => {
-                setVideoMoving(true);
-                setVideoBlocked(false);
-              }}
-              onPause={() => setVideoMoving(false)}
-              onError={() => {
-                setVideoMoving(false);
-                setVideoBlocked(true);
-              }}
-            />
-          ) : (
-            <img src={asset(poster)} alt="" loading="lazy" decoding="async" />
-          )}
-        </div>
+        {mobile && (
+          <div
+            className="journey-year-picker"
+            role="group"
+            aria-label={t("Годы истории Young Unicorn")}
+          >
+            {steps.map((step, index) => (
+              <button
+                key={step.year}
+                type="button"
+                aria-label={`${step.year}: ${t(step.headline)}`}
+                aria-controls="journey-narrative"
+                aria-pressed={index === active}
+                onClick={() => select(index)}
+              >
+                {step.year}
+              </button>
+            ))}
+          </div>
+        )}
+        {!mobile && film}
         {videoBlocked && !reduced && (
           <button
             type="button"
@@ -327,27 +326,39 @@ export function CompanyHistory() {
             }}
           >
             <Play size={14} aria-hidden="true" />
-            {t("Запустить видео")}</button>
+            {t("Запустить видео")}
+          </button>
         )}
-        <div className="journey-glass-scene">
-          <HistoryMilestoneVisual
-            visual={current.milestoneVisual}
-            interactionArea={pin}
-            loadArtwork={near}
-          />
-        </div>
+        {!mobile && milestone}
         <div className="journey-copy-shell">
-          {previous !== null &&
-            previous !== active &&
-            !reduced &&
-            narrative(previous, true)}
-          {narrative(active)}
+          <div className="journey-narrative" id="journey-narrative">
+            <span key={`stage-${current.year}`} className="journey-stage-label">
+              {t(current.stageLabel)}
+            </span>
+            <div className="journey-year-row">
+              <span key={current.year} className="journey-year">
+                {current.year}
+              </span>
+              {mobile && milestone}
+            </div>
+            <h3 key={`headline-${current.year}`}>{t(current.headline)}</h3>
+            <p key={`description-${current.year}`}>{t(current.description)}</p>
+            <span className="journey-stage-progress" aria-hidden="true">
+              {steps.map((step, index) => (
+                <span
+                  key={step.year}
+                  className={index <= active ? "is-complete" : undefined}
+                />
+              ))}
+            </span>
+          </div>
         </div>
         <div
           className="journey-photo-collage"
           role="group"
           aria-label={t("Фотопримеры к этапу {0}", current.year)}
         >
+          {mobile && film}
           {photographs[current.year].map((slot) => (
             <HistoryPrintedPhoto
               key={slot.variant}

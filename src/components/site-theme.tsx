@@ -1,5 +1,5 @@
 import { useSiteLanguage } from "../lib/site-language";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { Moon, Sun } from "lucide-react";
 import "../site-theme.css";
@@ -7,8 +7,9 @@ import "../site-theme.css";
 const key = "yuc-site-theme";
 const eventName = "yuc-theme-change";
 type Theme = "light" | "dark";
+type SitePage = "landing" | "login";
 let sessionTheme: Theme | undefined;
-function readTheme(defaultTheme?: Theme): Theme {
+function readTheme(): Theme {
   if (sessionTheme) return sessionTheme;
   try {
     const saved = localStorage.getItem(key);
@@ -16,46 +17,52 @@ function readTheme(defaultTheme?: Theme): Theme {
   } catch {
     /* The switch also works when browser storage is unavailable. */
   }
-  return (
-    defaultTheme ??
-    (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-  );
+  return "dark";
 }
-export function useSiteTheme(defaultTheme?: Theme) {
-  useEffect(() => {
-    const media = matchMedia("(prefers-color-scheme: dark)");
+export function useSiteTheme(page: SitePage | null) {
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+
+    if (!page) {
+      delete root.dataset.sitePage;
+      delete root.dataset.siteTheme;
+      if (themeColor) themeColor.content = "#f5f6fa";
+      return;
+    }
+
     const apply = () => {
-      document.documentElement.dataset.siteTheme = readTheme(defaultTheme);
+      root.dataset.sitePage = page;
+      root.dataset.siteTheme = readTheme();
+      if (themeColor) {
+        themeColor.content = getComputedStyle(root)
+          .getPropertyValue("--yu-site-surface")
+          .trim();
+      }
     };
     apply();
     window.addEventListener(eventName, apply);
     window.addEventListener("storage", apply);
-    media.addEventListener("change", apply);
     return () => {
-      delete document.documentElement.dataset.siteTheme;
       window.removeEventListener(eventName, apply);
       window.removeEventListener("storage", apply);
-      media.removeEventListener("change", apply);
     };
-  }, [defaultTheme]);
+  }, [page]);
 }
-export function SiteThemeToggle({ defaultTheme }: { defaultTheme?: Theme }) {
+export function SiteThemeToggle() {
   const { t } = useSiteLanguage();
-  const [theme, setTheme] = useState(() => readTheme(defaultTheme));
+  const [theme, setTheme] = useState(readTheme);
   const activeReveal = useRef<ViewTransition | null>(null);
   useEffect(() => {
-    const update = () => setTheme(readTheme(defaultTheme));
-    const media = matchMedia("(prefers-color-scheme: dark)");
+    const update = () => setTheme(readTheme());
     window.addEventListener(eventName, update);
     window.addEventListener("storage", update);
-    media.addEventListener("change", update);
     return () => {
       activeReveal.current?.skipTransition();
       window.removeEventListener(eventName, update);
       window.removeEventListener("storage", update);
-      media.removeEventListener("change", update);
     };
-  }, [defaultTheme]);
+  }, []);
   return (
     <button
       type="button"
@@ -65,7 +72,7 @@ export function SiteThemeToggle({ defaultTheme }: { defaultTheme?: Theme }) {
       }
       onClick={(event) => {
         const root = document.documentElement;
-        const next = readTheme(defaultTheme) === "light" ? "dark" : "light";
+        const next = readTheme() === "light" ? "dark" : "light";
         const apply = () => {
           try {
             localStorage.setItem(key, next);
@@ -73,8 +80,6 @@ export function SiteThemeToggle({ defaultTheme }: { defaultTheme?: Theme }) {
           } catch {
             sessionTheme = next;
           }
-          root.dataset.siteTheme = next;
-          setTheme(next);
           window.dispatchEvent(new Event(eventName));
         };
 

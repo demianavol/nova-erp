@@ -1,7 +1,6 @@
 import { useSiteLanguage } from "../lib/site-language";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSiteTheme } from "../components/site-theme";
 import { PublicHeader } from "../components/public-header";
 import { HeroFilm } from "../components/hero-film";
 import { HeroTitle } from "../components/hero-title";
@@ -18,6 +17,7 @@ import { CompanyMetric } from "../components/company-metric";
 import { MetricDetailsProvider } from "../components/company-metric-details";
 import { getCompanyMetrics, companyMetricsMode } from "../data/company-metrics";
 import { EvidenceMetrics } from "../components/evidence-metrics";
+import { useLandingChapterScroll } from "../components/use-landing-chapter-scroll";
 import {
   LandingFontPreview,
   useLandingFontPreview,
@@ -29,6 +29,7 @@ import "../company-editorial.css";
 import "../hero-video.css";
 import "../company-metrics.css";
 import "../company-typography.css";
+import "../landing-mobile.css";
 
 export { loadLandingFonts } from "../components/landing-font-preview";
 
@@ -64,9 +65,10 @@ function useRevealOnce<T extends HTMLElement>() {
   return { root, revealed };
 }
 export function Landing() {
+  const landingRef = useRef<HTMLDivElement>(null);
+  useLandingChapterScroll(landingRef);
   const { language, t } = useSiteLanguage();
   const metrics = useMemo(() => getCompanyMetrics(language, t), [language, t]);
-  useSiteTheme("dark");
   const { preview, changePreview } = useLandingFontPreview();
   const [footer, setFooter] = useState<HTMLElement | null>(null);
   const { root: resultsRef, revealed: resultsRevealed } =
@@ -113,7 +115,11 @@ export function Landing() {
       });
   };
   return (
-    <div className="landing landing-home" data-font-preview={preview?.scope}>
+    <div
+      ref={landingRef}
+      className="landing landing-home"
+      data-font-preview={preview?.scope}
+    >
       <PublicHeader />
       <main id="main-content" tabIndex={-1}>
         <section

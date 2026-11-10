@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { z } from "zod";
 import { seedData } from "./seed";
 import { enrichDemoWorkspace } from "./demo-activities";
+import { dashboardLayoutSchema, defaultDashboardLayout } from "./dashboard-layout";
 import {
   validateData,
   customerInputSchema,
@@ -323,14 +324,14 @@ export const useERP = create<Store>((set, get) => {
 });
 
 const preferencesSchema = z.object({
-  // Migrate saved themes to the current light appearance.
-  theme: z.enum(["light", "dark"]).transform(() => "light" as const),
+  theme: z.enum(["light", "dark"]).default("light"),
   collapsed: z.boolean(),
   name: z.string().trim().min(2).max(60),
   email: z.email(),
   role: z.string().min(2).max(80),
   welcomeHidden: z.boolean().default(false),
   promoHidden: z.boolean().default(false),
+  dashboardLayout: dashboardLayoutSchema,
 });
 type Preferences = z.infer<typeof preferencesSchema>;
 const defaults: Preferences = {
@@ -341,6 +342,7 @@ const defaults: Preferences = {
   role: "Руководитель компании",
   welcomeHidden: false,
   promoHidden: false,
+  dashboardLayout: defaultDashboardLayout,
 };
 export function migratePreferences(value: unknown): Preferences {
   const prefs = preferencesSchema.parse(value);

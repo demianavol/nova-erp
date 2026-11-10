@@ -1,68 +1,48 @@
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  Link,
   Navigate,
-  NavLink,
   Outlet,
+  matchPath,
   useLocation,
   useNavigate,
+  useNavigationType,
 } from "react-router-dom";
 import {
   Bell,
-  BookOpen,
   Box,
-  Building2,
   CalendarDays,
   Check,
-  ChevronDown,
   ChevronRight,
-  ChevronsLeft,
-  PanelLeftOpen,
   CircleHelp,
   Command,
   LayoutDashboard,
   ListTodo,
   LogOut,
   Menu as MenuIcon,
+  Moon,
   Plus,
   Search,
   Settings2,
   ShoppingBag,
   Sparkles,
+  Sun,
   Target,
   Users,
-  Wallet,
-  X,
   ArrowUpRight,
-  Megaphone,
-  Truck,
-  Package,
   AlertCircle,
+  ArrowLeft,
 } from "lucide-react";
 import { Toaster } from "sonner";
 import { useAuth, useERP, usePreferences } from "../data/store";
+import { useErpActivity } from "../data/erp-activity";
 import { cn, dateLabel, money, today } from "../lib/utils";
 import { orderTotal } from "../data/selectors";
 import { Avatar, Badge, Button, Dialog, Empty, Input, Menu } from "./ui";
-import { ProjectNavigation } from "./project-navigation";
 import { EntityDialogs } from "./entity-dialogs";
-import { CompanyBrand } from "./company-brand";
+import { ErpNavigation, SalesNavigation, erpPage } from "./erp-navigation";
 import "../refinements.css";
 import "../workspace.css";
 
-export function Logo({ compact = false }: { compact?: boolean }) {
-  return <CompanyBrand compact={compact} />;
-}
-const nav = [
-  { to: "/erp", label: "Обзор", icon: LayoutDashboard, end: true },
-  { to: "/erp/sales", label: "Продажи", icon: ShoppingBag, end: false },
-  { to: "/erp/departments/marketing", label: "Маркетинг", icon: Megaphone },
-  { to: "/erp/departments/purchasing", label: "Закупки", icon: Truck },
-  { to: "/erp/departments/warehouse", label: "Склад", icon: Package },
-  { to: "/erp/departments/finance", label: "Финансы", icon: Wallet },
-  { to: "/erp/departments/team", label: "Команда", icon: Users },
-  { to: "/erp/employees", label: "Справочник", icon: BookOpen },
-];
 function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
   const data = useERP((s) => s.data),
     navigate = useNavigate();
@@ -149,7 +129,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
               {[
                 {
                   title: "Аналитика продаж",
-                  route: "/erp/sales",
+                  route: "/erp/sales/analytics",
                   icon: Target,
                 },
                 {
@@ -213,10 +193,7 @@ export function ProtectedLayout() {
   const authenticated = useAuth((s) => s.authenticated);
   const location = useLocation();
   return authenticated ? (
-    <>
-      <Layout />
-      <Toaster richColors position="bottom-right" theme="light" closeButton />
-    </>
+    <Layout />
   ) : (
     <Navigate
       to="/login"
@@ -232,12 +209,47 @@ function Layout() {
     logout = useAuth((s) => s.logout);
   const navigate = useNavigate(),
     location = useLocation();
+  const navigationType = useNavigationType();
+  const visitedErpEntries = useRef(new Set<number>());
+  useLayoutEffect(() => {
+    const index: unknown = window.history.state?.idx;
+    if (typeof index !== "number") return;
+    if (navigationType === "PUSH") {
+      for (const entry of visitedErpEntries.current) {
+        if (entry >= index) visitedErpEntries.current.delete(entry);
+      }
+    }
+    visitedErpEntries.current.add(index);
+  }, [location.key, navigationType]);
+  const page = erpPage(location.pathname);
+  const section = page?.label ?? "ERP";
+  const isHome = page?.to === "/erp";
+  const path = page?.to;
+  const lastPage = useRef<string | undefined>(undefined);
+  useEffect(() => {
+    if (lastPage.current === path) return;
+    lastPage.current = path;
+    if (path && path !== "/erp") useErpActivity.getState().record(path);
+  }, [path]);
   const [mobile, setMobile] = useState(false),
     [search, setSearch] = useState(false),
     [notifications, setNotifications] = useState(false),
-    [help, setHelp] = useState(false),
-    [company, setCompany] = useState(false);
+    [help, setHelp] = useState(false);
   const asideRef = useRef<HTMLElement>(null);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const mobileRoute = useRef<string>(null);
+  const pageRef = useRef<HTMLElement>(null);
+  const dark = preferences.theme === "dark";
+  const themeLabel = dark
+    ? "Включить светлую тему ERP"
+    : "Включить чёрную тему ERP";
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.dataset.erpTheme = preferences.theme;
+    return () => {
+      delete root.dataset.erpTheme;
+    };
+  }, [preferences.theme]);
   const [smallScreen, setSmallScreen] = useState(
     () => window.matchMedia("(max-width: 640px)").matches,
   );
@@ -250,20 +262,39 @@ function Layout() {
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
-  const unread = data.notifications.filter((n) => !n.read).length,
-    isSales = location.pathname.startsWith("/erp/sales"),
-    pageRef = useRef<HTMLDivElement>(null);
+  const unread = data.notifications.filter((n) => !n.read).length;
+  const isSales = /^\/erp\/sales(?:\/|$)/.test(location.pathname);
+  const goBack = () => {
+    const index: unknown = window.history.state?.idx;
+    if (typeof index === "number" && visitedErpEntries.current.has(index - 1)) {
+      navigate(-1);
+      return;
+    }
+    const { pathname, hash } = location;
+    let fallback = "/erp";
+    if (isSales && !matchPath("/erp/sales/orders", pathname))
+      fallback = "/erp/sales/orders";
+    if (
+      matchPath("/erp/learning/*", pathname) &&
+      !matchPath("/erp/learning", pathname)
+    )
+      fallback = "/erp/learning";
+    if (matchPath("/erp/employees", pathname))
+      fallback = hash ? "/erp/employees" : "/erp/learning";
+    if (matchPath("/erp/tasks/projects", pathname)) fallback = "/erp/tasks";
+    navigate(fallback, { replace: true });
+  };
   useEffect(() => {
+    if (mobile) return;
     const key = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         setSearch((v) => !v);
       }
-      if (event.key === "Escape") setMobile(false);
     };
     window.addEventListener("keydown", key);
     return () => window.removeEventListener("keydown", key);
-  }, []);
+  }, [mobile]);
   useEffect(() => {
     setMobile(false);
     pageRef.current?.scrollTo(0, 0);
@@ -271,17 +302,24 @@ function Layout() {
   }, [location.key]);
   useEffect(() => {
     if (!mobile) return;
-    const previous = document.activeElement as HTMLElement;
     asideRef.current
-      ?.querySelector<HTMLButtonElement>(".mobile-close")
+      ?.querySelector<HTMLButtonElement>(".erp-sidebar-close")
       ?.focus();
     const trap = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setMobile(false);
+        return;
+      }
       if (event.key !== "Tab") return;
       const items = Array.from(
         asideRef.current?.querySelectorAll<HTMLElement>(
           "a[href],button:not([disabled]),input,select",
         ) || [],
-      ).filter((element) => element.offsetParent !== null);
+      ).filter(
+        (element) =>
+          element.offsetParent !== null && !element.closest("[inert]"),
+      );
       const first = items[0],
         last = items[items.length - 1];
       if (event.shiftKey && document.activeElement === first) {
@@ -299,192 +337,41 @@ function Layout() {
     return () => {
       document.body.style.overflow = old;
       document.removeEventListener("keydown", trap);
-      requestAnimationFrame(() => previous?.focus());
     };
   }, [mobile]);
-  const section = location.pathname.includes("orders")
-    ? "Заказы"
-    : location.pathname.includes("customers")
-      ? "Клиенты"
-      : location.pathname.includes("pipeline")
-        ? "Воронка продаж"
-        : location.pathname === "/erp/sales"
-          ? "Аналитика"
-          : location.pathname === "/erp/tasks"
-            ? "Задачи"
-            : location.pathname === "/erp/employees"
-              ? "Справочник сотрудника"
-              : location.pathname === "/erp/settings"
-                ? "Настройки"
-                : location.pathname.includes("departments")
-                  ? nav.find((n) => n.to === location.pathname)?.label ||
-                    "Отдел"
-                  : "Обзор";
+  useEffect(() => {
+    if (mobile || mobileRoute.current === null) return;
+    const sameRoute = mobileRoute.current === location.key;
+    mobileRoute.current = null;
+    (sameRoute && smallScreen ? menuButton.current : pageRef.current)?.focus({
+      preventScroll: true,
+    });
+  }, [location.key, mobile, smallScreen]);
   return (
     <div
-      className={cn("app-shell", preferences.collapsed && "sidebar-collapsed")}
+      className={cn(
+        "app-shell erp-shell",
+        preferences.collapsed && "erp-nav-collapsed",
+      )}
     >
-      <nav className="app-rail" aria-label="Быстрые переходы">
-        <Link
-          to="/erp"
-          className="rail-brand"
-          aria-label="Young Unicorn — обзор"
-        >
-          <Logo compact />
-        </Link>
-        {preferences.collapsed && (
-          <button
-            className="rail-expand"
-            aria-label="Развернуть навигацию"
-            aria-expanded={false}
-            aria-controls="workspace-sidebar"
-            title="Открыть проекты и навигацию"
-            onClick={() => preferences.update({ collapsed: false })}
-          >
-            <PanelLeftOpen size={19} />
-            <span>Проекты</span>
-          </button>
-        )}
-        <div className="rail-links">
-          {[
-            ...nav,
-            { to: "/erp/tasks", label: "Задачи", icon: ListTodo, end: true },
-          ].map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              aria-label={item.label}
-              title={item.label}
-            >
-              <item.icon size={20} />
-            </NavLink>
-          ))}
-        </div>
-        <NavLink to="/erp/settings" aria-label="Настройки" title="Настройки">
-          <Settings2 size={20} />
-        </NavLink>
-      </nav>
-      {mobile && (
+      {smallScreen && (
         <button
-          className="sidebar-backdrop"
-          aria-label="Закрыть навигацию"
+          type="button"
+          className="erp-sidebar-backdrop"
+          data-open={mobile}
+          aria-hidden="true"
+          tabIndex={-1}
           onClick={() => setMobile(false)}
         />
       )}
-      <aside
-        id="workspace-sidebar"
-        ref={asideRef}
-        inert={smallScreen && !mobile}
-        role={smallScreen && mobile ? "dialog" : undefined}
-        aria-modal={smallScreen && mobile ? true : undefined}
-        aria-label="Навигация"
-        className={cn("sidebar", mobile && "sidebar-mobile-open")}
-      >
-        <div className="sidebar-brand">
-          <strong className="sidebar-title">Проекты</strong>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="sidebar-collapse"
-            aria-label={
-              preferences.collapsed
-                ? "Развернуть навигацию"
-                : "Свернуть навигацию"
-            }
-            onClick={() =>
-              preferences.update({ collapsed: !preferences.collapsed })
-            }
-          >
-            <ChevronsLeft size={17} />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="mobile-close"
-            aria-label="Закрыть меню"
-            onClick={() => setMobile(false)}
-          >
-            <X size={20} />
-          </Button>
-        </div>
-        <nav className="mobile-sections" aria-label="Разделы портала">
-          {[
-            ...nav,
-            { to: "/erp/tasks", label: "Задачи", icon: ListTodo, end: true },
-            {
-              to: "/erp/settings",
-              label: "Настройки",
-              icon: Settings2,
-              end: true,
-            },
-          ].map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              onClick={() => setMobile(false)}
-            >
-              <item.icon size={17} />
-              <span>{item.label}</span>
-            </NavLink>
-          ))}
-        </nav>
-        <ProjectNavigation />
-        <div className="sidebar-bottom">
-          {!preferences.promoHidden && (
-            <button className="sidebar-intro" onClick={() => setHelp(true)}>
-              <Sparkles size={14} />
-              Знакомство с ERP
-              <ArrowUpRight size={12} />
-            </button>
-          )}
-          <Link
-            className="sidebar-guide-link"
-            to="/erp/employees"
-            title="Справочник сотрудника"
-          >
-            <BookOpen size={17} />
-            <span>Справочник сотрудника</span>
-          </Link>
-          <div className="sidebar-utility">
-            <button title="Справка" onClick={() => setHelp(true)}>
-              <CircleHelp size={17} />
-              <span>Помощь и поддержка</span>
-            </button>
-          </div>
-          <div className="sidebar-profile">
-            <Avatar name={preferences.name} />
-            <button
-              onClick={() => navigate("/erp/settings")}
-              title="Настройки профиля"
-            >
-              <strong>{preferences.name}</strong>
-              <span>{preferences.role}</span>
-            </button>
-            <Menu
-              trigger={
-                <Button variant="ghost" size="icon" aria-label="Меню профиля">
-                  <ChevronDown size={14} />
-                </Button>
-              }
-              items={[
-                {
-                  label: "О компании",
-                  icon: <Building2 size={15} />,
-                  onClick: () => setCompany(true),
-                },
-                {
-                  label: "Настройки профиля",
-                  icon: <Settings2 size={15} />,
-                  onClick: () => navigate("/erp/settings"),
-                },
-                { label: "Выйти", icon: <LogOut size={15} />, onClick: logout },
-              ]}
-            />
-          </div>
-        </div>
-      </aside>
+      <ErpNavigation
+        sidebarRef={asideRef}
+        collapsed={preferences.collapsed && !smallScreen}
+        smallScreen={smallScreen}
+        mobile={mobile}
+        toggle={() => preferences.update({ collapsed: !preferences.collapsed })}
+        close={() => setMobile(false)}
+      />
       <div className="main-shell" inert={smallScreen && mobile}>
         <header className="topbar">
           <div className="topbar-left">
@@ -492,47 +379,60 @@ function Layout() {
               variant="ghost"
               size="icon"
               className="mobile-menu"
+              ref={menuButton}
               aria-label="Открыть меню"
-              onClick={() => setMobile(true)}
+              aria-expanded={mobile}
+              aria-controls="workspace-sidebar"
+              onClick={() => {
+                mobileRoute.current = location.key;
+                setMobile(true);
+              }}
             >
               <MenuIcon size={21} />
             </Button>
-            {location.pathname === "/erp" ? (
+            {isHome ? (
               <h1
                 className="topbar-greeting"
                 id="workspace-greeting"
-                title={`Добрый день, ${preferences.name.split(" ")[0]}`}
+                tabIndex={-1}
               >
                 Добрый день, {preferences.name.split(" ")[0]}
                 <span>.</span>
               </h1>
             ) : (
               <>
+                <Button
+                  variant="ghost"
+                  className="erp-back-button"
+                  onClick={goBack}
+                  aria-label="Назад"
+                  title="Назад"
+                >
+                  <ArrowLeft size={16} aria-hidden="true" />
+                  <span>Назад</span>
+                </Button>
                 <span className="breadcrumb-home">
-                  <LayoutDashboard size={15} />
-                  <span>Рабочее пространство</span>
+                  <LayoutDashboard size={15} aria-hidden="true" />
+                  <span>{isSales ? "Продажи" : "Рабочее пространство"}</span>
                 </span>
-                <ChevronRight size={13} />
-                <strong>
-                  {isSales && section !== "Аналитика" ? "Продажи" : section}
-                </strong>
-                {isSales && section !== "Аналитика" && (
-                  <>
-                    <ChevronRight size={13} />
-                    <span>{section}</span>
-                  </>
-                )}
+                <ChevronRight
+                  size={13}
+                  className="erp-breadcrumb-separator"
+                  aria-hidden="true"
+                />
+                <strong title={section}>{section}</strong>
               </>
             )}
           </div>
           <div className="topbar-right">
             <button
               aria-label="Поиск по рабочему пространству"
+              aria-haspopup="dialog"
               className="global-search-trigger"
               onClick={() => setSearch(true)}
             >
-              <Search size={16} />
-              <span>Поиск в пространстве…</span>
+              <Search size={16} aria-hidden="true" />
+              <span>Поиск</span>
               <kbd>Ctrl K</kbd>
             </button>
             <span className="topbar-date">
@@ -564,6 +464,22 @@ function Layout() {
               ]}
             />
             <span className="topbar-divider" />
+            <Button
+              variant="ghost"
+              size="icon"
+              className="erp-theme-toggle"
+              aria-label={themeLabel}
+              title={themeLabel}
+              onClick={() =>
+                preferences.update({ theme: dark ? "light" : "dark" })
+              }
+            >
+              {dark ? (
+                <Sun size={18} aria-hidden="true" />
+              ) : (
+                <Moon size={18} aria-hidden="true" />
+              )}
+            </Button>
             <button
               className="notifications-button"
               aria-label={`Уведомления: ${unread} непрочитанных`}
@@ -589,9 +505,19 @@ function Layout() {
                   onClick: () => navigate("/"),
                 },
                 {
-                  label: "Профиль и настройки",
+                  label: "Личный кабинет",
+                  icon: <Settings2 size={15} />,
+                  onClick: () => navigate("/erp/profile"),
+                },
+                {
+                  label: "Настройки",
                   icon: <Settings2 size={15} />,
                   onClick: () => navigate("/erp/settings"),
+                },
+                {
+                  label: "Помощь и поддержка",
+                  icon: <CircleHelp size={15} />,
+                  onClick: () => setHelp(true),
                 },
                 {
                   label: "Выйти из аккаунта",
@@ -608,9 +534,6 @@ function Layout() {
           tabIndex={-1}
           className="page-content"
           id="main-content"
-          aria-labelledby={
-            location.pathname === "/erp" ? "workspace-greeting" : undefined
-          }
         >
           {storageError && (
             <div role="alert" className="storage-warning">
@@ -622,7 +545,16 @@ function Layout() {
               </button>
             </div>
           )}
-          <Outlet />
+          {isSales && <SalesNavigation />}
+          <Suspense
+            fallback={
+              <p className="muted" role="status">
+                Загрузка раздела…
+              </p>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </main>
       </div>
       <EntityDialogs />
@@ -712,9 +644,9 @@ function Layout() {
           {[
             {
               n: "01",
-              title: "Посмотрите на бизнес целиком",
-              text: "Обзор показывает выручку, заказы, задачи и события.",
-              route: "/erp",
+              title: "Посмотрите аналитику продаж",
+              text: "Выберите период, чтобы посмотреть выручку, заказы и каналы продаж.",
+              route: "/erp/sales/analytics",
             },
             {
               n: "02",
@@ -752,66 +684,12 @@ function Layout() {
           </div>
         </div>
       </Dialog>
-      <Dialog
-        open={company}
-        onOpenChange={setCompany}
-        title="Young Unicorn"
-        description="Продукты, медиа и команда в одном пространстве"
-      >
-        <div className="dialog-body company-overview">
-          <span className="company-label">
-            <Building2 size={18} />
-            E-commerce · Fashion · Self-care
-          </span>
-          <p>
-            Young Unicorn создаёт и развивает бренды в e-commerce. В этой
-            демоверсии ERP показаны примеры работы с командой, продажами и
-            финансами.
-          </p>
-          <div className="mini-stats">
-            <div>
-              <span>Сотрудников</span>
-              <strong>{data.employees.length}</strong>
-            </div>
-            <div>
-              <span>Товаров</span>
-              <strong>{data.products.length}</strong>
-            </div>
-            <div>
-              <span>Клиентов</span>
-              <strong>{data.customers.length}</strong>
-            </div>
-          </div>
-          <div className="company-lead">
-            <Avatar name={preferences.name} size="lg" />
-            <div>
-              <strong>{preferences.name}</strong>
-              <span>{preferences.role}</span>
-            </div>
-          </div>
-        </div>
-        <div className="dialog-footer">
-          <Button
-            variant="outline"
-            onClick={() => {
-              setCompany(false);
-              navigate("/erp/departments/team");
-            }}
-          >
-            Команда
-            <Users size={15} />
-          </Button>
-          <Button
-            onClick={() => {
-              setCompany(false);
-              navigate("/erp/departments/finance");
-            }}
-          >
-            Финансы компании
-            <ArrowUpRight size={15} />
-          </Button>
-        </div>
-      </Dialog>
+      <Toaster
+        richColors
+        position="bottom-right"
+        theme={preferences.theme}
+        closeButton
+      />
     </div>
   );
 }

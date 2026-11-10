@@ -1,4 +1,4 @@
-import React, { Component, Suspense, lazy, type ReactNode } from "react";
+import React, { Component, Suspense, lazy, useLayoutEffect, type ReactNode } from "react";
 import ReactDOM from "react-dom/client";
 import {
   HashRouter,
@@ -9,12 +9,14 @@ import {
 } from "react-router-dom";
 import { Inbox } from "lucide-react";
 import { CompanyBrand } from "./components/company-brand";
+import { useSiteTheme } from "./components/site-theme";
 import { SiteLanguageProvider, useSiteLanguage } from "./lib/site-language";
 import "@fontsource-variable/inter";
 import "@fontsource-variable/manrope";
 import "./styles.css";
 import "./typography.css";
 import "./brand.css";
+import "./erp-shell.css";
 
 const Login = lazy(() =>
   import("./pages/login").then((m) => ({ default: m.Login })),
@@ -45,6 +47,27 @@ const Pipeline = lazy(() =>
 );
 const Tasks = lazy(() =>
   import("./pages/workspace").then((m) => ({ default: m.Tasks })),
+);
+const Projects = lazy(() =>
+  import("./pages/workspace").then((m) => ({ default: m.Projects })),
+);
+const Profile = lazy(() =>
+  import("./pages/workspace").then((m) => ({ default: m.Profile })),
+);
+const ErpHome = lazy(() =>
+  import("./pages/erp-home").then((m) => ({ default: m.ErpHome })),
+);
+const FirstSteps = lazy(() =>
+  import("./pages/erp-sections").then((m) => ({ default: m.FirstSteps })),
+);
+const ErpLearning = lazy(() =>
+  import("./pages/erp-learning").then((m) => ({ default: m.ErpLearning })),
+);
+const Documents = lazy(() =>
+  import("./pages/erp-sections").then((m) => ({ default: m.Documents })),
+);
+const OrgStructure = lazy(() =>
+  import("./pages/erp-sections").then((m) => ({ default: m.OrgStructure })),
 );
 const Department = lazy(() =>
   import("./pages/workspace").then((m) => ({ default: m.Department })),
@@ -116,7 +139,11 @@ function LegacyERPRedirect() {
     />
   );
 }
-function AppContent({ isLanding }: { isLanding: boolean }) {
+function SalesIndexRedirect() {
+  const { search, hash } = useLocation();
+  return <Navigate to={`/erp/sales/analytics${search}${hash}`} replace />;
+}
+function AppContent({ isLanding, isErp }: { isLanding: boolean; isErp: boolean }) {
   const { t } = useSiteLanguage();
   return (
     <ErrorBoundary t={t}>
@@ -133,7 +160,7 @@ function AppContent({ isLanding }: { isLanding: boolean }) {
       <Suspense
         fallback={
           <div className="app-loading" role="status">
-            <CompanyBrand compact />
+            {!isErp && <CompanyBrand compact />}
             <p className={isLanding ? "sr-only" : undefined}>
               {t("Собираем ваше пространство…")}
             </p>
@@ -145,13 +172,21 @@ function AppContent({ isLanding }: { isLanding: boolean }) {
           <Route path="/employees" element={<LegacyERPRedirect />} />
           <Route path="/login" element={<Login />} />
           <Route path="/erp" element={<Protected />}>
-            <Route index element={<Dashboard />} />
-            <Route path="sales" element={<Dashboard sales />} />
+            <Route index element={<ErpHome />} />
+            <Route path="sales" element={<SalesIndexRedirect />} />
+            <Route path="sales/analytics" element={<Dashboard />} />
             <Route path="sales/orders" element={<Orders />} />
             <Route path="sales/customers" element={<Customers />} />
             <Route path="sales/pipeline" element={<Pipeline />} />
             <Route path="tasks" element={<Tasks />} />
+            <Route path="tasks/projects" element={<Projects />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="documents" element={<Documents />} />
+            <Route path="org-structure" element={<OrgStructure />} />
             <Route path="employees" element={<Employees />} />
+            <Route path="learning/start" element={<FirstSteps />} />
+            <Route path="learning" element={<ErpLearning />} />
+            <Route path="learning/lesson/:lessonId" element={<ErpLearning />} />
             <Route path="departments/finance" element={<FinancePage />} />
             <Route path="departments/:department" element={<Department />} />
             <Route path="settings" element={<Settings />} />
@@ -172,10 +207,16 @@ function AppContent({ isLanding }: { isLanding: boolean }) {
 }
 function LocalizedApp() {
   const { pathname } = useLocation();
+  const isErp = /^\/erp(?:\/|$)/i.test(pathname);
   const isLanding = pathname === "/";
+  const isLogin = /^\/login\/*$/i.test(pathname);
+  useLayoutEffect(() => {
+    if (!isErp) delete document.documentElement.dataset.erpTheme;
+  }, [isErp]);
+  useSiteTheme(isLanding ? "landing" : isLogin ? "login" : null);
   return (
     <SiteLanguageProvider enabled={isLanding}>
-      <AppContent isLanding={isLanding} />
+      <AppContent isLanding={isLanding} isErp={isErp} />
     </SiteLanguageProvider>
   );
 }

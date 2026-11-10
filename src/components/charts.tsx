@@ -214,7 +214,7 @@ export function RevenueChart({
           <Area
             type="monotone"
             dataKey="previous"
-            stroke="#747181"
+            stroke="var(--muted-foreground)"
             strokeWidth={2}
             strokeDasharray="5 5"
             fill="transparent"

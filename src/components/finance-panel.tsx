@@ -23,6 +23,7 @@ import { money } from "../lib/utils";
 import { Badge, Button, Dialog, Field, Input, SectionHeading } from "./ui";
 import { RevenueChart } from "./charts";
 import { MetricDetails, type MetricKey } from "./metric-details";
+import { DashboardWidgetActions } from "./dashboard-widgets";
 
 export function FinancialSummary({ period }: { period: Period }) {
   const data = useERP((s) => s.data),
@@ -89,10 +90,13 @@ export function FinancialChartPanel({ period }: { period: Period }) {
         title="Финансовая динамика"
         description="Показатели за выбранный и предыдущий периоды"
         action={
-          <Badge tone="violet">
-            <ChartNoAxesCombined size={12} />
-            Финансы
-          </Badge>
+          <div className="erp-widget-heading-actions">
+            <Badge tone="violet">
+              <ChartNoAxesCombined size={12} />
+              Финансы
+            </Badge>
+            <DashboardWidgetActions />
+          </div>
         }
       />
       <div className="financial-chart-tabs" aria-label="Показатель графика">

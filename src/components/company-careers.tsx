@@ -18,16 +18,18 @@ import {
   careerIndexAtProgress,
   careerScrollProgress,
 } from "../data/career-orbit";
-import { CareersAtmosphere } from "./careers-atmosphere";
+import { CareersAtmosphere, MobileCareersFilm } from "./careers-atmosphere";
 import { CareerBadge, preloadCareerBadge } from "./career-badge";
 import { LandingEmblem } from "./landing-emblem";
 import { useNearViewport } from "./use-near-viewport";
+import { useLandingMobile } from "./use-landing-mobile";
 import "../company-careers.css";
 
 const asset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
 export function CompanyCareers() {
   const { language, t } = useSiteLanguage();
+  const mobile = useLandingMobile();
   const sectionRef = useRef<HTMLElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const dotRef = useRef<SVGCircleElement>(null);
@@ -58,10 +60,10 @@ export function CompanyCareers() {
     );
     observer.observe(orbitRef.current);
     return () => observer.disconnect();
-  }, [near]);
+  }, [near, mobile]);
 
   useEffect(() => {
-    if (reduced || !badgeTrigger.current) return;
+    if (reduced || mobile || !badgeTrigger.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
@@ -72,7 +74,7 @@ export function CompanyCareers() {
     );
     observer.observe(badgeTrigger.current);
     return () => observer.disconnect();
-  }, [language, reduced]);
+  }, [language, reduced, mobile]);
   const animation = useRef(0);
   const selectedIndex = useRef(0);
   const orbit = useRef({
@@ -159,7 +161,7 @@ export function CompanyCareers() {
   }, [updateTarget]);
 
   useLayoutEffect(() => {
-    if (!near) return;
+    if (!near || mobile) return;
     const path = pathRef.current;
     const root = orbitRef.current;
     const svg = path?.ownerSVGElement;
@@ -187,10 +189,10 @@ export function CompanyCareers() {
     const resize = new ResizeObserver(measure);
     resize.observe(svg);
     return () => resize.disconnect();
-  }, [near]);
+  }, [near, mobile]);
 
   useEffect(() => {
-    if (!near) return;
+    if (!near || mobile) return;
     drawProgress(orbit.current.displayed, false);
     let measureFrame = 0;
     let lastScrollY = window.scrollY;
@@ -238,9 +240,14 @@ export function CompanyCareers() {
       cancelAnimationFrame(animation.current);
       animation.current = 0;
     };
-  }, [near, drawProgress, updateTarget]);
+  }, [near, mobile, drawProgress, updateTarget]);
 
   const select = (index: number) => {
+    if (mobile) {
+      selectedIndex.current = index;
+      setActiveIndex(index);
+      return;
+    }
     if (
       index === selectedIndex.current &&
       (orbit.current.selection === null || orbit.current.selection === index)
@@ -289,169 +296,232 @@ export function CompanyCareers() {
             <span className="career-eyebrow">— {t(content.eyebrow)}</span>
             <h2 id="careers-title">
               {t(content.title)}
-              <br />
-              <span>{content.accent}</span>
+              <br /> <span>{content.accent}</span>
             </h2>
             <p className="career-subtitle">{t(content.subtitle)}</p>
           </header>
-          <CareersAtmosphere benefit={content.benefits[activeIndex].id} />
-
-          <div
-            ref={orbitRef}
-            className="career-orbit"
-            aria-label={t("Возможности в команде")}
-          >
-            <svg
-              className="career-orbit-svg"
-              viewBox="0 0 760 380"
-              preserveAspectRatio="none"
-              fill="none"
-              aria-hidden="true"
-            >
-              <defs>
-                <linearGradient
-                  id="career-orbit-spectrum"
-                  x1="100"
-                  y1="320"
-                  x2="650"
-                  y2="60"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stopColor="var(--career-accent)" />
-                  <stop
-                    offset=".48"
-                    stopColor="var(--career-orbit-highlight)"
-                  />
-                  <stop offset="1" stopColor="var(--career-accent)" />
-                </linearGradient>
-              </defs>
-              <path d={careerOrbitPath} className="career-orbit-base-track" />
-              <path
-                ref={pathRef}
-                d={careerOrbitPath}
-                className="career-orbit-trail"
+          {mobile ? (
+            <>
+              <MobileCareersFilm
+                benefit={content.benefits[activeIndex].id}
+                reduced={reduced}
               />
-              {milestones.map((point, index) => (
-                <g
-                  key={index}
-                  className={`career-milestone-marker${activeIndex === index ? " is-active" : ""}`}
-                >
-                  <circle
-                    cx={point.x}
-                    cy={point.y}
-                    r="4"
-                    className="career-milestone-dot"
-                  />
-                </g>
-              ))}
-              <circle
-                ref={ringRef}
-                className="career-moving-ring"
-                cx="250"
-                cy="60"
-                r="11"
-              />
-              <circle
-                ref={dotRef}
-                className="career-moving-dot"
-                cx="250"
-                cy="60"
-                r="4.5"
-              />
-            </svg>
-
-            <div className="career-orbit-center" aria-hidden="true">
-              <span className="career-orbit-center-label">
-                {t("Твоя траектория")}
-              </span>
-              <span className="career-orbit-center-count">
-                {String(activeIndex + 1).padStart(2, "0")}
-                <small>
-                  {" "}
-                  / {String(content.benefits.length).padStart(2, "0")}
-                </small>
-              </span>
-              <span className="career-orbit-center-rule" />
-            </div>
-            {content.benefits.map((benefit, index) => {
-              const active = activeIndex === index;
-              return (
-                <button
-                  key={benefit.id}
-                  type="button"
-                  className={`career-benefit-pill career-benefit-${benefit.id}${active ? " is-active" : ""}`}
-                  data-side={
-                    index === 0 || index === 1 || index === 5
-                      ? "above"
-                      : "below"
-                  }
-                  style={
-                    milestones[index]
-                      ? ({
-                          "--milestone-x": `${milestones[index].left}px`,
-                          "--milestone-y": `${milestones[index].top}px`,
-                        } as CSSProperties)
-                      : undefined
-                  }
-                  aria-expanded={active}
-                  aria-describedby={
-                    active ? `career-description-${benefit.id}` : undefined
-                  }
-                  aria-controls={`career-description-${benefit.id}`}
-                  onClick={() => select(index)}
-                  onKeyDown={(event) => {
-                    const direction =
-                      event.key === "ArrowRight" || event.key === "ArrowDown"
-                        ? 1
-                        : event.key === "ArrowLeft" || event.key === "ArrowUp"
-                          ? -1
-                          : 0;
-                    const next =
-                      event.key === "Home"
-                        ? 0
-                        : event.key === "End"
-                          ? content.benefits.length - 1
-                          : direction
-                            ? (index + direction + content.benefits.length) %
-                              content.benefits.length
-                            : null;
-                    if (next !== null) {
-                      event.preventDefault();
-                      sectionRef.current
-                        ?.querySelectorAll<HTMLButtonElement>(
-                          ".career-benefit-pill",
-                        )
-                        [next]?.focus();
-                    }
-                  }}
-                >
-                  <span className="career-benefit-icon-wrap">
-                    <LandingEmblem
-                      kind={`career-${benefit.id}`}
-                      active={active}
-                      visible={orbitVisible}
-                    />
-                  </span>
-                  <span className="career-benefit-text">
-                    <span className="career-benefit-title">
-                      {t(benefit.title)}
-                    </span>
-                    <span
-                      className="career-benefit-reveal"
-                      aria-hidden={!active}
+              <div
+                ref={orbitRef}
+                className="career-mobile-benefits"
+                role="group"
+                aria-label={t("Возможности в команде")}
+              >
+                {content.benefits.map((benefit, index) => {
+                  const active = index === activeIndex;
+                  const titleId = `career-mobile-title-${benefit.id}`;
+                  const descriptionId = `career-mobile-description-${benefit.id}`;
+                  return (
+                    <button
+                      key={benefit.id}
+                      type="button"
+                      className="career-mobile-benefit"
+                      aria-labelledby={titleId}
+                      aria-expanded={active}
+                      aria-controls={descriptionId}
+                      aria-describedby={active ? descriptionId : undefined}
+                      onClick={() => select(index)}
                     >
-                      <span
-                        className="career-benefit-desc"
-                        id={`career-description-${benefit.id}`}
-                      >
-                        {t(benefit.description)}
+                      <span className="career-mobile-benefit-heading">
+                        <span className="career-mobile-benefit-icon">
+                          <LandingEmblem
+                            kind={`career-${benefit.id}`}
+                            active={active}
+                            visible={orbitVisible}
+                            loadOnSelect
+                          />
+                        </span>
+                        <span id={titleId}>{t(benefit.title)}</span>
                       </span>
-                    </span>
+                      <span
+                        className="career-mobile-benefit-drawer"
+                        id={descriptionId}
+                        aria-hidden={!active}
+                      >
+                        <span>
+                          <span className="career-mobile-benefit-description">
+                            {t(benefit.description)}
+                          </span>
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <>
+              <CareersAtmosphere benefit={content.benefits[activeIndex].id} />
+              <div
+                ref={orbitRef}
+                className="career-orbit"
+                aria-label={t("Возможности в команде")}
+              >
+                <svg
+                  className="career-orbit-svg"
+                  viewBox="0 0 760 380"
+                  preserveAspectRatio="none"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <defs>
+                    <linearGradient
+                      id="career-orbit-spectrum"
+                      x1="100"
+                      y1="320"
+                      x2="650"
+                      y2="60"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="var(--career-accent)" />
+                      <stop
+                        offset=".48"
+                        stopColor="var(--career-orbit-highlight)"
+                      />
+                      <stop offset="1" stopColor="var(--career-accent)" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d={careerOrbitPath}
+                    className="career-orbit-base-track"
+                  />
+                  <path
+                    ref={pathRef}
+                    d={careerOrbitPath}
+                    className="career-orbit-trail"
+                  />
+                  {milestones.map((point, index) => (
+                    <g
+                      key={index}
+                      className={`career-milestone-marker${activeIndex === index ? " is-active" : ""}`}
+                    >
+                      <circle
+                        cx={point.x}
+                        cy={point.y}
+                        r="4"
+                        className="career-milestone-dot"
+                      />
+                    </g>
+                  ))}
+                  <circle
+                    ref={ringRef}
+                    className="career-moving-ring"
+                    cx="250"
+                    cy="60"
+                    r="11"
+                  />
+                  <circle
+                    ref={dotRef}
+                    className="career-moving-dot"
+                    cx="250"
+                    cy="60"
+                    r="4.5"
+                  />
+                </svg>
+
+                <div className="career-orbit-center" aria-hidden="true">
+                  <span className="career-orbit-center-label">
+                    {t("Твоя траектория")}
                   </span>
-                </button>
-              );
-            })}
-          </div>
+                  <span className="career-orbit-center-count">
+                    {String(activeIndex + 1).padStart(2, "0")}
+                    <small>
+                      {" "}
+                      / {String(content.benefits.length).padStart(2, "0")}
+                    </small>
+                  </span>
+                  <span className="career-orbit-center-rule" />
+                </div>
+                {content.benefits.map((benefit, index) => {
+                  const active = activeIndex === index;
+                  return (
+                    <button
+                      key={benefit.id}
+                      type="button"
+                      className={`career-benefit-pill career-benefit-${benefit.id}${active ? " is-active" : ""}`}
+                      data-side={
+                        index === 0 || index === 1 || index === 5
+                          ? "above"
+                          : "below"
+                      }
+                      style={
+                        milestones[index]
+                          ? ({
+                              "--milestone-x": `${milestones[index].left}px`,
+                              "--milestone-y": `${milestones[index].top}px`,
+                            } as CSSProperties)
+                          : undefined
+                      }
+                      aria-expanded={active}
+                      aria-describedby={
+                        active ? `career-description-${benefit.id}` : undefined
+                      }
+                      aria-controls={`career-description-${benefit.id}`}
+                      onClick={() => select(index)}
+                      onKeyDown={(event) => {
+                        const direction =
+                          event.key === "ArrowRight" ||
+                          event.key === "ArrowDown"
+                            ? 1
+                            : event.key === "ArrowLeft" ||
+                                event.key === "ArrowUp"
+                              ? -1
+                              : 0;
+                        const next =
+                          event.key === "Home"
+                            ? 0
+                            : event.key === "End"
+                              ? content.benefits.length - 1
+                              : direction
+                                ? (index +
+                                    direction +
+                                    content.benefits.length) %
+                                  content.benefits.length
+                                : null;
+                        if (next !== null) {
+                          event.preventDefault();
+                          sectionRef.current
+                            ?.querySelectorAll<HTMLButtonElement>(
+                              ".career-benefit-pill",
+                            )
+                            [next]?.focus();
+                        }
+                      }}
+                    >
+                      <span className="career-benefit-icon-wrap">
+                        <LandingEmblem
+                          kind={`career-${benefit.id}`}
+                          active={active}
+                          visible={orbitVisible}
+                        />
+                      </span>
+                      <span className="career-benefit-text">
+                        <span className="career-benefit-title">
+                          {t(benefit.title)}
+                        </span>
+                        <span
+                          className="career-benefit-reveal"
+                          aria-hidden={!active}
+                        >
+                          <span
+                            className="career-benefit-desc"
+                            id={`career-description-${benefit.id}`}
+                          >
+                            {t(benefit.description)}
+                          </span>
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
 
           <footer className="career-actions">
             <a

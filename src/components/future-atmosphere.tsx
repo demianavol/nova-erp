@@ -1,5 +1,53 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 const GradientWaves = lazy(() => import("./react-bits/GradientWaves"));
+const film = `${import.meta.env.BASE_URL}media/future/future-atmosphere`;
+
+export function FutureBackgroundFilm() {
+  const video = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const element = video.current;
+    if (!element) return;
+    const motion = matchMedia("(prefers-reduced-motion: reduce)");
+    let visible = false;
+    const sync = () => {
+      if (visible && !document.hidden && !motion.matches) {
+        void element.play().catch(() => {});
+      } else {
+        element.pause();
+      }
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      sync();
+    });
+    observer.observe(element);
+    motion.addEventListener("change", sync);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      observer.disconnect();
+      motion.removeEventListener("change", sync);
+      document.removeEventListener("visibilitychange", sync);
+      element.pause();
+    };
+  }, []);
+
+  return (
+    <div
+      className="future-atmosphere future-atmosphere--film"
+      aria-hidden="true"
+    >
+      <video
+        ref={video}
+        src={`${film}.mp4`}
+        poster={`${film}-poster.webp`}
+        muted
+        loop
+        playsInline
+        preload="none"
+      />
+    </div>
+  );
+}
 
 export function FutureAtmosphere({ paused }: { paused: boolean }) {
   const surface = useRef<HTMLDivElement>(null);

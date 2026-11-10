@@ -1,0 +1,654 @@
+@media (max-width: 640px) {
+  .landing.landing-home {
+    --lp-section-space: clamp(28px, 8vw, 44px);
+    --lp-mobile-header-offset: 86px;
+    --lp-mobile-chapter-gap: clamp(46px, 14vw, 76px);
+  }
+
+  .landing.landing-home > main > section[id] {
+    scroll-margin-block-start: var(--lp-mobile-header-offset);
+  }
+
+  .landing-home .lp-hero.lp-hero-video {
+    min-height: calc(100svh - 103px);
+    align-content: center;
+    row-gap: clamp(28px, 9vw, 50px);
+    padding-block: clamp(14px, 2svh, 20px) clamp(22px, 4svh, 36px);
+  }
+
+  .landing-home .lp-hero-video .lp-hero-copy {
+    text-align: center;
+  }
+
+  .landing-home .lp-hero-video .hero-meta {
+    justify-content: center;
+    margin-bottom: 16px;
+    font-size: clamp(11px, 3.2vw, 16px);
+  }
+
+  .landing-home .lp-hero.lp-hero-video h1 {
+    font-size: clamp(58px, 22vw, 110px);
+  }
+
+  .landing-home .lp-hero.lp-hero-video h1 > .hero-tech-line {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .landing.landing-home
+    > main
+    > :is(#about, #principles, #future, #careers, #contacts) {
+    margin-block-start: var(--lp-mobile-chapter-gap);
+  }
+
+  .landing.landing-home #contacts {
+    scroll-margin-block-start: var(--lp-mobile-header-offset);
+  }
+
+  .landing-home #contacts .partnership-layout {
+    padding-block: clamp(58px, 16vw, 80px) clamp(46px, 13vw, 68px);
+  }
+
+  .landing-home .lp-results .lp-metric-trigger {
+    width: 42px;
+    height: 42px;
+  }
+
+  .landing-home .journey-pin {
+    --journey-photo-lane: clamp(132px, 42%, 225px);
+    height: auto;
+    padding-block: 8px 12px;
+  }
+
+  .journey-year-picker {
+    position: relative;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 3px;
+    margin-top: 14px;
+    padding: 3px;
+    border: 1px solid var(--yu-line);
+    border-radius: 13px;
+  }
+
+  .journey-year-picker button {
+    min-width: 0;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 9px;
+    color: var(--yu-muted);
+    background: transparent;
+    font-size: clamp(11px, 3.25vw, 14px);
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+  }
+
+  .journey-year-picker button[aria-pressed="true"] {
+    color: var(--yu-accent);
+    background: color-mix(in srgb, var(--yu-accent) 15%, transparent);
+    font-weight: 700;
+  }
+
+  .journey-year-picker button:focus-visible,
+  .career-mobile-benefits button:focus-visible,
+  .company-footer-group summary:focus-visible {
+    outline: 2px solid var(--yu-accent);
+    outline-offset: 2px;
+  }
+
+  .landing-home .journey-narrative {
+    width: 100%;
+    min-height: 0;
+    margin-top: 20px;
+  }
+
+  .landing-home .journey-year-row {
+    margin-top: 8px;
+  }
+
+  .landing-home .journey-year {
+    font-size: clamp(54px, 15vw, 76px);
+    letter-spacing: -0.065em;
+  }
+
+  .landing-home .journey-narrative h3 {
+    margin-top: 12px;
+    font-size: clamp(21px, 6vw, 27px);
+    letter-spacing: -0.035em;
+  }
+
+  .landing-home .journey-narrative p {
+    max-width: 48ch;
+    margin-top: 9px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .landing-home :is(.journey-trajectory, .journey-stage-progress) {
+    display: none;
+  }
+
+  .landing-home .journey-photo-collage {
+    position: relative;
+    inset: auto;
+    height: clamp(212px, 68vw, 320px);
+    margin-top: 18px;
+  }
+
+  .landing-home .journey-photo-collage .history-print--main {
+    left: 6px;
+    bottom: 14px;
+    width: min(
+      clamp(118px, 36vw, 180px),
+      calc(var(--journey-photo-lane) - 12px)
+    );
+  }
+
+  .landing-home .journey-photo-collage .history-print--wide {
+    right: calc(100% - var(--journey-photo-lane) + 3px);
+    bottom: clamp(92px, 25vw, 130px);
+    left: auto;
+    width: clamp(80px, 24vw, 126px);
+  }
+
+  .landing-home .journey-photo-collage .history-print--portrait {
+    display: none;
+  }
+
+  .landing-home .journey-year-row .journey-glass-scene {
+    position: relative;
+    inset: auto;
+    flex: none;
+    width: clamp(88px, 29vw, 142px);
+    height: auto;
+    margin-inline-start: auto;
+    aspect-ratio: 1;
+    opacity: 0.92;
+    rotate: var(--glass-angle, -7deg);
+  }
+
+  .landing-home .journey-film {
+    inset: 0 auto calc(-1 * clamp(24px, 8vw, 48px)) 50%;
+    width: 100vw;
+    aspect-ratio: auto;
+    translate: -50% 0;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 20%,
+      #000 78%,
+      transparent
+    );
+  }
+
+  .landing-home .journey-film :is(video, img) {
+    object-fit: cover;
+    object-position: center 73%;
+  }
+
+  html[data-site-theme="dark"] .landing-home .journey-film :is(video, img) {
+    transform: translateX(6%) scale(0.86);
+    transform-origin: center 68%;
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 16%,
+      #000 93%,
+      transparent
+    );
+  }
+
+  .landing-home .journey-video-retry {
+    bottom: 10px;
+  }
+
+  .landing-home .cp-layout {
+    gap: 16px;
+  }
+
+  .landing-home .cp-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+  }
+
+  .landing-home .cp-card {
+    --cp-icon-size: 80px;
+    --cp-hand-base-opacity: 0.42;
+    display: grid;
+    grid-template-columns: 35px minmax(0, 1fr);
+    align-items: start;
+    column-gap: 10px;
+    height: auto;
+    min-height: 53px;
+    padding: 8px 32px 8px 10px;
+    border-radius: 13px;
+    contain: paint;
+  }
+
+  .landing-home .cp-card :is(.cp-card-icon-area, .cp-card-copy) {
+    transform: none;
+    transition: none;
+  }
+
+  .landing-home .cp-card-icon-area {
+    height: 35px;
+    margin: 0;
+  }
+
+  /* Scale the whole scene so its existing motion stays in proportion. */
+  .landing-home .cp-card-icon-object {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    translate: -50% -50%;
+    scale: 0.44;
+  }
+
+  .landing-home .cp-card-icon-glow {
+    width: 50px;
+    height: 50px;
+    filter: blur(8px);
+  }
+
+  .landing-home .cp-card-heading {
+    min-height: 35px;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .landing-home .cp-card-title {
+    font-size: 15px;
+    letter-spacing: -0.015em;
+  }
+
+  .landing-home .cp-card-toggle {
+    top: 18px;
+    right: 10px;
+  }
+
+  .landing-home .cp-card-drawer {
+    display: grid;
+    grid-template-rows: 0fr;
+    gap: 0;
+    margin: 0;
+    transition:
+      grid-template-rows 220ms ease,
+      visibility 0s linear 220ms;
+  }
+
+  .landing-home .cp-card.is-expanded .cp-card-drawer {
+    grid-template-rows: 1fr;
+    transition-delay: 0s;
+  }
+
+  .landing-home .cp-card-drawer::before {
+    display: none;
+  }
+
+  .landing-home .cp-card-drawer-copy {
+    display: block;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .landing-home .cp-card :is(.cp-card-description, .cp-card-slide) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .landing-home .cp-card-description {
+    margin-block: 2px 5px;
+  }
+
+  .landing-home .cp-card-slide {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .landing-home .company-future {
+    padding-block: 8px 12px;
+  }
+
+  .landing-home .future-atmosphere--film {
+    inset: 12% -8% 6%;
+    height: auto;
+    opacity: 0.25;
+  }
+
+  html[data-site-theme="dark"] .landing-home .future-atmosphere--film {
+    opacity: 0.66;
+  }
+
+  .future-atmosphere--film video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .landing-home .future-heading h2 {
+    margin-block: 8px 10px;
+  }
+
+  .landing-home .future-heading p {
+    font-size: 14px;
+  }
+
+  .landing-home .future-scene {
+    margin-top: 6px;
+    padding-top: clamp(195px, 62vw, 292px);
+  }
+
+  .landing-home .future-mountain {
+    width: min(114%, 440px);
+  }
+
+  .landing-home .future-priorities {
+    gap: 7px;
+  }
+
+  .landing-home .future-priority-surface {
+    min-height: 66px;
+    padding: 8px;
+    border-radius: 13px;
+  }
+
+  .landing-home .future-priority-number {
+    margin-bottom: 2px;
+  }
+
+  .landing-home .future-priority-arrow {
+    top: 6px;
+    right: 6px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .landing-home .company-careers {
+    padding-block: 10px 14px;
+  }
+
+  .landing-home .career-heading h2 {
+    margin-bottom: 6px;
+    font-size: clamp(26px, 7.4vw, 38px);
+    text-wrap: balance;
+  }
+
+  .landing-home .career-heading h2 br {
+    display: none;
+  }
+
+  .landing-home .career-heading :is(.career-eyebrow, .career-subtitle) {
+    margin-bottom: 4px;
+    line-height: 1.45;
+  }
+
+  .landing-home .career-team-film.career-team-film-mobile {
+    position: relative;
+    inset: auto;
+    z-index: 1;
+    width: 100%;
+    margin: 12px 0 10px;
+    overflow: hidden;
+    border: 1px solid var(--career-border);
+    border-radius: 16px;
+    background: #211a2a;
+    opacity: 1;
+    mask-image: none;
+  }
+
+  .career-team-film-mobile
+    :is(.career-team-film-poster, .career-team-film-video) {
+    object-fit: cover;
+    filter: none;
+  }
+
+  .career-team-film-mobile .career-team-film-video {
+    transition: opacity 180ms ease-out;
+  }
+
+  .career-mobile-benefits {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 5px;
+  }
+
+  .career-mobile-benefit {
+    min-height: 44px;
+    padding: 6px 8px;
+    border: 1px solid var(--career-border);
+    border-radius: 10px;
+    background: var(--career-panel);
+    color: var(--career-ink);
+    font-size: 12px;
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .career-mobile-benefit-heading {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: center;
+    gap: 6px;
+  }
+
+  .career-mobile-benefit-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .career-mobile-benefit[aria-expanded="true"] {
+    border-color: var(--career-accent);
+    background: var(--career-active);
+    font-weight: 650;
+  }
+
+  .career-mobile-benefit-drawer {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 230ms cubic-bezier(0.22, 0.75, 0.18, 1),
+      opacity 180ms ease;
+  }
+
+  .career-mobile-benefit[aria-expanded="true"] .career-mobile-benefit-drawer {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  .career-mobile-benefit-drawer > span {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .career-mobile-benefit-description {
+    display: block;
+    padding: 6px 0 3px;
+    color: var(--career-muted);
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.45;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .career-mobile-benefit-drawer {
+      transition: none;
+    }
+  }
+
+  .landing-home .career-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .landing-home .career-actions .career-btn {
+    min-height: 44px;
+    padding: 6px 8px;
+    gap: 5px;
+    font-size: 11px;
+    backdrop-filter: none;
+  }
+
+  .landing-home .career-actions .career-btn > svg {
+    flex-shrink: 0;
+    width: 13px;
+  }
+
+  .landing-home .career-actions .career-btn-arrow {
+    display: none;
+  }
+
+  .landing.landing-home .company-footer {
+    margin-top: clamp(26px, 8vw, 40px);
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+  }
+
+  .landing-home .company-footer-horizon {
+    height: 24px;
+  }
+
+  .landing-home .company-footer-grid {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "brand contact" "nav nav";
+    gap: 8px 12px;
+    align-items: center;
+    padding-block: 27px 8px;
+  }
+
+  .landing-home .company-footer-brand {
+    grid-area: brand;
+  }
+  .landing-home .company-footer-nav {
+    grid-area: nav;
+  }
+  .landing-home .company-footer-contact {
+    grid-area: contact;
+  }
+
+  .landing-home .company-footer-signature {
+    gap: 7px;
+  }
+
+  .landing-home .company-footer-signature > span:last-child {
+    font-size: clamp(17px, 5vw, 22px);
+  }
+
+  .landing-home .company-footer-signature .yuc-brand > img {
+    width: 23px;
+    height: 28px;
+  }
+
+  .landing-home .company-footer .company-footer-heading {
+    margin-bottom: 0;
+  }
+
+  .landing-home .company-footer-telegram {
+    min-height: 34px;
+    gap: 5px;
+    font-size: 14px;
+  }
+
+  .landing-home .company-footer-contact-arrow {
+    width: 15px;
+    height: 15px;
+    border: 0;
+    color: currentColor;
+    opacity: 0.65;
+  }
+
+  .landing-home .company-footer-contact-arrow svg {
+    width: 13px;
+  }
+
+  .landing-home .company-footer .company-footer-nav {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .company-footer-group summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    border-top: 1px solid var(--footer-line);
+    font-size: 13px;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .company-footer-group summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .company-footer-group summary svg {
+    color: var(--yu-accent);
+  }
+
+  .company-footer-group[open] summary svg {
+    transform: rotate(180deg);
+  }
+
+  .company-footer-group .company-footer-links {
+    padding: 0 0 8px 10px;
+  }
+
+  .company-footer-group .company-footer-links > a {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 640px) and (prefers-reduced-motion: no-preference) {
+  .landing-home .journey-year-row .journey-emblem-stack {
+    animation: journey-mobile-emblem-drift 5.4s ease-in-out infinite;
+  }
+
+  @keyframes journey-mobile-emblem-drift {
+    0%,
+    100% {
+      transform: translateY(1px) rotate(-2deg) rotateY(-5deg);
+    }
+    50% {
+      transform: translateY(-5px) rotate(2deg) rotateY(7deg);
+    }
+  }
+}
+
+/* The chapter gesture owns vertical paging; keep horizontal pans and zoom native. */
+html:not(:has([role="dialog"][data-state="open"], dialog[open]))
+  .landing-home[data-chapter-scroll]
+  > :is(main, .company-footer) {
+  touch-action: pan-x pinch-zoom;
+}
+
+@media (max-width: 640px) and (min-height: 540px) and (orientation: portrait) and (prefers-reduced-motion: no-preference) {
+  .landing.landing-home
+    > main
+    > :is(#results, #directions, #global-experience) {
+    min-block-size: calc(
+      100svh - var(--lp-mobile-header-offset) - var(--lp-section-space)
+    );
+  }
+
+  .landing.landing-home
+    > main
+    > :is(#about, #principles, #future, #careers, #contacts) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-block-size: min(
+      820px,
+      calc(
+        100svh - var(--lp-mobile-header-offset) - var(--lp-mobile-chapter-gap)
+      )
+    );
+  }
+}

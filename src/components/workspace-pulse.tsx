@@ -4,6 +4,7 @@ import { useERP } from "../data/store";
 import { projectTasks, type WorkspaceProject } from "../data/workspace";
 import { today, money } from "../lib/utils";
 import { dealValue } from "../data/selectors";
+import { DashboardWidgetActions } from "./dashboard-widgets";
 
 export function WorkspacePulse({ project }: { project?: WorkspaceProject }) {
   const data = useERP((s) => s.data),
@@ -26,6 +27,7 @@ export function WorkspacePulse({ project }: { project?: WorkspaceProject }) {
       <header>
         <Clock3 size={15} />
         <h2>Прогресс команды</h2>
+        <DashboardWidgetActions />
       </header>
       <div
         className="pulse-gauge"

@@ -27,9 +27,9 @@ export function EvidenceMetrics({
             metric={metric}
             className={`lp-evidence-item evidence-${metric.icon}`}
           >
-            {(engaged) => (
+            {(engaged, taps) => (
               <span className="evidence-motion">
-                <MetricEmblem kind={metric.icon} active={engaged} />
+                <MetricEmblem kind={metric.icon} active={engaged} taps={taps} />
                 <span className="evidence-copy">
                   <strong>
                     {t(metricDisplayValue(metric))}{" "}

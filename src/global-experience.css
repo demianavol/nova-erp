@@ -140,22 +140,29 @@ html[data-site-theme="dark"] .ge-copy h2 .ge-title-accent {
   contain: layout paint;
 }
 .ge-film-poster,
-.ge-film-canvas {
+.ge-film-canvas,
+.ge-film-native {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
-.ge-film-canvas {
+.ge-film :is(.ge-film-canvas, .ge-film-native) {
   opacity: 0;
   transition: opacity 600ms ease;
 }
-.ge-film[data-ready="true"] .ge-film-canvas {
+.ge-film[data-ready="true"] :is(.ge-film-canvas, .ge-film-native) {
   opacity: 1;
 }
 .ge-film[data-ready="true"] .ge-film-poster {
   opacity: 0;
+}
+.ge-film-native {
+  mask-image:
+    linear-gradient(to right, transparent, #000 11%, #000 89%, transparent),
+    linear-gradient(to bottom, transparent, #000 14%, #000 87%, transparent);
+  mask-composite: intersect;
 }
 .ge-film-source {
   position: absolute;

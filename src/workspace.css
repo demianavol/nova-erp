@@ -304,7 +304,7 @@
   font-size: 12px;
   font-weight: 600;
 }
-.home-tasks > header > button {
+.home-tasks > header .erp-widget-heading-actions > button {
   display: flex;
   padding: 2px;
   color: var(--muted-foreground);
@@ -455,9 +455,6 @@
     height: auto;
     max-height: 430px;
   }
-}
-.app-rail {
-  display: none;
 }
 .home-dashboard {
   display: grid;
@@ -630,21 +627,17 @@
   font-size: 11px;
   padding: 20px 4px;
 }
-.home-dashboard > .overview-heading {
-  grid-column: 1 / -1;
-  order: 6;
+.erp-business-overview > .overview-heading {
   margin: 1px 2px -4px;
 }
-.home-dashboard > .overview-heading h2 {
+.erp-business-overview > .overview-heading h2 {
   font-size: 12px;
 }
-.home-dashboard > .overview-heading p {
+.erp-business-overview > .overview-heading p {
   font-size: 9px;
   margin-top: 4px;
 }
-.home-dashboard > .kpi-grid {
-  grid-column: 1 / -1;
-  order: 6;
+.erp-business-overview > .kpi-grid {
   gap: 12px;
   margin: 0;
 }
@@ -722,9 +715,7 @@
 .home-dashboard .revenue-chart {
   height: 170px;
 }
-.home-dashboard > .finance-strip {
-  grid-column: 1 / -1;
-  order: 7;
+.erp-business-overview > .finance-strip {
   margin: 0;
   gap: 12px;
 }
@@ -800,7 +791,7 @@
   .home-board-column {
     flex-basis: 210px;
   }
-  .home-dashboard > .kpi-grid {
+  .erp-business-overview > .kpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
@@ -818,7 +809,7 @@
   .home-dashboard .revenue-chart {
     height: 180px;
   }
-  .home-dashboard > .finance-strip {
+  .erp-business-overview > .finance-strip {
     grid-template-columns: minmax(0, 1fr);
     gap: 10px;
   }
@@ -828,10 +819,10 @@
   .home-dashboard .finance-mini-card > strong {
     margin-top: 7px;
   }
-  .home-dashboard > .overview-heading {
+  .erp-business-overview > .overview-heading {
     align-items: center;
   }
-  .home-dashboard > .overview-heading .badge {
+  .erp-business-overview > .overview-heading .badge {
     display: none;
   }
 }
@@ -1246,25 +1237,6 @@
   font-size: 10px;
   color: var(--muted-foreground);
 }
-.app-rail > .rail-expand {
-  width: 42px;
-  height: 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  transform: none;
-  margin: -32px 0 18px;
-  background: var(--violet-bg);
-  border: 1px solid #ac82e94a;
-  box-shadow: var(--shadow);
-  color: var(--primary);
-}
-.rail-expand > span {
-  font-size: 8px;
-  letter-spacing: 0.1px;
-}
 .workspace-calendar {
   grid-column: 1;
   order: 5;
@@ -1393,88 +1365,7 @@
   text-decoration: line-through;
   color: var(--muted-foreground);
 }
-@media (min-width: 641px) {
-  .app-shell {
-    --sidebar-width: 304px;
-  }
-  .app-rail {
-    display: flex;
-    position: fixed;
-    inset: 16px auto 16px 16px;
-    width: 56px;
-    z-index: 30;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--panel);
-    box-shadow: var(--shadow);
-    flex-direction: column;
-    align-items: center;
-    padding: 18px 0;
-  }
-  .app-rail > .rail-brand {
-    margin-bottom: 50px;
-  }
-  .app-rail .rail-links {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .app-rail a,
-  .app-rail > button {
-    width: 35px;
-    height: 35px;
-    display: grid;
-    place-items: center;
-    border-radius: 10px;
-    color: var(--muted-foreground);
-  }
-  .app-rail a:hover,
-  .app-rail > button:hover {
-    color: var(--foreground);
-    background: var(--hover);
-  }
-  .app-rail a.active {
-    color: var(--primary);
-    background: var(--violet-bg);
-    box-shadow: var(--shadow);
-  }
-  .app-rail > a:last-child {
-    margin-top: auto;
-  }
-  .app-rail .rail-expand {
-    transform: none;
-    margin-top: -32px;
-  }
-  .sidebar {
-    left: 84px;
-    width: 220px;
-  }
-  .sidebar-brand {
-    height: 64px;
-    padding-inline: 5px;
-  }
-  .sidebar-collapsed {
-    --sidebar-width: 76px;
-  }
-  .sidebar-collapsed .sidebar {
-    display: none;
-  }
-}
 @media (min-width: 641px) and (max-width: 1100px) {
-  .app-shell {
-    --sidebar-width: 276px;
-  }
-  .app-rail {
-    left: 10px;
-    width: 48px;
-  }
-  .sidebar {
-    left: 68px;
-    width: 208px;
-  }
-  .sidebar-collapsed {
-    --sidebar-width: 64px;
-  }
   .page-content {
     padding-inline: 4px;
   }
@@ -1551,13 +1442,6 @@
   flex-shrink: 0;
 }
 @media (max-width: 1100px) {
-  .home-dashboard > .overview-heading,
-  .home-dashboard > .kpi-grid {
-    order: 7;
-  }
-  .home-dashboard > .finance-strip {
-    order: 8;
-  }
   .home-dashboard .recent-orders {
     order: 9;
   }

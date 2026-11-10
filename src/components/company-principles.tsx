@@ -144,8 +144,10 @@ function PrincipleCard({
           </h3>
         </div>
         <div id={detailId} className="cp-card-drawer" aria-hidden={!expanded}>
-          <p className="cp-card-description">{t(principle.description)}</p>
-          <span className="cp-card-slide">{t(principle.welcomeSlide)}</span>
+          <div className="cp-card-drawer-copy">
+            <p className="cp-card-description">{t(principle.description)}</p>
+            <span className="cp-card-slide">{t(principle.welcomeSlide)}</span>
+          </div>
         </div>
       </div>
     </article>

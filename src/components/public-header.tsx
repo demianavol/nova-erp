@@ -427,7 +427,7 @@ export function PublicHeader() {
             <span className="yu-erp-label">{t("Войти в ERP")}</span>
             <ArrowUpRight size={15} aria-hidden="true" />
           </ErpEntryLink>
-          <SiteThemeToggle defaultTheme="dark" />
+          <SiteThemeToggle />
           <LanguageSelector />
 
           <Dropdown.Root open={mobileOpen} onOpenChange={setMobileOpen}>

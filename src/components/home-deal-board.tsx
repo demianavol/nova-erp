@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Flag,
@@ -14,7 +15,8 @@ import { useERP } from "../data/store";
 import { stageNames, type Stage } from "../data/schema";
 import { dealValue } from "../data/selectors";
 import { dateLabel, money } from "../lib/utils";
-import { Avatar, Button, TextLink } from "./ui";
+import { Avatar, Button, Empty, Menu, TextLink } from "./ui";
+import { DashboardWidgetActions } from "./dashboard-widgets";
 
 const previewStages: Stage[] = [
   "qualified",
@@ -26,7 +28,11 @@ const previewStages: Stage[] = [
 ];
 
 /** A compact view of the existing pipeline; all actions open its existing forms. */
-export function HomeDealBoard() {
+export function HomeDealBoard({
+  showProjectPicker = false,
+}: {
+  showProjectPicker?: boolean;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
   const updateEdges = () => {
@@ -77,27 +83,55 @@ export function HomeDealBoard() {
                 .length
             }
           </span>
+          {showProjectPicker && (
+            <Menu
+              label="Проекты"
+              trigger={
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="erp-board-project-picker"
+                  aria-label="Выбрать проект"
+                  title="Выбрать проект"
+                >
+                  <ChevronDown size={15} aria-hidden="true" />
+                </Button>
+              }
+              items={[
+                {
+                  label: "Все проекты",
+                  onClick: () => workspace.selectProject(null),
+                },
+                ...workspace.projects.map(({ id, name }) => ({
+                  label: name,
+                  onClick: () => workspace.selectProject(id),
+                })),
+              ]}
+            />
+          )}
         </div>
         <div>
           <TextLink onClick={() => navigate("/erp/sales/pipeline")}>
             Вся воронка
           </TextLink>
-          <div className="board-paging">
-            <button
-              aria-label="Предыдущие этапы"
-              disabled={edges.start}
-              onClick={() => scroll(-1)}
-            >
-              <ChevronLeft size={15} />
-            </button>
-            <button
-              aria-label="Следующие этапы"
-              disabled={edges.end}
-              onClick={() => scroll(1)}
-            >
-              <ChevronRight size={15} />
-            </button>
-          </div>
+          {scopedDeals.length > 0 && (
+            <div className="board-paging">
+              <button
+                aria-label="Предыдущие этапы"
+                disabled={edges.start}
+                onClick={() => scroll(-1)}
+              >
+                <ChevronLeft size={15} />
+              </button>
+              <button
+                aria-label="Следующие этапы"
+                disabled={edges.end}
+                onClick={() => scroll(1)}
+              >
+                <ChevronRight size={15} />
+              </button>
+            </div>
+          )}
           <Button
             size="sm"
             onClick={() =>
@@ -110,86 +144,115 @@ export function HomeDealBoard() {
             <Plus size={14} />
             Новая сделка
           </Button>
+          <DashboardWidgetActions />
         </div>
       </div>
-      <div
-        ref={scrollRef}
-        onScroll={updateEdges}
-        className="home-board-scroll"
-        tabIndex={0}
-        aria-label="Этапы сделок, горизонтальная прокрутка"
-      >
-        {previewStages.map((stage) => {
-          const deals = scopedDeals.filter((d) => d.stage === stage);
-          return (
-            <section
-              className={`home-board-column kanban-${stage}`}
-              key={stage}
-            >
-              <div className="home-stage-heading">
-                <h3>
-                  <i />
-                  {stageNames[stage]}
-                </h3>
-                <span>{deals.length}</span>
-                <button
-                  aria-label={`Открыть этап: ${stageNames[stage]}`}
-                  onClick={() => navigate(`/erp/sales/pipeline?stage=${stage}`)}
-                >
-                  <MoreHorizontal size={16} />
-                </button>
-              </div>
-              {deals.slice(0, 2).map((deal) => {
-                const customer = data.customers.find(
-                  (c) => c.id === deal.customerId,
-                );
-                const employee = data.employees.find(
-                  (e) => e.id === deal.managerId,
-                );
-                return (
+      {scopedDeals.length === 0 ? (
+        <Empty
+          title={project ? "В проекте пока нет сделок" : "Пока нет сделок"}
+          description={
+            project
+              ? "Здесь отображаются сделки, привязанные к выбранному проекту."
+              : "Создайте сделку, чтобы начать работу с воронкой."
+          }
+          action={
+            project && data.deals.length > 0 ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => workspace.selectProject(null)}
+              >
+                Показать сделки всех проектов
+              </Button>
+            ) : undefined
+          }
+        />
+      ) : (
+        <div
+          ref={scrollRef}
+          onScroll={updateEdges}
+          className="home-board-scroll"
+          tabIndex={0}
+          aria-label="Этапы сделок, горизонтальная прокрутка"
+        >
+          {previewStages.map((stage) => {
+            const deals = scopedDeals.filter((d) => d.stage === stage);
+            return (
+              <section
+                className={`home-board-column kanban-${stage}`}
+                key={stage}
+              >
+                <div className="home-stage-heading">
+                  <h3>
+                    <i />
+                    {stageNames[stage]}
+                  </h3>
+                  <span>{deals.length}</span>
                   <button
-                    className="home-deal"
-                    key={deal.id}
-                    onClick={() => navigate(`/erp/sales/pipeline?open=${deal.id}`)}
+                    aria-label={`Открыть этап: ${stageNames[stage]}`}
+                    onClick={() =>
+                      navigate(`/erp/sales/pipeline?stage=${stage}`)
+                    }
                   >
-                    <span className="home-deal-title">{deal.title}</span>
-                    <span className="home-deal-people-date">
-                      <span className="home-deal-date">
-                        <CalendarDays size={11} />
-                        {dateLabel(deal.expectedAt)}
-                      </span>
-                      <span className="home-deal-avatars">
-                        {customer && (
-                          <Avatar name={customer.name} portrait size="sm" />
-                        )}
-                        {employee && (
-                          <Avatar name={employee.name} portrait size="sm" />
-                        )}
-                      </span>
-                    </span>
-                    <span className="home-deal-footer">
-                      <span
-                        className={`deal-priority priority-${deal.priority || "medium"}`}
-                      >
-                        <Flag size={11} />
-                        {
-                          { high: "Высокий", medium: "Средний", low: "Низкий" }[
-                            deal.priority || "medium"
-                          ]
-                        }
-                      </span>
-                      <span>{money(dealValue(deal))}</span>
-                    </span>
+                    <MoreHorizontal size={16} />
                   </button>
-                );
-              })}
-              {!deals.length && (
-                <p className="home-board-empty">Пока нет сделок</p>
-              )}
-            </section>
-          );
-        })}
-      </div>
+                </div>
+                {deals.slice(0, 2).map((deal) => {
+                  const customer = data.customers.find(
+                    (c) => c.id === deal.customerId,
+                  );
+                  const employee = data.employees.find(
+                    (e) => e.id === deal.managerId,
+                  );
+                  return (
+                    <button
+                      className="home-deal"
+                      key={deal.id}
+                      onClick={() =>
+                        navigate(`/erp/sales/pipeline?open=${deal.id}`)
+                      }
+                    >
+                      <span className="home-deal-title">{deal.title}</span>
+                      <span className="home-deal-people-date">
+                        <span className="home-deal-date">
+                          <CalendarDays size={11} />
+                          {dateLabel(deal.expectedAt)}
+                        </span>
+                        <span className="home-deal-avatars">
+                          {customer && (
+                            <Avatar name={customer.name} portrait size="sm" />
+                          )}
+                          {employee && (
+                            <Avatar name={employee.name} portrait size="sm" />
+                          )}
+                        </span>
+                      </span>
+                      <span className="home-deal-footer">
+                        <span
+                          className={`deal-priority priority-${deal.priority || "medium"}`}
+                        >
+                          <Flag size={11} />
+                          {
+                            {
+                              high: "Высокий",
+                              medium: "Средний",
+                              low: "Низкий",
+                            }[deal.priority || "medium"]
+                          }
+                        </span>
+                        <span>{money(dealValue(deal))}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+                {!deals.length && (
+                  <p className="home-board-empty">Пока нет сделок</p>
+                )}
+              </section>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 }

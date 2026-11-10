@@ -177,11 +177,10 @@ export const siteTranslations: Record<string, readonly [string, string]> = {
       "Details of Young Unicorn’s work in Uzbekistan will be available once the team confirms them.",
       "Young Unicorn 在乌兹别克斯坦的业务经验将在团队确认后公布。",
     ],
-  "Видео: флаги Китая, Кыргызстана и Узбекистана с мягким выделением выбранной страны":
-    [
-      "Video of the flags of China, Kyrgyzstan and Uzbekistan, with the selected country highlighted",
-      "视频展示中国、吉尔吉斯斯坦和乌兹别克斯坦的国旗，并突出所选国家",
-    ],
+  "Флаги Китая, Кыргызстана и Узбекистана": [
+    "Flags of China, Kyrgyzstan and Uzbekistan",
+    "中国、吉尔吉斯斯坦和乌兹别克斯坦的国旗",
+  ],
   // Company history
   "Начало истории": ["How it started", "起步"],
   "Первые коллекции": ["First collections", "首批系列"],
@@ -191,42 +190,42 @@ export const siteTranslations: Record<string, readonly [string, string]> = {
   "Новые возможности": ["New opportunities", "新机遇"],
   "Новый этап": ["A new chapter", "新阶段"],
   "Основание компании": ["Company founded", "公司成立"],
-  "Начинаем путь в российском e-commerce.": [
-    "We get started in Russian e-commerce.",
-    "我们在俄罗斯电商市场起步。",
+  "Начинаем путь в российском e-commerce": [
+    "We get started in Russian e-commerce",
+    "我们在俄罗斯电商市场起步",
   ],
   "Первые покупатели": ["First customers", "首批客户"],
-  "Проверяем спрос и слушаем первых покупателей.": [
-    "We test demand and listen to our first customers.",
-    "我们验证市场需求，倾听首批客户的反馈。",
+  "Проверяем спрос и слушаем первых покупателей": [
+    "We test demand and listen to our first customers",
+    "我们验证市场需求，倾听首批客户的反馈",
   ],
   "Больше выбора": ["More choice", "更多选择"],
-  "Развиваем линейку одежды и работу с производителями.": [
-    "We expand our clothing range and strengthen our work with manufacturers.",
-    "我们丰富服装系列，并深化与制造商的合作。",
+  "Развиваем линейку одежды и работу с производителями": [
+    "We expand our clothing range and strengthen our work with manufacturers",
+    "我们丰富服装系列，并深化与制造商的合作",
   ],
   "Узнаваемый Enmoone": [
     "A distinct identity for Enmoone",
     "塑造鲜明的 Enmoone 品牌",
   ],
-  "Связываем коллекции, контент и маркетинг.": [
-    "We bring collections, content and marketing together.",
-    "我们将产品系列、内容与营销结合起来。",
+  "Связываем коллекции, контент и маркетинг": [
+    "We bring collections, content and marketing together",
+    "我们将产品系列、内容与营销结合起来",
   ],
   "Растим продажи": ["Growing sales", "推动销售增长"],
-  "Расширяем поставки, опираясь на аналитику спроса.": [
-    "We scale up supply based on demand data.",
-    "我们根据需求数据扩大供货规模。",
+  "Расширяем поставки, опираясь на аналитику спроса": [
+    "We scale up supply based on demand data",
+    "我们根据需求数据扩大供货规模",
   ],
   "Новые категории": ["New categories", "新产品类别"],
-  "Переносим опыт команды в продукты ежедневного ухода.": [
-    "We apply our team’s experience to everyday care products.",
-    "我们把团队经验运用到日常护理产品的开发中。",
+  "Переносим опыт команды в продукты ежедневного ухода": [
+    "We apply our team’s experience to everyday care products",
+    "我们把团队经验运用到日常护理产品的开发中",
   ],
   "Enmoone и уход": ["Enmoone and personal care", "Enmoone 与个人护理"],
-  "Развиваем Enmoone, готовим self-care и oral care.": [
-    "We grow Enmoone and prepare personal care and oral care products for launch.",
-    "我们继续发展 Enmoone，并筹备推出个人护理与口腔护理产品。",
+  "Развиваем Enmoone, готовим self-care и oral care": [
+    "We grow Enmoone and prepare personal care and oral care products for launch",
+    "我们继续发展 Enmoone，并筹备推出个人护理与口腔护理产品",
   ],
   "Годы истории Young Unicorn": [
     "Young Unicorn timeline",
@@ -480,21 +479,11 @@ export const siteTranslations: Record<string, readonly [string, string]> = {
   "от Young Unicorn": ["from Young Unicorn", "来自 Young Unicorn"],
   "Открыть приглашение": ["Open invitation", "打开邀请函"],
   "Приглашение к сотрудничеству": ["An invitation to partner", "合作邀请"],
-  "Давайте создадим сильный бренд вместе": [
-    "Let’s build a strong brand together",
-    "携手打造有竞争力的品牌",
+  "Вместе мы превращаем смелые идеи в бренды, которым доверяют": [
+    "Together, we turn bold ideas into brands people trust",
+    "携手将大胆的创意变成值得信赖的品牌",
   ],
-  "Вы производите или поставляете продукты? Давайте обсудим, что можем создать вместе":
-    [
-      "Do you manufacture or supply products? Let’s talk about what we could build together.",
-      "您是产品制造商或供应商吗？欢迎和我们聊聊有哪些产品可以一起开发。",
-    ],
-  "Мы объединяем работу над продуктом, контентом, маркетингом и продажами. Ищем партнёров, с которыми можно развивать существующие направления и запускать новые":
-    [
-      "We bring product development, content, marketing and sales together. We’re looking for partners to grow our existing businesses and launch new ones.",
-      "我们整合产品开发、内容、营销与销售，期待与合作伙伴共同发展现有业务、开拓新领域。",
-    ],
-  "Обсудить сотрудничество": ["Discuss a partnership", "洽谈合作"],
+  "Связаться с нами": ["Contact us", "联系我们"],
   "Свернуть письмо": ["Close letter", "收起信件"],
   "Подбор шрифта": ["Font preview", "字体预览"],
   "Где применить": ["Apply to", "应用范围"],

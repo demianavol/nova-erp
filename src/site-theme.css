@@ -51,20 +51,19 @@ html[data-site-theme] body {
   min-width: 0;
 }
 html[data-site-theme="light"] {
-  --yu-site-surface: #faf8fd;
-  color-scheme: light;
-  background: var(--yu-site-surface);
   scrollbar-color: #b8b0c4 var(--yu-site-surface);
 }
 html[data-site-theme="dark"] {
-  --yu-site-surface: #191526;
-  color-scheme: dark;
-  background: var(--yu-site-surface);
   scrollbar-color: #6c607f var(--yu-site-surface);
 }
-html[data-site-theme="dark"]:has(.landing-home) {
-  --yu-site-surface: #080809;
+html[data-site-theme="dark"][data-site-page="landing"] {
   scrollbar-color: #626268 var(--yu-site-surface);
+}
+html[data-site-theme="dark"] .app-loading .yuc-brand > img {
+  filter: brightness(0) invert(1);
+}
+html[data-site-theme="dark"] .app-loading > p {
+  color: #b9adc8;
 }
 html[data-site-theme="dark"] .landing {
   --yu-ink: #eeeaf5;

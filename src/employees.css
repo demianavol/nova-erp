@@ -2155,13 +2155,145 @@
   }
 }
 .employee-guide-erp {
-  border: 1px solid #e7e5eb;
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 0 30px 20px;
+}
+
+html[data-erp-theme] .employee-guide-erp {
+  --yu-ink: var(--foreground);
+  --yu-muted: var(--muted-foreground);
+  --yu-accent: var(--erp-nav-accent);
+  --yu-line: var(--border);
+  background: var(--panel);
+  color: var(--foreground);
+}
+
+.employee-guide-erp .eg-welcome {
+  background: var(--subtle);
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+.employee-guide-erp .eg-welcome::after { display: none; }
+.employee-guide-erp .eg-welcome h1 { color: var(--foreground); }
+.employee-guide-erp .eg-welcome .eg-intro { color: var(--muted-foreground); }
+.employee-guide-erp .eg-welcome :is(.eg-quick-links, .eg-quick-links > a) { border-color: var(--border); }
+.employee-guide-erp .eg-welcome .eg-quick-links > a > :is(svg, span, strong),
+.employee-guide-erp .eg-welcome .eg-quick-links :is(strong svg, .eg-quick-value) { color: var(--erp-nav-accent); }
+.employee-guide-erp .eg-welcome a:focus-visible { outline-color: var(--accent); }
+
+html[data-erp-theme="dark"] .employee-guide-erp :is(
+  .eg-search, .eg-topics-menu > nav, .eg-topic-cards > a, .eg-visual,
+  .eg-flow-node, .eg-flow-note, .eg-channel-map > div, .eg-tool-map > div,
+  .eg-topic-pagination > a
+) {
+  background: var(--card);
+  border-color: var(--border);
+  box-shadow: none;
+}
+
+html[data-erp-theme="dark"] .employee-guide-erp :is(
+  .eg-topic-cards > a:hover, .eg-topic-pagination > a:hover, .eg-search:focus-within
+) { border-color: var(--accent); }
+
+html[data-erp-theme="dark"] .employee-guide-erp :is(
+  .eg-article h1, .eg-search-results h1, .eg-directory h2, .eg-topic-cards h3,
+  .eg-topic-list strong, .eg-sections summary h2, .eg-visual figcaption > strong,
+  .eg-agile-principle > strong, .eg-channel-map strong, .eg-tool-map strong,
+  .eg-call-journey strong, .eg-menu-groups h2, .eg-team .lp-team-heading h2,
+  .eg-team .lp-department-description h3
+) { color: var(--foreground); }
+
+html[data-erp-theme="dark"] .employee-guide-erp :is(
+  .eg-breadcrumb, .eg-intro, .eg-answer p, .eg-answer li, .eg-source,
+  .eg-contact > span, .eg-topic-cards p, .eg-topic-list strong + span,
+  .eg-topics-menu > summary, .eg-menu-groups a, .eg-topic-pagination a,
+  .eg-topic-pagination small, .eg-topic-filters button, .eg-search,
+  .eg-visual figcaption > span, .eg-flow-cell > button, .eg-flow-note > p,
+  .eg-product-lanes > span, .eg-responsibility > span, .eg-product-lanes small,
+  .eg-responsibility small, .eg-visual-foot, .eg-agile-principle > span,
+  .eg-channel-map small, .eg-channel-map p, .eg-tool-map p,
+  .eg-adaptation-duration > strong > span, .eg-adaptation-focus > span,
+  .eg-welcome-box > span, .eg-reply-time > p, .eg-call-journey small,
+  .eg-call-journey p, .eg-tenure > span, .eg-tenure div > span,
+  .eg-team .lp-team-heading p, .eg-team .lp-department-description p,
+  .eg-team .lp-network-group h3
+) { color: var(--muted-foreground); }
+
+html[data-erp-theme="dark"] .employee-guide-erp :is(
+  .eg-all-topics, .eg-next-topic, .eg-topic-list svg, .eg-sections summary svg,
+  .eg-contact a, .eg-card-heading > svg, .eg-topic-filters button[aria-pressed="true"],
+  .eg-menu-groups a[aria-current], .eg-flow-node, .eg-flow-note > span,
+  .eg-flow-arrow, .eg-flow-return, .eg-agile-principle > svg, .eg-responsibility > svg,
+  .eg-channel-map > div > svg, .eg-tool-map svg, .eg-adaptation-duration > strong,
+  .eg-adaptation-focus svg, .eg-welcome-box > svg, .eg-welcome-box > strong,
+  .eg-reply-time > strong, .eg-value-tags > span, .eg-call-arrow, .eg-tenure strong
+) { color: var(--erp-nav-accent); }
+
+html[data-erp-theme="dark"] .employee-guide-erp :is(
+  .eg-topic-symbol, .eg-tool-map > div > div > span, .eg-message-exchange > div,
+  .eg-agile-core, .eg-call-icon, .eg-flow-cell > button.is-selected .eg-flow-node
+) { background: var(--violet-bg); border-color: var(--border); color: var(--primary); }
+
+html[data-erp-theme="dark"] .employee-guide-erp .eg-message-exchange > div:last-child {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+html[data-erp-theme="dark"] .employee-guide-erp .eg-topic-filters button[aria-pressed="true"] { border-bottom-color: var(--accent); }
+html[data-erp-theme="dark"] .employee-guide-erp .eg-adaptation-duration .eg-duration-ring { stroke: var(--accent); }
+html[data-erp-theme="dark"] .employee-guide-erp .eg-team { background: transparent; }
+html[data-erp-theme="dark"] .employee-guide-erp .eg-team .lp-department-info { border-color: var(--border); }
+html[data-erp-theme="dark"] .employee-guide-erp .eg-team .lp-network-group .lp-department-buttons > button {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+html[data-erp-theme="dark"] .employee-guide-erp .eg-team .lp-network-group .lp-department-buttons > button:is(.is-connected, :hover) {
+  background: var(--erp-selection);
+  color: var(--erp-nav-accent);
 }
 .employee-guide-erp .eg-content {
   width: 100%;
   max-width: 1100px;
+}
+.employee-guide-erp .erp-guide-heading { padding-top: 22px; }
+.employee-guide-erp .erp-guide-heading h1 {
+  color: var(--foreground);
+  margin: 0;
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.2;
+  letter-spacing: -.03em;
+}
+.employee-guide-erp .erp-guide-heading p { color: var(--muted-foreground); margin: 6px 0 0; }
+.employee-guide-erp .erp-guide-search-title { color: var(--foreground); font-size: 21px; font-weight: 600; }
+.employee-guide-erp .erp-guide-heading + .eg-toolbar { justify-content: flex-start; }
+.employee-guide-erp .erp-guide-heading + .eg-toolbar .eg-search { width: min(360px, 100%); }
+.employee-guide-erp .eg-directory { margin-top: 18px; }
+.employee-guide-erp .eg-topic-cards { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.employee-guide-erp .eg-topic-cards > a {
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: none;
+}
+.employee-guide-erp .eg-topic-cards > a:hover { transform: none; box-shadow: none; }
+.employee-guide-erp .eg-topic-cards h3 { font-size: 14px; margin: 0; }
+.employee-guide-erp .eg-topic-cards p { margin: 3px 0 0; }
+.employee-guide-erp .eg-topic-cards .eg-topic-symbol {
+  width: 34px;
+  height: 34px;
+  border-radius: 7px;
+  background: var(--erp-selection);
+  color: var(--erp-nav-accent);
+}
+.employee-guide-erp .eg-topic-cards > a > svg { color: var(--erp-nav-accent); }
+.employee-guide-erp .eg-topics-menu > nav {
+  width: min(810px, calc(100vw - var(--sidebar-width) - 88px));
 }
 .employee-guide-erp .eg-team {
   margin: 45px 0;
@@ -2218,6 +2350,10 @@
   .employee-guide-erp {
     padding-inline: 16px;
   }
+  .employee-guide-erp .eg-topics-menu > nav {
+    width: calc(100vw - 58px);
+  }
+  .employee-guide-erp .eg-topic-cards { grid-template-columns: 1fr; }
   .employee-guide-erp .eg-team .lp-team-heading {
     align-items: flex-start;
     flex-direction: column;

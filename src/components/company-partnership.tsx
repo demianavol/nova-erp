@@ -18,6 +18,8 @@ import "../company-partnership.css";
 import { invitationPocketPath } from "./partnership-invitation-geometry";
 
 const Silk = lazy(() => import("./react-bits/Silk"));
+const flapPath =
+  "M3 27Q3 3 28 3H612Q637 3 637 27L346 220Q320 237 294 220Z";
 
 export function CompanyPartnership() {
   const { t } = useSiteLanguage();
@@ -169,6 +171,17 @@ export function CompanyPartnership() {
                 <stop offset=".7" stopColor="#c79de5" />
                 <stop offset="1" stopColor="#fff" />
               </linearGradient>
+              <linearGradient
+                id={`${svgId}-inside`}
+                x1="0"
+                y1="0"
+                x2=".18"
+                y2="1"
+              >
+                <stop stopColor="#4b2d65" stopOpacity=".88" />
+                <stop offset=".48" stopColor="#986bbd" stopOpacity=".62" />
+                <stop offset="1" stopColor="#e8ccff" stopOpacity=".86" />
+              </linearGradient>
             </defs>
           </svg>
           <div
@@ -215,8 +228,6 @@ export function CompanyPartnership() {
                 <h2 id="partnership-title" tabIndex={-1}>
                   {t(content.title)}
                 </h2>
-                <p className="invitation-opening">{t(content.opening)}</p>
-                <p className="invitation-description">{t(content.description)}</p>
                 <div className="invitation-letter-actions">
                   <a
                     className="partnership-cta"
@@ -270,7 +281,7 @@ export function CompanyPartnership() {
             <div className="invitation-hinge">
               <svg viewBox="0 0 640 232" fill="none">
                 <path
-                  d="M3 27Q3 3 28 3H612Q637 3 637 27L346 220Q320 237 294 220Z"
+                  d={flapPath}
                   fill={`url(#${svgId}-glass)`}
                   stroke={`url(#${svgId}-edge)`}
                   strokeWidth="2.5"
@@ -279,6 +290,18 @@ export function CompanyPartnership() {
                   d="M12 28Q12 11 30 11H610Q628 11 628 28L342 213Q320 228 298 213Z"
                   stroke="#fff"
                   strokeOpacity=".3"
+                />
+              </svg>
+              <svg
+                className="invitation-flap-inside"
+                viewBox="0 0 640 232"
+                fill="none"
+              >
+                <path
+                  d={flapPath}
+                  fill={`url(#${svgId}-inside)`}
+                  stroke={`url(#${svgId}-edge)`}
+                  strokeWidth="2"
                 />
               </svg>
               <span

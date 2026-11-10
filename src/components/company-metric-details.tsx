@@ -125,7 +125,7 @@ export function MetricDetails({
   metric: CompanyMetricData;
   className: string;
   style?: CSSProperties;
-  children: ReactNode | ((engaged: boolean) => ReactNode);
+  children: ReactNode | ((engaged: boolean, taps: number) => ReactNode);
 }) {
   const { t } = useSiteLanguage();
   const state = useContext(MetricDetailsContext);
@@ -212,6 +212,7 @@ export function MetricDetails({
   const verified = metric.verification === "verified" && metric.value !== null;
   const hasDisplayValue = verified || metric.verification === "demo";
   const [engaged, setEngaged] = useState(false);
+  const [taps, setTaps] = useState(0);
   return (
     <article
       ref={refs.setPositionReference}
@@ -220,6 +221,11 @@ export function MetricDetails({
         if (event.pointerType === "mouse") setEngaged(true);
       }}
       onPointerLeave={() => setEngaged(false)}
+      onClick={(event) => {
+        if (event.currentTarget.contains(event.target as Node)) {
+          setTaps((count) => count + 1);
+        }
+      }}
       onFocusCapture={() => setEngaged(true)}
       onBlurCapture={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget))
@@ -228,7 +234,9 @@ export function MetricDetails({
       style={style}
       data-company-metric={metric.id}
     >
-      {typeof children === "function" ? children(engaged || active) : children}
+      {typeof children === "function"
+        ? children(engaged || active, taps)
+        : children}
       <button
         ref={refs.setReference}
         type="button"

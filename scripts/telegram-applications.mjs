@@ -29,8 +29,21 @@ export async function openApplicationReplies(path) {
   const insert = db.prepare(
     "INSERT INTO application_replies (inbox, message, applicant, application) VALUES (?, ?, ?, ?)",
   );
+  const original = db.prepare(
+    "SELECT message, application FROM application_replies WHERE inbox = ? AND applicant = ? AND application = ? ORDER BY rowid LIMIT 1",
+  );
+  const latest = db.prepare(`
+    SELECT message, application FROM application_replies WHERE rowid = (
+      SELECT MIN(rowid) FROM application_replies WHERE inbox = ? AND applicant = ?
+      GROUP BY application ORDER BY MIN(rowid) DESC LIMIT 1
+    )
+  `);
   return {
     find: (inbox, message) => find.get(inbox, message),
+    conversation: (inbox, applicant, application) =>
+      application === undefined
+        ? latest.get(inbox, applicant)
+        : original.get(inbox, applicant, application),
     remember: (inbox, message, applicant, application) =>
       insert.run(inbox, message, applicant, application),
     close: () => db.close(),
@@ -56,7 +69,7 @@ export function createApplicationHandler({
     const original = message.reply_to_message;
     if (
       original?.from?.id !== botId ||
-      !/^Заявка №\d+ · /.test(original.text ?? "")
+      !/^(?:Заявка №\d+ · |Продолжение заявки №\d+\n)/.test(original.text ?? "")
     )
       return;
     const applicant = replies.find(inbox, original.message_id);
@@ -89,7 +102,9 @@ export function createApplicationHandler({
       );
       return;
     }
-    console.log(`Ответ по заявке №${applicant.application} доставлен в личный чат.`);
+    console.log(
+      `Ответ по заявке №${applicant.application} доставлен в личный чат.`,
+    );
     await report("Ответ отправлен заявителю.");
   }
 
@@ -113,7 +128,21 @@ export function createApplicationHandler({
       reply?.from?.id === botId
         ? Object.keys(topics).find((key) => reply.text === prompt(key))
         : undefined;
-    if (!topic) {
+    const referenced =
+      reply?.from?.id === botId
+        ? /^(?:(?:Ответ команды Young Unicorn|Сообщение) по заявке №(\d+)(?:\n| передано команде)|Заявка №(\d+) передана команде)/.exec(
+            reply.text ?? "",
+          )
+        : null;
+    const conversation =
+      !topic && (!reply || referenced)
+        ? replies.conversation(
+            inbox,
+            chat,
+            referenced ? Number(referenced[1] ?? referenced[2]) : undefined,
+          )
+        : undefined;
+    if (!topic && !conversation) {
       await send(
         chat,
         "Чтобы оставить заявку, отправьте /start и ответьте на сообщение бота.",
@@ -121,24 +150,34 @@ export function createApplicationHandler({
       return;
     }
     if (!text || text.length > maxLength) {
-      await send(
-        chat,
-        `Ответьте на сообщение с запросом текстом до ${maxLength} символов.`,
-      );
+      await send(chat, `Отправьте сообщение текстом до ${maxLength} символов.`);
       return;
     }
 
+    const application = conversation?.application ?? update_id;
     const { first_name, last_name, username } = message.from;
     const sender = [first_name, last_name, username && `(@${username})`]
       .filter(Boolean)
       .join(" ");
+    const title = conversation
+      ? `Продолжение заявки №${application}`
+      : `Заявка №${application} · ${topics[topic]}`;
     try {
       const sent = await send(
         inbox,
-        `Заявка №${update_id} · ${topics[topic]}\nОт: ${sender}\n\n${text}`,
-        inboxOptions,
+        `${title}\nОт: ${sender}\n\n${text}`,
+        conversation
+          ? {
+              ...inboxOptions,
+              reply_parameters: { message_id: conversation.message },
+            }
+          : inboxOptions,
       );
-      replies.remember(inbox, sent.message_id, chat, update_id);
+      replies.remember(inbox, sent.message_id, chat, application);
+      if (conversation)
+        console.log(
+          `Продолжение заявки №${application} доставлено. ID сообщения: ${sent.message_id}.`,
+        );
     } catch (error) {
       console.error(
         `Не удалось подтвердить доставку заявки №${update_id}: ${error.message}`,
@@ -151,7 +190,9 @@ export function createApplicationHandler({
     }
     await send(
       chat,
-      `Заявка №${update_id} передана команде Young Unicorn. Спасибо!`,
+      conversation
+        ? `Сообщение по заявке №${application} передано команде.`
+        : `Заявка №${application} передана команде Young Unicorn. Спасибо!`,
     );
   };
 }

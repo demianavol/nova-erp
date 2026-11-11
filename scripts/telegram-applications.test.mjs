@@ -49,13 +49,14 @@ it("delivers the application to the configured forum topic before confirming it"
   );
 });
 
-it("routes a team reply to the applicant after a restart and ignores other topics", async () => {
+it("continues the correct application in both directions after a restart", async () => {
   const directory = mkdtempSync(join(tmpdir(), "yuc-replies-"));
   const path = join(directory, "test.sqlite");
   let replies;
   try {
     replies = await openApplicationReplies(path);
     replies.remember(-1001, 71, 42, 2);
+    replies.remember(-1001, 73, 42, 3);
     replies.close();
     replies = undefined;
     replies = await openApplicationReplies(path);
@@ -100,6 +101,58 @@ it("routes a team reply to the applicant after a restart and ignores other topic
         message_thread_id: 17,
         reply_parameters: { message_id: 44 },
       },
+    );
+    const teamReply = send.mock.calls[0][1];
+    send.mockReset().mockResolvedValue({ message_id: 74 });
+    const direct = {
+      chat: { type: "private", id: 42 },
+      from: { id: 42, first_name: "Ирина" },
+      text: "Во сколько можно созвониться?",
+    };
+    await handle({
+      update_id: 9,
+      message: {
+        ...direct,
+        reply_to_message: { from: { id: 9 }, text: teamReply },
+      },
+    });
+    expect(send).toHaveBeenNthCalledWith(
+      1,
+      -1001,
+      expect.stringContaining("Продолжение заявки №2"),
+      { message_thread_id: 17, reply_parameters: { message_id: 71 } },
+    );
+    const continuation = send.mock.calls[0][1];
+    expect(send).toHaveBeenNthCalledWith(
+      2,
+      42,
+      "Сообщение по заявке №2 передано команде.",
+    );
+    send.mockReset().mockResolvedValue({ message_id: 75 });
+    await handle({
+      update_id: 10,
+      message: {
+        ...message,
+        message_thread_id: 17,
+        reply_to_message: {
+          message_id: 74,
+          from: { id: 9 },
+          text: continuation,
+        },
+      },
+    });
+    expect(send).toHaveBeenNthCalledWith(
+      1,
+      42,
+      expect.stringContaining("по заявке №2"),
+    );
+    send.mockReset().mockResolvedValue({ message_id: 76 });
+    await handle({ update_id: 11, message: direct });
+    expect(send).toHaveBeenNthCalledWith(
+      1,
+      -1001,
+      expect.stringContaining("Продолжение заявки №3"),
+      { message_thread_id: 17, reply_parameters: { message_id: 73 } },
     );
   } finally {
     replies?.close();

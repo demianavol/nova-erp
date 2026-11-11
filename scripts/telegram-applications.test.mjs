@@ -1,13 +1,21 @@
 import { expect, it, vi } from "vitest";
-import { createApplicationHandler } from "./telegram-applications.mjs";
+import { mkdtempSync, rmSync, rmdirSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import {
+  createApplicationHandler,
+  openApplicationReplies,
+} from "./telegram-applications.mjs";
 
 it("delivers the application to the configured forum topic before confirming it", async () => {
-  const send = vi.fn().mockResolvedValue(undefined);
+  const send = vi.fn().mockResolvedValue({ message_id: 71 });
+  const remember = vi.fn();
   const handle = createApplicationHandler({
     botId: 9,
     inbox: "-1001",
     threadId: 17,
     send,
+    replies: { remember },
   });
   const message = {
     chat: { type: "private", id: 42 },
@@ -33,11 +41,71 @@ it("delivers the application to the configured forum topic before confirming it"
     expect.stringContaining("Заявка №2 · Карьера"),
     { message_thread_id: 17 },
   );
+  expect(remember).toHaveBeenCalledWith("-1001", 71, 42, 2);
   expect(send).toHaveBeenNthCalledWith(
     3,
     42,
     expect.stringContaining("передана команде"),
   );
+});
+
+it("routes a team reply to the applicant after a restart and ignores other topics", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "yuc-replies-"));
+  const path = join(directory, "test.sqlite");
+  let replies;
+  try {
+    replies = await openApplicationReplies(path);
+    replies.remember(-1001, 71, 42, 2);
+    replies.close();
+    replies = undefined;
+    replies = await openApplicationReplies(path);
+    const send = vi.fn().mockResolvedValue({ message_id: 72 });
+    const handle = createApplicationHandler({
+      botId: 9,
+      inbox: -1001,
+      threadId: 17,
+      send,
+      replies,
+    });
+    const message = {
+      message_id: 44,
+      chat: { type: "supergroup", id: -1001 },
+      from: { id: 23 },
+      text: "Спасибо, свяжемся завтра.",
+      reply_to_message: {
+        message_id: 71,
+        from: { id: 9 },
+        text: "Заявка №2 · Карьера",
+      },
+    };
+    await handle({
+      update_id: 7,
+      message: { ...message, message_thread_id: 18 },
+    });
+    expect(send).not.toHaveBeenCalled();
+    await handle({
+      update_id: 8,
+      message: { ...message, message_thread_id: 17 },
+    });
+    expect(send).toHaveBeenNthCalledWith(
+      1,
+      42,
+      expect.stringContaining(message.text),
+    );
+    expect(send).toHaveBeenNthCalledWith(
+      2,
+      -1001,
+      "Ответ отправлен заявителю.",
+      {
+        message_thread_id: 17,
+        reply_parameters: { message_id: 44 },
+      },
+    );
+  } finally {
+    replies?.close();
+    rmSync(path, { force: true });
+    rmdirSync(directory);
+  }
 });
 
 it("ignores group messages and refuses to accept a reply to a different sender", async () => {

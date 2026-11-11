@@ -6,6 +6,7 @@ dist/
 .env
 .env.*
 !.env.example
+/scripts/telegram-applications.sqlite*
 coverage/
 test-results/
 output/

@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { pathToFileURL } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const topics = {
   general: "Обращение",
@@ -11,16 +11,96 @@ const maxLength = 2400;
 const prompt = (topic) =>
   `${topics[topic]} · Young Unicorn\n\nОтветьте на это сообщение одним текстом. Укажите имя, как с вами связаться и кратко опишите ваш запрос. Сообщение увидит команда Young Unicorn.`;
 
-export function createApplicationHandler({ botId, inbox, threadId, send }) {
-  return async ({ update_id, message }) => {
+export async function openApplicationReplies(path) {
+  const { DatabaseSync } = await import("node:sqlite");
+  const db = new DatabaseSync(path);
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS application_replies (
+      inbox INTEGER NOT NULL,
+      message INTEGER NOT NULL,
+      applicant INTEGER NOT NULL,
+      application INTEGER NOT NULL,
+      PRIMARY KEY (inbox, message)
+    )
+  `);
+  const find = db.prepare(
+    "SELECT applicant, application FROM application_replies WHERE inbox = ? AND message = ?",
+  );
+  const insert = db.prepare(
+    "INSERT INTO application_replies (inbox, message, applicant, application) VALUES (?, ?, ?, ?)",
+  );
+  return {
+    find: (inbox, message) => find.get(inbox, message),
+    remember: (inbox, message, applicant, application) =>
+      insert.run(inbox, message, applicant, application),
+    close: () => db.close(),
+  };
+}
+
+export function createApplicationHandler({
+  botId,
+  inbox,
+  threadId,
+  send,
+  replies,
+}) {
+  const inboxOptions =
+    threadId === undefined ? undefined : { message_thread_id: threadId };
+
+  async function replyToApplicant(message, text) {
     if (
-      message?.chat?.type !== "private" ||
-      !message.from ||
-      message.from.is_bot
+      message.chat.id !== inbox ||
+      (threadId !== undefined && message.message_thread_id !== threadId)
     )
       return;
-    const chat = message.chat.id;
+    const original = message.reply_to_message;
+    if (
+      original?.from?.id !== botId ||
+      !/^Заявка №\d+ · /.test(original.text ?? "")
+    )
+      return;
+    const applicant = replies.find(inbox, original.message_id);
+    const report = (status) =>
+      send(inbox, status, {
+        ...inboxOptions,
+        reply_parameters: { message_id: message.message_id },
+      });
+    if (!applicant) {
+      await report(
+        "Для этой заявки ещё нет привязки к личному чату. Используйте контакт из заявки.",
+      );
+      return;
+    }
+    if (!text || text.length > maxLength) {
+      await report(`Ответьте текстом до ${maxLength} символов.`);
+      return;
+    }
+    try {
+      await send(
+        applicant.applicant,
+        `Ответ команды Young Unicorn по заявке №${applicant.application}\n\n${text}`,
+      );
+    } catch (error) {
+      console.error(
+        `Не удалось доставить ответ по заявке №${applicant.application}: ${error.message}`,
+      );
+      await report(
+        "Telegram не подтвердил доставку ответа. При необходимости повторите его или используйте контакт из заявки.",
+      );
+      return;
+    }
+    console.log(`Ответ по заявке №${applicant.application} доставлен в личный чат.`);
+    await report("Ответ отправлен заявителю.");
+  }
+
+  return async ({ update_id, message }) => {
+    if (!message?.from || message.from.is_bot) return;
     const text = message.text?.trim();
+    if (message.chat.type !== "private") {
+      await replyToApplicant(message, text);
+      return;
+    }
+    const chat = message.chat.id;
     const [command, argument] = text?.split(/\s+/, 2) ?? [];
     if (command?.split("@", 1)[0] === "/start") {
       const topic = Object.hasOwn(topics, argument) ? argument : "general";
@@ -53,11 +133,12 @@ export function createApplicationHandler({ botId, inbox, threadId, send }) {
       .filter(Boolean)
       .join(" ");
     try {
-      await send(
+      const sent = await send(
         inbox,
         `Заявка №${update_id} · ${topics[topic]}\nОт: ${sender}\n\n${text}`,
-        threadId === undefined ? undefined : { message_thread_id: threadId },
+        inboxOptions,
       );
+      replies.remember(inbox, sent.message_id, chat, update_id);
     } catch (error) {
       console.error(
         `Не удалось подтвердить доставку заявки №${update_id}: ${error.message}`,
@@ -144,10 +225,14 @@ async function main() {
     throw new Error(
       "Для доставки в тему в группе должен быть включён режим тем.",
     );
+  const replies = await openApplicationReplies(
+    fileURLToPath(new URL("./telegram-applications.sqlite", import.meta.url)),
+  );
   const handle = createApplicationHandler({
     botId: bot.id,
     inbox,
     threadId,
+    replies,
     send: async (chat_id, text, options) => {
       const sent = await api("sendMessage", {
         chat_id,
@@ -155,7 +240,7 @@ async function main() {
         ...options,
         link_preview_options: { is_disabled: true },
       });
-      if (chat_id === inbox)
+      if (chat_id === inbox && !options?.reply_parameters)
         console.log(`Заявка доставлена. ID сообщения: ${sent.message_id}.`);
       if (options?.reply_markup?.force_reply)
         console.log("Отправлена форма заявки в личный чат.");

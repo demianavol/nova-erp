@@ -25,7 +25,7 @@ describe("Company footer", () => {
     ]) {
       expect(html).toContain(`href="/#${id}"`);
     }
-    expect(html).toContain('href="/erp/employees"');
+    expect(html).toContain('href="/erp"');
     expect(html).not.toContain("company-footer-utility");
     expect(html).not.toContain('id="hero-motion-settings"');
   });

@@ -854,6 +854,29 @@ html[data-erp-theme="dark"] .home-task:first-child {
   background: var(--hover);
 }
 
+.sales-notification-form {
+  display: grid;
+  gap: 16px;
+  max-width: 680px;
+  padding: 20px clamp(16px, 3vw, 24px) 24px;
+}
+.sales-notification-form .textarea {
+  resize: vertical;
+}
+.sales-notification-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+.sales-notification-actions .btn {
+  max-width: 100%;
+  white-space: normal;
+}
+.sales-notification-actions a {
+  text-decoration: underline;
+}
+
 html[data-erp-theme] .department-banner {
   background: var(--card);
   border-color: var(--border);

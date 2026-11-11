@@ -10,7 +10,7 @@ const eventName = "yuc-theme-change";
 type Theme = "light" | "dark";
 type SitePage = "landing" | "login";
 let sessionTheme: Theme | undefined;
-function readTheme(): Theme {
+export function readSiteTheme(): Theme {
   if (sessionTheme) return sessionTheme;
   try {
     const saved = localStorage.getItem(key);
@@ -36,7 +36,7 @@ export function useSiteTheme(page: SitePage | null) {
 
     const apply = () => {
       root.dataset.sitePage = page;
-      root.dataset.siteTheme = readTheme();
+      root.dataset.siteTheme = readSiteTheme();
       if (themeColor) {
         themeColor.content = getComputedStyle(root)
           .getPropertyValue("--yu-site-surface")
@@ -54,10 +54,10 @@ export function useSiteTheme(page: SitePage | null) {
 }
 export function SiteThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
   const { t } = useSiteLanguage();
-  const [theme, setTheme] = useState(readTheme);
+  const [theme, setTheme] = useState(readSiteTheme);
   const activeReveal = useRef<ViewTransition | null>(null);
   useEffect(() => {
-    const update = () => setTheme(readTheme());
+    const update = () => setTheme(readSiteTheme());
     window.addEventListener(eventName, update);
     window.addEventListener("storage", update);
     return () => {
@@ -71,7 +71,7 @@ export function SiteThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
   const icon = theme === "light" ? <Moon size={18} /> : <Sun size={18} />;
   const toggle = (anchor: HTMLElement) => {
     const root = document.documentElement;
-    const next = readTheme() === "light" ? "dark" : "light";
+    const next = readSiteTheme() === "light" ? "dark" : "light";
     const apply = () => {
       try {
         localStorage.setItem(key, next);

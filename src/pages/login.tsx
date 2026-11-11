@@ -20,7 +20,7 @@ import { erpAccessMailto, erpAccessSchema } from "../data/erp-access";
 import { CompanyBrand } from "../components/company-brand";
 import { TechTitleLine, useTechTitleMotion } from "../components/hero-title";
 import { OfficeBackdrop } from "../components/office-backdrop";
-import { SiteThemeToggle } from "../components/site-theme";
+import { readSiteTheme, SiteThemeToggle } from "../components/site-theme";
 import { Button, Field, Input, Textarea } from "../components/ui";
 import "../login.css";
 
@@ -56,7 +56,10 @@ function SignInForm({ requestLink }: { requestLink: ReactNode }) {
         noValidate
         onChange={() => setError("")}
         onSubmit={form.handleSubmit(async ({ password, remember }) => {
+          const { usePreferences } = await import("../data/store");
           const status = await login(password, remember);
+          if (status === 204)
+            usePreferences.getState().update({ theme: readSiteTheme() });
           if (status === 204) return;
           setError(
             status === 401

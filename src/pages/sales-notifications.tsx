@@ -1,28 +1,44 @@
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
 import { useAuth } from "../data/erp-session";
-import { Button, PageHeading, SectionHeading } from "../components/ui";
+import { salesNotificationLimits } from "../data/sales-notification";
+import {
+  Button,
+  Field,
+  Input,
+  PageHeading,
+  SectionHeading,
+  Textarea,
+} from "../components/ui";
 
 export function SalesNotifications() {
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [messageUrl, setMessageUrl] = useState("");
   const [error, setError] = useState(false);
 
-  async function sendTest() {
+  async function sendNotification(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!message.trim() || sending) return;
     setSending(true);
     setMessageUrl("");
     setError(false);
     try {
-      const response = await fetch("/api/sales/telegram-test", {
+      const response = await fetch("/api/sales/telegram-notification", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, message }),
       });
       if (response.status === 401) {
         useAuth.setState({ authenticated: false });
         return;
       }
-      if (!response.ok) throw new Error("Telegram test failed");
+      if (!response.ok) throw new Error("Telegram delivery failed");
       const result = await response.json();
       setMessageUrl(result.messageUrl);
+      setTitle("");
+      setMessage("");
     } catch {
       setError(true);
     } finally {
@@ -35,37 +51,58 @@ export function SalesNotifications() {
       <PageHeading
         eyebrow="ОТДЕЛ ПРОДАЖ"
         title="Уведомления"
-        description="Проверка доставки сообщений отдела продаж."
+        description="Объявления для отдела продаж."
       />
       <section className="card">
         <SectionHeading
           title="Telegram"
-          description="Тестовое уведомление отправится в тему «Отдел продаж»."
-          action={
-            import.meta.env.VITE_SALES_TELEGRAM_PILOT && (
-              <Button onClick={sendTest} disabled={sending}>
-                <Send size={16} />
-                {sending ? "Отправляем…" : "Отправить тест в Telegram"}
-              </Button>
-            )
-          }
+          description="Получатель — тема «Отдел продаж»."
         />
-        {!import.meta.env.VITE_SALES_TELEGRAM_PILOT && (
+        {import.meta.env.VITE_SALES_TELEGRAM_PILOT ? (
+          <form className="sales-notification-form" onSubmit={sendNotification}>
+            <Field label="Заголовок (необязательно)">
+              <Input
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="Например, Планёрка отдела"
+                maxLength={salesNotificationLimits.title}
+                disabled={sending}
+              />
+            </Field>
+            <Field label="Сообщение">
+              <Textarea
+                value={message}
+                onChange={(event) => setMessage(event.target.value)}
+                placeholder="Например, завтра встречаемся в 11:00"
+                maxLength={salesNotificationLimits.message}
+                rows={5}
+                required
+                disabled={sending}
+              />
+            </Field>
+            <div className="sales-notification-actions">
+              <Button type="submit" disabled={sending || !message.trim()}>
+                <Send size={16} aria-hidden="true" />
+                {sending ? "Отправляем…" : "Отправить в Telegram"}
+              </Button>
+              {error && (
+                <span role="alert" className="field-error">
+                  Не удалось отправить уведомление.
+                </span>
+              )}
+              {messageUrl && (
+                <span role="status">
+                  Уведомление доставлено.{" "}
+                  <a href={messageUrl} target="_blank" rel="noreferrer">
+                    Открыть в Telegram
+                  </a>
+                </span>
+              )}
+            </div>
+          </form>
+        ) : (
           <p className="card-footnote">
             Отправка в Telegram пока не настроена.
-          </p>
-        )}
-        {error && (
-          <p className="card-footnote" role="alert">
-            Не удалось отправить тест в Telegram.
-          </p>
-        )}
-        {messageUrl && (
-          <p className="card-footnote" role="status">
-            Тест доставлен.{" "}
-            <a href={messageUrl} target="_blank" rel="noreferrer">
-              Открыть в Telegram
-            </a>
           </p>
         )}
       </section>

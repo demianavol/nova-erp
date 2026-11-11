@@ -2,7 +2,7 @@ import type { MouseEvent, ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../erp-entry-transition.css";
 
-const destination = "/erp/employees";
+const destination = "/erp";
 
 export function ErpEntryLink({
   children,
@@ -52,7 +52,7 @@ export function ErpEntryLink({
           // Wait for the final screen through auth redirects and lazy route loading.
           const deadline = window.setTimeout(finish, 1200);
           observer.observe(root, { childList: true, subtree: true });
-          navigate(destination);
+          navigate(destination, { state: { inheritSiteTheme: true } });
         }),
     );
 
@@ -62,7 +62,12 @@ export function ErpEntryLink({
   };
 
   return (
-    <Link to={destination} className={className} onClick={enterErp}>
+    <Link
+      to={destination}
+      state={{ inheritSiteTheme: true }}
+      className={className}
+      onClick={enterErp}
+    >
       {children}
     </Link>
   );

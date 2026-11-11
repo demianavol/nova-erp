@@ -35,6 +35,7 @@ import {
 import { Toaster } from "sonner";
 import { useERP, usePreferences } from "../data/store";
 import { useAuth } from "../data/erp-session";
+import { readSiteTheme } from "./site-theme";
 import { useErpActivity } from "../data/erp-activity";
 import { cn, dateLabel, money, today } from "../lib/utils";
 import { orderTotal } from "../data/selectors";
@@ -219,6 +220,12 @@ function Layout() {
     logout = useAuth((s) => s.logout);
   const navigate = useNavigate(),
     location = useLocation();
+  useLayoutEffect(() => {
+    if (location.pathname !== "/erp" || !location.state?.inheritSiteTheme)
+      return;
+    usePreferences.getState().update({ theme: readSiteTheme() });
+    navigate("/erp", { replace: true, state: null });
+  }, [location.pathname, location.state, navigate]);
   const navigationType = useNavigationType();
   const visitedErpEntries = useRef(new Set<number>());
   useLayoutEffect(() => {

@@ -44,33 +44,14 @@ const navigationGroups = [
   {
     id: "company",
     title: "Компания",
-    summary: "Знакомство с Young Unicorn",
+    summary: "Показатели, бренды и рынки",
     links: [
-      {
-        id: "about",
-        title: "Наш путь",
-        description: "От основания до сегодняшнего дня",
-        Icon: History,
-      },
       {
         id: "results",
         title: "Компания в цифрах",
         description: "Покупатели, заказы и рост",
         Icon: ChartNoAxesCombined,
       },
-      {
-        id: "principles",
-        title: "Принципы",
-        description: "На чём строится наша работа",
-        Icon: Layers3,
-      },
-    ],
-  },
-  {
-    id: "growth",
-    title: "Бренды и развитие",
-    summary: "Что создаём и куда движемся",
-    links: [
       {
         id: "directions",
         title: "Продукты",
@@ -82,6 +63,25 @@ const navigationGroups = [
         title: "Международный опыт",
         description: "Сотрудничество без границ",
         Icon: Globe2,
+      },
+    ],
+  },
+  {
+    id: "growth",
+    title: "Путь и развитие",
+    summary: "История, принципы и планы",
+    links: [
+      {
+        id: "about",
+        title: "Наш путь",
+        description: "От основания до сегодняшнего дня",
+        Icon: History,
+      },
+      {
+        id: "principles",
+        title: "Принципы",
+        description: "На чём строится наша работа",
+        Icon: Layers3,
       },
       {
         id: "future",

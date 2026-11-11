@@ -20,6 +20,9 @@ export const siteTranslations: Record<string, readonly [string, string]> = {
   Перезагрузить: ["Reload", "重新加载"],
   "Восстановить демоданные": ["Restore demo data", "恢复演示数据"],
   Компания: ["Company", "公司"],
+  "Показатели, бренды и рынки": ["Metrics, brands and markets", "数据、品牌与市场"],
+  "Путь и развитие": ["Journey and growth", "历程与发展"],
+  "История, принципы и планы": ["History, principles and plans", "历史、原则与计划"],
   "Знакомство с Young Unicorn": [
     "Get to know Young Unicorn",
     "了解 Young Unicorn",

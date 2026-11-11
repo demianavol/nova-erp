@@ -2,6 +2,7 @@ import { defineConfig, loadEnv, type PluginOption } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { erpDemoSession } from "./scripts/erp-demo-session";
+import { erpAssistant } from "./scripts/erp-assistant";
 import { salesTelegramPilot } from "./scripts/sales-telegram-pilot";
 
 export default defineConfig(({ command, mode }) => {
@@ -11,6 +12,7 @@ export default defineConfig(({ command, mode }) => {
     const session = erpDemoSession(env.ERP_DEMO_PASSWORD_SHA256);
     plugins.push(
       session.plugin,
+      erpAssistant(session),
       salesTelegramPilot({
         token: env.ERP_SALES_TELEGRAM_TOKEN,
         chatId: env.ERP_SALES_TELEGRAM_CHAT_ID,

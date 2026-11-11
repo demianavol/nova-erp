@@ -328,6 +328,7 @@ const preferencesSchema = z.object({
   name: z.string().trim().min(2).max(60),
   email: z.email(),
   role: z.string().min(2).max(80),
+  assistantEmployeeId: z.string().min(1).optional(),
   welcomeHidden: z.boolean().default(false),
   promoHidden: z.boolean().default(false),
   dashboardLayout: dashboardLayoutSchema,

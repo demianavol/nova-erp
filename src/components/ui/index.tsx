@@ -256,6 +256,8 @@ export function Dialog({
   title,
   description,
   children,
+  trigger,
+  className,
   wide = false,
 }: {
   open: boolean;
@@ -263,14 +265,17 @@ export function Dialog({
   title: string;
   description?: string;
   children: React.ReactNode;
+  trigger?: React.ReactElement;
+  className?: string;
   wide?: boolean;
 }) {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+      {trigger && <DialogPrimitive.Trigger asChild>{trigger}</DialogPrimitive.Trigger>}
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="dialog-overlay" />
         <DialogPrimitive.Content
-          className={cn("dialog-content", wide && "dialog-wide")}
+          className={cn("dialog-content", wide && "dialog-wide", className)}
         >
           <div className="dialog-header">
             <div>

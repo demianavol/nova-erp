@@ -1,0 +1,184 @@
+.erp-shell .topbar .erp-assistant-trigger {
+  min-height: 36px;
+  padding-inline: 10px;
+  color: var(--erp-nav-accent);
+  white-space: nowrap;
+}
+
+.erp-assistant-dialog.dialog-content {
+  display: flex;
+  flex-direction: column;
+  width: min(600px, calc(100vw - 24px));
+  max-height: calc(100dvh - 28px);
+  overflow: hidden;
+}
+
+.erp-assistant-task-scope {
+  display: grid;
+  gap: 5px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8125rem;
+}
+
+.erp-assistant-task-scope .select-trigger {
+  min-width: 0;
+  width: 100%;
+}
+
+.erp-assistant-transcript {
+  min-height: 0;
+  height: min(360px, 48dvh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20px;
+}
+
+.erp-assistant-suggestions {
+  display: grid;
+  gap: 8px;
+  margin: auto 0;
+}
+
+.erp-assistant-suggestions p {
+  margin: 0 0 4px;
+  font-weight: 650;
+}
+
+.erp-assistant-suggestions .btn {
+  justify-content: space-between;
+  text-align: start;
+  white-space: normal;
+}
+
+.erp-assistant-turn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.erp-assistant-turn p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.erp-assistant-question,
+.erp-assistant-answer {
+  border-radius: 12px;
+  padding: 10px 12px;
+  line-height: 1.55;
+}
+
+.erp-assistant-question {
+  align-self: flex-end;
+  max-width: 90%;
+  background: var(--erp-selection);
+}
+
+.erp-assistant-answer {
+  align-self: flex-start;
+  border: 1px solid var(--border);
+  background: var(--subtle);
+  max-width: 100%;
+}
+
+.erp-assistant-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  list-style: none;
+  border-top: 1px solid var(--border);
+  margin: 10px 0 0;
+  padding: 8px 0 0;
+  font-size: 0.8125rem;
+}
+
+.erp-assistant-sources a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--erp-nav-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.erp-assistant-tasks {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.erp-assistant-tasks li {
+  border-top: 1px solid var(--border);
+}
+
+.erp-assistant-tasks a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 0;
+  color: var(--erp-nav-accent);
+  overflow-wrap: anywhere;
+}
+
+.erp-assistant-tasks a:hover strong {
+  text-decoration: underline;
+}
+
+.erp-assistant-tasks small {
+  display: block;
+  color: var(--muted-foreground);
+}
+
+.erp-assistant-tasks svg {
+  flex-shrink: 0;
+}
+
+.erp-assistant-pending {
+  color: var(--muted-foreground);
+}
+
+.erp-assistant-form {
+  display: grid;
+  gap: 8px;
+  border-top: 1px solid var(--border);
+  padding: 12px 20px 16px;
+}
+
+.erp-assistant-error {
+  margin: 0;
+  color: var(--danger);
+}
+
+.erp-assistant-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.erp-assistant-composer .textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 56px;
+  resize: none;
+}
+
+.erp-assistant-composer .btn {
+  flex-shrink: 0;
+}
+
+@media (max-width: 1060px) {
+  .erp-shell .topbar .erp-assistant-trigger {
+    width: 36px;
+    padding-inline: 0;
+  }
+
+  .erp-assistant-trigger > span {
+    display: none;
+  }
+}

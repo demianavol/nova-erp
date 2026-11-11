@@ -41,6 +41,7 @@ import { cn, dateLabel, money, today } from "../lib/utils";
 import { orderTotal } from "../data/selectors";
 import { Avatar, Badge, Button, Dialog, Empty, Input, Menu } from "./ui";
 import { EntityDialogs } from "./entity-dialogs";
+import { ErpAssistant } from "./erp-assistant";
 import { ErpNavigation, SalesNavigation, erpPage } from "./erp-navigation";
 import "../refinements.css";
 import "../workspace.css";
@@ -452,6 +453,7 @@ function Layout() {
               <span>Поиск</span>
               <kbd>Ctrl K</kbd>
             </button>
+            {import.meta.env.DEV && <ErpAssistant />}
             <span className="topbar-date">
               <CalendarDays size={14} />
               {dateLabel(today(), true)}

@@ -82,6 +82,7 @@ html[data-erp-theme="dark"] .btn-danger {
 }
 html[data-erp-theme] .dialog-overlay {
   background: var(--erp-backdrop);
+  backdrop-filter: none;
 }
 
 .app-shell.erp-shell {

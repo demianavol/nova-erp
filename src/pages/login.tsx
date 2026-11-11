@@ -11,12 +11,11 @@ import {
   Eye,
   EyeOff,
   LockKeyhole,
-  Mail,
   MessageSquare,
   Send,
   UserRound,
 } from "lucide-react";
-import { useAuth } from "../data/store";
+import { useAuth } from "../data/erp-session";
 import { erpAccessMailto, erpAccessSchema } from "../data/erp-access";
 import { CompanyBrand } from "../components/company-brand";
 import { TechTitleLine, useTechTitleMotion } from "../components/hero-title";
@@ -25,23 +24,30 @@ import { SiteThemeToggle } from "../components/site-theme";
 import { Button, Field, Input, Textarea } from "../components/ui";
 import "../login.css";
 
-const demoEmail = "demo@nova.local";
-const demoPassword = "Demo2026!";
 const loginSchema = z.object({
-  email: z.string().trim().pipe(z.email("Введите корректный email")),
   password: z.string().min(1, "Введите пароль"),
   remember: z.boolean(),
 });
 
 function SignInForm({ requestLink }: { requestLink: ReactNode }) {
-  const login = useAuth((state) => state.login);
+  const { login, authenticated } = useAuth();
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState("");
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "", remember: true },
+    defaultValues: { password: "", remember: true },
   });
-  const { errors } = form.formState;
+  const { errors, isSubmitting } = form.formState;
+
+  if (!import.meta.env.DEV)
+    return (
+      <>
+        <p className="office-card-description">
+          Доступ к ERP предоставляется по запросу.
+        </p>
+        <div className="office-switch office-sign-in-links">{requestLink}</div>
+      </>
+    );
 
   return (
     <>
@@ -49,26 +55,18 @@ function SignInForm({ requestLink }: { requestLink: ReactNode }) {
         className="office-form"
         noValidate
         onChange={() => setError("")}
-        onSubmit={form.handleSubmit(({ email, password, remember }) => {
-          if (email.toLowerCase() !== demoEmail || password !== demoPassword) {
-            setError("Проверьте email и пароль или откройте демоверсию");
-            return;
-          }
-          login(remember);
+        onSubmit={form.handleSubmit(async ({ password, remember }) => {
+          const status = await login(password, remember);
+          if (status === 204) return;
+          setError(
+            status === 401
+              ? "Неверный пароль."
+              : status === 429
+                ? "Слишком много попыток. Попробуйте через минуту."
+                : "Вход сейчас недоступен.",
+          );
         })}
       >
-        <Field label="Рабочий email" error={errors.email?.message}>
-          <span className="office-input">
-            <Mail size={16} aria-hidden="true" />
-            <Input
-              type="email"
-              autoComplete="username"
-              placeholder="name@company.ru"
-              aria-invalid={!!errors.email}
-              {...form.register("email")}
-            />
-          </span>
-        </Field>
         <div className="office-password">
           <Field label="Пароль" error={errors.password?.message}>
             <span className="office-input">
@@ -108,16 +106,15 @@ function SignInForm({ requestLink }: { requestLink: ReactNode }) {
             {error}
           </p>
         )}
-        <Button type="submit" className="office-submit">
+        <Button
+          type="submit"
+          className="office-submit"
+          disabled={isSubmitting || authenticated === null}
+        >
           Войти в ERP <ArrowRight size={17} aria-hidden="true" />
         </Button>
       </form>
-      <div className="office-switch office-sign-in-links">
-        {requestLink}
-        <button type="button" onClick={() => login(form.getValues("remember"))}>
-          Открыть демоверсию
-        </button>
-      </div>
+      <div className="office-switch office-sign-in-links">{requestLink}</div>
     </>
   );
 }
@@ -202,7 +199,7 @@ function AccessRequestForm() {
 }
 
 export function Login() {
-  const authenticated = useAuth((state) => state.authenticated);
+  const { authenticated, check } = useAuth();
   const location = useLocation();
   const search = new URLSearchParams(location.search);
   const requestMode = search.get("mode") === "request";
@@ -217,6 +214,9 @@ export function Login() {
     clickKick: false,
   } as const;
 
+  useEffect(() => {
+    if (authenticated === null) void check();
+  }, [authenticated, check]);
   useEffect(() => {
     if (previousMode.current !== requestMode) {
       previousMode.current = requestMode;

@@ -570,9 +570,6 @@ export function Profile() {
             onChange={(e) => setRole(e.target.value)}
           />
         </Field>
-        <p className="form-hint">
-          Данные для входа остаются: demo@nova.local / Demo2026!
-        </p>
         {error && (
           <p className="field-error" role="alert">
             {error}

@@ -85,6 +85,7 @@ const salesPages = [
   { label: "Клиенты", to: "/erp/sales/customers" },
   { label: "Воронка", to: "/erp/sales/pipeline" },
   { label: "Аналитика", to: "/erp/sales/analytics" },
+  { label: "Уведомления", to: "/erp/sales/notifications" },
 ];
 
 const workspacePages: Page[] = [

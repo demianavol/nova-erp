@@ -33,7 +33,8 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { Toaster } from "sonner";
-import { useAuth, useERP, usePreferences } from "../data/store";
+import { useERP, usePreferences } from "../data/store";
+import { useAuth } from "../data/erp-session";
 import { useErpActivity } from "../data/erp-activity";
 import { cn, dateLabel, money, today } from "../lib/utils";
 import { orderTotal } from "../data/selectors";
@@ -190,8 +191,17 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
 }
 
 export function ProtectedLayout() {
-  const authenticated = useAuth((s) => s.authenticated);
+  const { authenticated, check } = useAuth();
   const location = useLocation();
+  useEffect(() => {
+    if (authenticated === null) void check();
+  }, [authenticated, check]);
+  if (authenticated === null)
+    return (
+      <div className="app-loading" role="status">
+        Проверяем доступ…
+      </div>
+    );
   return authenticated ? (
     <Layout />
   ) : (
@@ -522,7 +532,14 @@ function Layout() {
                 {
                   label: "Выйти из аккаунта",
                   icon: <LogOut size={15} />,
-                  onClick: logout,
+                  onClick: async () => {
+                    if (!(await logout())) {
+                      useERP.setState({
+                        storageError:
+                          "Не удалось выйти из ERP. Попробуйте ещё раз.",
+                      });
+                    }
+                  },
                   danger: true,
                 },
               ]}

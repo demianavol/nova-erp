@@ -1,4 +1,10 @@
-import React, { Component, Suspense, lazy, useLayoutEffect, type ReactNode } from "react";
+import React, {
+  Component,
+  Suspense,
+  lazy,
+  useLayoutEffect,
+  type ReactNode,
+} from "react";
 import ReactDOM from "react-dom/client";
 import {
   HashRouter,
@@ -21,7 +27,7 @@ import "./erp-shell.css";
 const Login = lazy(() =>
   import("./pages/login").then((m) => ({ default: m.Login })),
 );
-const Protected = lazy(() =>
+const Protected = /* @__PURE__ */ lazy(() =>
   import("./components/layout").then((m) => ({ default: m.ProtectedLayout })),
 );
 const Landing = lazy(async () => {
@@ -29,53 +35,58 @@ const Landing = lazy(async () => {
   await loadLandingFonts();
   return { default: Landing };
 });
-const Employees = lazy(() =>
+const Employees = /* @__PURE__ */ lazy(() =>
   import("./pages/employees").then((m) => ({ default: m.Employees })),
 );
 
-const Dashboard = lazy(() =>
+const Dashboard = /* @__PURE__ */ lazy(() =>
   import("./pages/dashboard").then((m) => ({ default: m.Dashboard })),
 );
-const Orders = lazy(() =>
+const SalesNotifications = /* @__PURE__ */ lazy(() =>
+  import("./pages/sales-notifications").then((m) => ({
+    default: m.SalesNotifications,
+  })),
+);
+const Orders = /* @__PURE__ */ lazy(() =>
   import("./pages/orders").then((m) => ({ default: m.Orders })),
 );
-const Customers = lazy(() =>
+const Customers = /* @__PURE__ */ lazy(() =>
   import("./pages/customers").then((m) => ({ default: m.Customers })),
 );
-const Pipeline = lazy(() =>
+const Pipeline = /* @__PURE__ */ lazy(() =>
   import("./pages/pipeline").then((m) => ({ default: m.Pipeline })),
 );
-const Tasks = lazy(() =>
+const Tasks = /* @__PURE__ */ lazy(() =>
   import("./pages/workspace").then((m) => ({ default: m.Tasks })),
 );
-const Projects = lazy(() =>
+const Projects = /* @__PURE__ */ lazy(() =>
   import("./pages/workspace").then((m) => ({ default: m.Projects })),
 );
-const Profile = lazy(() =>
+const Profile = /* @__PURE__ */ lazy(() =>
   import("./pages/workspace").then((m) => ({ default: m.Profile })),
 );
-const ErpHome = lazy(() =>
+const ErpHome = /* @__PURE__ */ lazy(() =>
   import("./pages/erp-home").then((m) => ({ default: m.ErpHome })),
 );
-const FirstSteps = lazy(() =>
+const FirstSteps = /* @__PURE__ */ lazy(() =>
   import("./pages/erp-sections").then((m) => ({ default: m.FirstSteps })),
 );
-const ErpLearning = lazy(() =>
+const ErpLearning = /* @__PURE__ */ lazy(() =>
   import("./pages/erp-learning").then((m) => ({ default: m.ErpLearning })),
 );
-const Documents = lazy(() =>
+const Documents = /* @__PURE__ */ lazy(() =>
   import("./pages/erp-sections").then((m) => ({ default: m.Documents })),
 );
-const OrgStructure = lazy(() =>
+const OrgStructure = /* @__PURE__ */ lazy(() =>
   import("./pages/erp-sections").then((m) => ({ default: m.OrgStructure })),
 );
-const Department = lazy(() =>
+const Department = /* @__PURE__ */ lazy(() =>
   import("./pages/workspace").then((m) => ({ default: m.Department })),
 );
-const Settings = lazy(() =>
+const Settings = /* @__PURE__ */ lazy(() =>
   import("./pages/workspace").then((m) => ({ default: m.Settings })),
 );
-const FinancePage = lazy(() =>
+const FinancePage = /* @__PURE__ */ lazy(() =>
   import("./pages/finance").then((m) => ({ default: m.FinancePage })),
 );
 
@@ -143,7 +154,13 @@ function SalesIndexRedirect() {
   const { search, hash } = useLocation();
   return <Navigate to={`/erp/sales/analytics${search}${hash}`} replace />;
 }
-function AppContent({ isLanding, isErp }: { isLanding: boolean; isErp: boolean }) {
+function AppContent({
+  isLanding,
+  isErp,
+}: {
+  isLanding: boolean;
+  isErp: boolean;
+}) {
   const { t } = useSiteLanguage();
   return (
     <ErrorBoundary t={t}>
@@ -171,27 +188,38 @@ function AppContent({ isLanding, isErp }: { isLanding: boolean; isErp: boolean }
           <Route path="/" element={<Landing />} />
           <Route path="/employees" element={<LegacyERPRedirect />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/erp" element={<Protected />}>
-            <Route index element={<ErpHome />} />
-            <Route path="sales" element={<SalesIndexRedirect />} />
-            <Route path="sales/analytics" element={<Dashboard />} />
-            <Route path="sales/orders" element={<Orders />} />
-            <Route path="sales/customers" element={<Customers />} />
-            <Route path="sales/pipeline" element={<Pipeline />} />
-            <Route path="tasks" element={<Tasks />} />
-            <Route path="tasks/projects" element={<Projects />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="documents" element={<Documents />} />
-            <Route path="org-structure" element={<OrgStructure />} />
-            <Route path="employees" element={<Employees />} />
-            <Route path="learning/start" element={<FirstSteps />} />
-            <Route path="learning" element={<ErpLearning />} />
-            <Route path="learning/lesson/:lessonId" element={<ErpLearning />} />
-            <Route path="departments/finance" element={<FinancePage />} />
-            <Route path="departments/:department" element={<Department />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="*" element={<Navigate to="/erp" replace />} />
-          </Route>
+          {import.meta.env.DEV ? (
+            <Route path="/erp" element={<Protected />}>
+              <Route index element={<ErpHome />} />
+              <Route path="sales" element={<SalesIndexRedirect />} />
+              <Route path="sales/analytics" element={<Dashboard />} />
+              <Route
+                path="sales/notifications"
+                element={<SalesNotifications />}
+              />
+              <Route path="sales/orders" element={<Orders />} />
+              <Route path="sales/customers" element={<Customers />} />
+              <Route path="sales/pipeline" element={<Pipeline />} />
+              <Route path="tasks" element={<Tasks />} />
+              <Route path="tasks/projects" element={<Projects />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="documents" element={<Documents />} />
+              <Route path="org-structure" element={<OrgStructure />} />
+              <Route path="employees" element={<Employees />} />
+              <Route path="learning/start" element={<FirstSteps />} />
+              <Route path="learning" element={<ErpLearning />} />
+              <Route
+                path="learning/lesson/:lessonId"
+                element={<ErpLearning />}
+              />
+              <Route path="departments/finance" element={<FinancePage />} />
+              <Route path="departments/:department" element={<Department />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="*" element={<Navigate to="/erp" replace />} />
+            </Route>
+          ) : (
+            <Route path="/erp/*" element={<Navigate to="/login" replace />} />
+          )}
           {["sales", "tasks", "departments", "settings"].map((path) => (
             <Route
               key={path}

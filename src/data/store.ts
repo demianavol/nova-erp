@@ -21,7 +21,6 @@ import {
 import { today, uid } from "../lib/utils";
 
 export const DATA_KEY = "nova-erp-data-v1";
-export const SESSION_KEY = "nova-session";
 type StorageLike = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 export function loadData(storage?: StorageLike): {
   data: Data;
@@ -380,44 +379,5 @@ export const usePreferences = create<
       });
     }
     set(next);
-  },
-}));
-function loadSession() {
-  try {
-    return (
-      localStorage.getItem(SESSION_KEY) === "demo" ||
-      sessionStorage.getItem(SESSION_KEY) === "demo"
-    );
-  } catch {
-    return false;
-  }
-}
-export const useAuth = create<{
-  authenticated: boolean;
-  login: (remember: boolean) => void;
-  logout: () => void;
-}>((set) => ({
-  authenticated: loadSession(),
-  login(remember) {
-    try {
-      localStorage.removeItem(SESSION_KEY);
-      sessionStorage.removeItem(SESSION_KEY);
-      (remember ? localStorage : sessionStorage).setItem(SESSION_KEY, "demo");
-    } catch {
-      useERP.setState({
-        storageError:
-          "Сессию не удалось сохранить. После перезагрузки потребуется войти снова.",
-      });
-    }
-    set({ authenticated: true });
-  },
-  logout() {
-    try {
-      localStorage.removeItem(SESSION_KEY);
-      sessionStorage.removeItem(SESSION_KEY);
-    } catch {
-      /* Session remains cleared in memory. */
-    }
-    set({ authenticated: false });
   },
 }));

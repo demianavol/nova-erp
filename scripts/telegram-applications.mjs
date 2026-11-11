@@ -3,13 +3,25 @@ import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const topics = {
+  partnership: {
+    label: "Партнёрство",
+    title: "Партнёрство",
+    tag: "#партнерство",
+  },
+  careers: { label: "Хочу в команду", title: "Кандидат", tag: "#карьера" },
+  general: { label: "Просто вопрос", title: "Общий вопрос", tag: "#вопрос" },
+};
+const legacyTitles = {
   general: "Обращение",
   partnership: "Партнёрство",
   careers: "Карьера",
 };
+const topicMenuText = "С чем вы хотите обратиться к Young Unicorn?";
 const maxLength = 2400;
+const legacyPrompt = (topic) =>
+  `${legacyTitles[topic]} · Young Unicorn\n\nОтветьте на это сообщение одним текстом. Укажите имя, как с вами связаться и кратко опишите ваш запрос. Сообщение увидит команда Young Unicorn.`;
 const prompt = (topic) =>
-  `${topics[topic]} · Young Unicorn\n\nОтветьте на это сообщение одним текстом. Укажите имя, как с вами связаться и кратко опишите ваш запрос. Сообщение увидит команда Young Unicorn.`;
+  `${topics[topic].title} · Young Unicorn\n\nНапишите запрос одним сообщением. При желании укажите имя и удобный способ связи. Сообщение получит команда Young Unicorn.`;
 
 export async function openApplicationReplies(path) {
   const { DatabaseSync } = await import("node:sqlite");
@@ -20,32 +32,60 @@ export async function openApplicationReplies(path) {
       message INTEGER NOT NULL,
       applicant INTEGER NOT NULL,
       application INTEGER NOT NULL,
+      topic TEXT,
       PRIMARY KEY (inbox, message)
-    )
+    );
+    CREATE TABLE IF NOT EXISTS application_drafts (
+      inbox INTEGER NOT NULL,
+      applicant INTEGER NOT NULL,
+      topic TEXT,
+      PRIMARY KEY (inbox, applicant)
+    );
   `);
+  if (
+    !db
+      .prepare("PRAGMA table_info(application_replies)")
+      .all()
+      .some(({ name }) => name === "topic")
+  )
+    db.exec("ALTER TABLE application_replies ADD COLUMN topic TEXT");
   const find = db.prepare(
     "SELECT applicant, application FROM application_replies WHERE inbox = ? AND message = ?",
   );
   const insert = db.prepare(
-    "INSERT INTO application_replies (inbox, message, applicant, application) VALUES (?, ?, ?, ?)",
+    "INSERT INTO application_replies (inbox, message, applicant, application, topic) VALUES (?, ?, ?, ?, ?)",
   );
   const original = db.prepare(
-    "SELECT message, application FROM application_replies WHERE inbox = ? AND applicant = ? AND application = ? ORDER BY rowid LIMIT 1",
+    "SELECT message, application, topic FROM application_replies WHERE inbox = ? AND applicant = ? AND application = ? ORDER BY rowid LIMIT 1",
   );
   const latest = db.prepare(`
-    SELECT message, application FROM application_replies WHERE rowid = (
+    SELECT message, application, topic FROM application_replies WHERE rowid = (
       SELECT MIN(rowid) FROM application_replies WHERE inbox = ? AND applicant = ?
       GROUP BY application ORDER BY MIN(rowid) DESC LIMIT 1
     )
   `);
+  const draft = db.prepare(
+    "SELECT topic FROM application_drafts WHERE inbox = ? AND applicant = ?",
+  );
+  const saveDraft = db.prepare(`
+    INSERT INTO application_drafts (inbox, applicant, topic) VALUES (?, ?, ?)
+    ON CONFLICT (inbox, applicant) DO UPDATE SET topic = excluded.topic
+  `);
+  const clearDraft = db.prepare(
+    "DELETE FROM application_drafts WHERE inbox = ? AND applicant = ?",
+  );
   return {
     find: (inbox, message) => find.get(inbox, message),
     conversation: (inbox, applicant, application) =>
       application === undefined
         ? latest.get(inbox, applicant)
         : original.get(inbox, applicant, application),
-    remember: (inbox, message, applicant, application) =>
-      insert.run(inbox, message, applicant, application),
+    remember: (inbox, message, applicant, application, topic = null) =>
+      insert.run(inbox, message, applicant, application, topic),
+    draft: (inbox, applicant) => draft.get(inbox, applicant),
+    saveDraft: (inbox, applicant, topic) =>
+      saveDraft.run(inbox, applicant, topic),
+    clearDraft: (inbox, applicant) => clearDraft.run(inbox, applicant),
     close: () => db.close(),
   };
 }
@@ -56,6 +96,7 @@ export function createApplicationHandler({
   threadId,
   send,
   replies,
+  answerCallback,
 }) {
   const inboxOptions =
     threadId === undefined ? undefined : { message_thread_id: threadId };
@@ -108,7 +149,39 @@ export function createApplicationHandler({
     await report("Ответ отправлен заявителю.");
   }
 
-  return async ({ update_id, message }) => {
+  function showTopics(chat, suggested) {
+    const keys = Object.keys(topics);
+    const ordered = Object.hasOwn(topics, suggested)
+      ? [suggested, ...keys.filter((topic) => topic !== suggested)]
+      : keys;
+    return send(chat, topicMenuText, {
+      reply_markup: {
+        inline_keyboard: ordered.map((topic) => [
+          { text: topics[topic].label, callback_data: `application:${topic}` },
+        ]),
+      },
+    });
+  }
+
+  return async ({ update_id, message, callback_query: callback }) => {
+    if (callback) {
+      await answerCallback(callback.id).catch((error) =>
+        console.error(error.message),
+      );
+      const chat = callback.message?.chat;
+      const topic = /^application:([a-z]+)$/.exec(callback.data ?? "")?.[1];
+      if (
+        chat?.type !== "private" ||
+        chat.id !== callback.from?.id ||
+        callback.message.from?.id !== botId ||
+        callback.message.text !== topicMenuText ||
+        !Object.hasOwn(topics, topic)
+      )
+        return;
+      replies.saveDraft(inbox, chat.id, topic);
+      await send(chat.id, prompt(topic));
+      return;
+    }
     if (!message?.from || message.from.is_bot) return;
     const text = message.text?.trim();
     if (message.chat.type !== "private") {
@@ -118,16 +191,24 @@ export function createApplicationHandler({
     const chat = message.chat.id;
     const [command, argument] = text?.split(/\s+/, 2) ?? [];
     if (command?.split("@", 1)[0] === "/start") {
-      const topic = Object.hasOwn(topics, argument) ? argument : "general";
-      await send(chat, prompt(topic), { reply_markup: { force_reply: true } });
+      replies.saveDraft(inbox, chat, null);
+      await showTopics(chat, argument);
       return;
     }
 
     const reply = message.reply_to_message;
-    const topic =
+    const draft = replies.draft(inbox, chat);
+    const legacyTopic =
       reply?.from?.id === botId
-        ? Object.keys(topics).find((key) => reply.text === prompt(key))
+        ? Object.keys(topics).find((key) => reply.text === legacyPrompt(key))
         : undefined;
+    const topic =
+      legacyTopic ??
+      (draft?.topic &&
+      (!reply ||
+        (reply.from?.id === botId && reply.text === prompt(draft.topic)))
+        ? draft.topic
+        : undefined);
     const referenced =
       reply?.from?.id === botId
         ? /^(?:(?:Ответ команды Young Unicorn|Сообщение) по заявке №(\d+)(?:\n| передано команде)|Заявка №(\d+) передана команде)/.exec(
@@ -135,7 +216,7 @@ export function createApplicationHandler({
           )
         : null;
     const conversation =
-      !topic && (!reply || referenced)
+      !topic && ((!reply && !draft) || referenced)
         ? replies.conversation(
             inbox,
             chat,
@@ -143,10 +224,7 @@ export function createApplicationHandler({
           )
         : undefined;
     if (!topic && !conversation) {
-      await send(
-        chat,
-        "Чтобы оставить заявку, отправьте /start и ответьте на сообщение бота.",
-      );
+      await showTopics(chat);
       return;
     }
     if (!text || text.length > maxLength) {
@@ -161,19 +239,34 @@ export function createApplicationHandler({
       .join(" ");
     const title = conversation
       ? `Продолжение заявки №${application}`
-      : `Заявка №${application} · ${topics[topic]}`;
+      : `Заявка №${application} · ${topics[topic].title}`;
+    const category = conversation ? conversation.topic : topic;
+    const tag = topics[category]?.tag;
+    const options = conversation
+      ? {
+          ...inboxOptions,
+          reply_parameters: { message_id: conversation.message },
+        }
+      : inboxOptions;
     try {
       const sent = await send(
         inbox,
-        `${title}\nОт: ${sender}\n\n${text}`,
-        conversation
+        `${title}${tag ? `\n${tag}` : ""}\nОт: ${sender}\n\n${text}`,
+        tag
           ? {
-              ...inboxOptions,
-              reply_parameters: { message_id: conversation.message },
+              ...options,
+              entities: [
+                {
+                  type: "hashtag",
+                  offset: title.length + 1,
+                  length: tag.length,
+                },
+              ],
             }
-          : inboxOptions,
+          : options,
       );
-      replies.remember(inbox, sent.message_id, chat, application);
+      replies.remember(inbox, sent.message_id, chat, application, category);
+      if (!conversation) replies.clearDraft(inbox, chat);
       if (conversation)
         console.log(
           `Продолжение заявки №${application} доставлено. ID сообщения: ${sent.message_id}.`,
@@ -274,6 +367,8 @@ async function main() {
     inbox,
     threadId,
     replies,
+    answerCallback: (id) =>
+      api("answerCallbackQuery", { callback_query_id: id }),
     send: async (chat_id, text, options) => {
       const sent = await api("sendMessage", {
         chat_id,
@@ -283,8 +378,6 @@ async function main() {
       });
       if (chat_id === inbox && !options?.reply_parameters)
         console.log(`Заявка доставлена. ID сообщения: ${sent.message_id}.`);
-      if (options?.reply_markup?.force_reply)
-        console.log("Отправлена форма заявки в личный чат.");
       return sent;
     },
   });
@@ -297,7 +390,7 @@ async function main() {
       updates = await api("getUpdates", {
         offset,
         timeout: 30,
-        allowed_updates: ["message"],
+        allowed_updates: ["message", "callback_query"],
       });
     } catch (error) {
       if (controller.signal.aborted) break;

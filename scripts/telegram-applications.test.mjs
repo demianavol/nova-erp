@@ -433,3 +433,96 @@ it("keeps unanswered applications in the team queue until the latest message get
     replies.close();
   }
 });
+
+it("opens a queue reply for the selected application and delivers it only from that operator", async () => {
+  const inbox = -10043680;
+  const replies = await openApplicationReplies(":memory:");
+  const send = vi.fn().mockResolvedValue({ message_id: 82 });
+  const answerCallback = vi.fn().mockResolvedValue(undefined);
+  const handle = createApplicationHandler({
+    botId: 9,
+    inbox,
+    threadId: 17,
+    send,
+    replies,
+    answerCallback,
+  });
+  const group = {
+    chat: { type: "supergroup", id: inbox },
+    message_thread_id: 17,
+  };
+  const operator = { id: 23, first_name: "Ирина" };
+  try {
+    replies.recordIncoming(inbox, 71, 42, 2, "careers", true);
+    replies.recordIncoming(inbox, 73, 44, 3, "general", true);
+    await handle({ message: { ...group, from: operator, text: "/queue" } });
+    const [, queue, options] = send.mock.calls[0];
+    const [show, reply] = options.reply_markup.inline_keyboard[2];
+    expect(show).toEqual({
+      text: "Показать №3",
+      url: "https://t.me/c/43680/17/73",
+    });
+    const click = () =>
+      handle({
+        callback_query: {
+          id: "reply",
+          data: reply.callback_data,
+          from: operator,
+          message: { ...group, from: { id: 9 }, message_id: 80, text: queue },
+        },
+      });
+    await click();
+    const [, prompt, promptOptions] = send.mock.calls[1];
+    expect(promptOptions).toMatchObject({
+      message_thread_id: 17,
+      reply_parameters: { message_id: 73 },
+      reply_markup: { force_reply: true, selective: true },
+      entities: [{ type: "text_mention", user: operator }],
+    });
+    const respond = (from) =>
+      handle({
+        message: {
+          ...group,
+          from,
+          message_id: 84,
+          text: "Ответ команды",
+          reply_to_message: { from: { id: 9 }, message_id: 82, text: prompt },
+        },
+      });
+    send.mockClear();
+    await respond({ id: 24, first_name: "Анна" });
+    expect(send).toHaveBeenCalledExactlyOnceWith(
+      inbox,
+      expect.stringContaining("Откройте свой ответ"),
+      expect.any(Object),
+    );
+    send.mockClear();
+    await respond(operator);
+    expect(send).toHaveBeenNthCalledWith(
+      1,
+      44,
+      expect.stringContaining("по заявке №3"),
+    );
+    expect(replies.queueItem(inbox, 2).status).toBe("new");
+    expect(replies.queueItem(inbox, 3).status).toBe("answered");
+    send.mockClear();
+    await respond(operator);
+    expect(send).toHaveBeenCalledExactlyOnceWith(
+      inbox,
+      expect.any(String),
+      expect.any(Object),
+    );
+
+    send.mockResolvedValue({ message_id: 85 });
+    replies.recordIncoming(inbox, 83, 44, 3, "general", false);
+    send.mockClear();
+    await click();
+    expect(send).not.toHaveBeenCalled();
+    expect(answerCallback).toHaveBeenLastCalledWith(
+      "reply",
+      expect.stringContaining("Обновите очередь"),
+    );
+  } finally {
+    replies.close();
+  }
+});

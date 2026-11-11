@@ -18,6 +18,7 @@ const legacyTitles = {
 };
 const topicMenuText = "С чем вы хотите обратиться к Young Unicorn?";
 const queueTitle = "Очередь заявок";
+const queueReplyPrefix = "Напишите ответ по заявке №";
 const queueLabels = {
   new: "Новые",
   working: "В работе",
@@ -60,6 +61,13 @@ export async function openApplicationReplies(path) {
     );
     CREATE INDEX IF NOT EXISTS application_queue_by_status
       ON application_queue (inbox, status, message);
+    CREATE TABLE IF NOT EXISTS queue_reply_prompts (
+      inbox INTEGER NOT NULL,
+      operator INTEGER NOT NULL,
+      prompt INTEGER NOT NULL,
+      target INTEGER NOT NULL,
+      PRIMARY KEY (inbox, operator)
+    );
   `);
   if (
     !db
@@ -117,6 +125,16 @@ export async function openApplicationReplies(path) {
     ORDER BY CASE WHEN status = 'answered' THEN -message ELSE message END
     LIMIT ? OFFSET ?
   `);
+  const saveReplyPrompt = db.prepare(`
+    INSERT INTO queue_reply_prompts (inbox, operator, prompt, target) VALUES (?, ?, ?, ?)
+    ON CONFLICT (inbox, operator) DO UPDATE SET prompt = excluded.prompt, target = excluded.target
+  `);
+  const replyPrompt = db.prepare(`
+    SELECT target FROM queue_reply_prompts WHERE inbox = ? AND operator = ? AND prompt = ?
+  `);
+  const clearReplyPrompt = db.prepare(`
+    DELETE FROM queue_reply_prompts WHERE inbox = ? AND operator = ? AND prompt = ?
+  `);
   return {
     find: (inbox, message) => find.get(inbox, message),
     conversation: (inbox, applicant, application) =>
@@ -141,6 +159,12 @@ export async function openApplicationReplies(path) {
     queueCounts: (inbox) => queueCounts.all(inbox),
     queuePage: (inbox, status, page) =>
       queuePage.all(inbox, status, queuePageSize, page * queuePageSize),
+    saveReplyPrompt: (inbox, operator, prompt, target) =>
+      saveReplyPrompt.run(inbox, operator, prompt, target),
+    replyPrompt: (inbox, operator, prompt) =>
+      replyPrompt.get(inbox, operator, prompt),
+    clearReplyPrompt: (inbox, operator, prompt) =>
+      clearReplyPrompt.run(inbox, operator, prompt),
     draft: (inbox, applicant) => draft.get(inbox, applicant),
     saveDraft: (inbox, applicant, topic) =>
       saveDraft.run(inbox, applicant, topic),
@@ -208,6 +232,14 @@ export function createApplicationHandler({
     }
   }
 
+  function replyRestriction(item, operator) {
+    if (item?.owner === operator) return;
+    if (item?.status === "working")
+      return `Заявка в работе у ${item.owner_name}. Верните её в новые, если нужно передать ответ другому сотруднику.`;
+    if (item?.status === "answered")
+      return `На заявку уже ответил сотрудник ${item.owner_name}. Нажмите «Открыть снова», если нужен ещё один ответ.`;
+  }
+
   function queueView(status, requestedPage) {
     const counts = Object.fromEntries(
       replies.queueCounts(inbox).map(({ status, count }) => [status, count]),
@@ -218,20 +250,31 @@ export function createApplicationHandler({
     const total = (counts.new ?? 0) + (counts.working ?? 0);
     let text = `${queueTitle}\nЖдут ответа: ${total}\n\n${queueLabels[status]} · ${page + 1}/${pages}`;
     const entities = [];
+    const actions = [];
     const groupId = /^-100(\d+)$/.exec(String(inbox))?.[1];
     for (const item of items) {
       const title = `№${item.application}`;
+      const row = [];
       if (groupId) {
         const path = [groupId, threadId, item.message]
           .filter((id) => id !== undefined)
           .join("/");
+        const url = `https://t.me/c/${path}`;
         entities.push({
           type: "text_link",
           offset: text.length + 1,
           length: title.length,
-          url: `https://t.me/c/${path}`,
+          url,
         });
+        row.push({ text: `Показать ${title}`, url });
       }
+      row.push(
+        button(
+          groupId ? "Ответить" : `Ответить ${title}`,
+          `reply:${item.application}:${item.message}`,
+        ),
+      );
+      actions.push(row);
       text += `\n${title} · ${topics[item.topic]?.title ?? "Обращение"}`;
       if (item.owner_name) text += ` · ${item.owner_name}`;
     }
@@ -248,13 +291,69 @@ export function createApplicationHandler({
     if (page + 1 < pages)
       navigation.push(button("Следующие →", `queue:${status}:${page + 1}`));
     const reply_markup = {
-      inline_keyboard: [tabs, ...(navigation.length ? [navigation] : [])],
+      inline_keyboard: [
+        tabs,
+        ...actions,
+        ...(navigation.length ? [navigation] : []),
+      ],
     };
     return { text, entities, reply_markup };
   }
 
+  async function openReplyPrompt(callback, acknowledge, application, target) {
+    const item = replies.queueItem(inbox, application);
+    if (!item || item.message !== target) {
+      await acknowledge("В заявке есть новое сообщение. Обновите очередь.");
+      return;
+    }
+    const operator = callback.from;
+    const restriction = replyRestriction(item, operator.id);
+    if (restriction) {
+      await acknowledge(restriction);
+      return;
+    }
+    await acknowledge();
+    const title = `${queueReplyPrefix}${application}`;
+    const name = teamName(operator);
+    const sent = await send(
+      inbox,
+      `${title}\n${name}, бот передаст ваш текст заявителю.`,
+      {
+        ...inboxOptions,
+        entities: [
+          {
+            type: "text_mention",
+            offset: title.length + 1,
+            length: name.length,
+            user: operator,
+          },
+        ],
+        reply_parameters: {
+          message_id: target,
+          allow_sending_without_reply: true,
+        },
+        reply_markup: {
+          force_reply: true,
+          selective: true,
+          input_field_placeholder: "Ответ заявителю",
+        },
+      },
+    );
+    replies.saveReplyPrompt(inbox, operator.id, sent.message_id, target);
+  }
+
   async function handleInboxCallback(callback, acknowledge) {
     const message = callback.message;
+    const reply = /^reply:(\d{1,16}):(\d{1,16})$/.exec(callback.data ?? "");
+    if (reply && message.text?.startsWith(`${queueTitle}\n`)) {
+      await openReplyPrompt(
+        callback,
+        acknowledge,
+        Number(reply[1]),
+        Number(reply[2]),
+      );
+      return;
+    }
     const queue = /^queue:(new|working|answered):(\d{1,9})$/.exec(
       callback.data ?? "",
     );
@@ -304,17 +403,26 @@ export function createApplicationHandler({
   async function replyToApplicant(message, text) {
     if (!inInbox(message)) return;
     const original = message.reply_to_message;
+    if (original?.from?.id !== botId) return;
+    const isPrompt = original.text?.startsWith(queueReplyPrefix);
     if (
-      original?.from?.id !== botId ||
+      !isPrompt &&
       !/^(?:Заявка №\d+ · |Продолжение заявки №\d+\n)/.test(original.text ?? "")
     )
       return;
-    const applicant = replies.find(inbox, original.message_id);
     const report = (status) =>
       send(inbox, status, {
         ...inboxOptions,
         reply_parameters: { message_id: message.message_id },
       });
+    const target = isPrompt
+      ? replies.replyPrompt(inbox, message.from.id, original.message_id)?.target
+      : original.message_id;
+    if (!target) {
+      await report("Откройте свой ответ кнопкой «Ответить» в очереди.");
+      return;
+    }
+    const applicant = replies.find(inbox, target);
     if (!applicant) {
       await report(
         "Для этой заявки ещё нет привязки к личному чату. Используйте контакт из заявки.",
@@ -326,16 +434,15 @@ export function createApplicationHandler({
       return;
     }
     const item = replies.queueItem(inbox, applicant.application);
-    if (item?.status === "working" && item.owner !== message.from.id) {
+    if (isPrompt && item?.message !== target) {
       await report(
-        `Заявка в работе у ${item.owner_name}. Верните её в новые, если нужно передать ответ другому сотруднику.`,
+        "Заявитель написал снова. Откройте свежую заявку через /queue.",
       );
       return;
     }
-    if (item?.status === "answered" && item.owner !== message.from.id) {
-      await report(
-        `На заявку уже ответил сотрудник ${item.owner_name}. Нажмите «Открыть снова», если нужен ещё один ответ.`,
-      );
+    const restriction = replyRestriction(item, message.from.id);
+    if (restriction) {
+      await report(restriction);
       return;
     }
     try {
@@ -355,7 +462,9 @@ export function createApplicationHandler({
     console.log(
       `Ответ по заявке №${applicant.application} доставлен в личный чат.`,
     );
-    if (item?.message === original.message_id && item.status !== "answered") {
+    if (isPrompt)
+      replies.clearReplyPrompt(inbox, message.from.id, original.message_id);
+    if (item?.message === target && item.status !== "answered") {
       const name = teamName(message.from);
       replies.setStatus(
         inbox,
@@ -365,11 +474,7 @@ export function createApplicationHandler({
         name,
       );
       await updateCard(item.message, cardMarkup("answered", name));
-    } else if (
-      item &&
-      item.message !== original.message_id &&
-      item.status !== "answered"
-    ) {
+    } else if (item && item.message !== target && item.status !== "answered") {
       await report(
         "Ответ отправлен. В очереди остаётся более новое сообщение заявителя.",
       );

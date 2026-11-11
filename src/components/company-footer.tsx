@@ -13,10 +13,10 @@ const sectionGroups = [
     title: "Компания",
     staff: false,
     links: [
-      ["about", "О компании"],
       ["results", "В цифрах"],
       ["directions", "Направления"],
       ["global-experience", "Международный опыт"],
+      ["about", "О компании"],
     ],
   },
   {
@@ -26,6 +26,7 @@ const sectionGroups = [
       ["principles", "Принципы"],
       ["future", "Будущее"],
       ["careers", "Команда"],
+      ["contacts", "Партнёрство"],
     ],
   },
 ] as const;

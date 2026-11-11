@@ -227,7 +227,7 @@ function HeaderCategory({
   );
 }
 
-function LanguageSelector() {
+function LanguageSelector({ inMenu = false }: { inMenu?: boolean }) {
   const { language, changeLanguage, t } = useSiteLanguage();
   const selected = siteLanguages.find(({ id }) => id === language)!;
   const [confirmed, setConfirmed] = useState(false);
@@ -287,6 +287,42 @@ function LanguageSelector() {
     void transition.finished.then(finish, finish);
   }
 
+  const options = (
+    <Dropdown.RadioGroup
+      value={language}
+      onValueChange={selectLanguage}
+      aria-label={t("Язык сайта")}
+    >
+      {siteLanguages.map(({ id, code, label }) => (
+        <Dropdown.RadioItem
+          key={id}
+          value={id}
+          className="yu-language-option"
+          textValue={label}
+          onSelect={inMenu ? (event) => event.preventDefault() : undefined}
+        >
+          <span className="yu-language-tile" lang={id} aria-hidden="true">
+            {code}
+          </span>
+          <span lang={id}>{label}</span>
+          <Dropdown.ItemIndicator className="yu-language-check">
+            <Check size={15} aria-hidden="true" />
+          </Dropdown.ItemIndicator>
+        </Dropdown.RadioItem>
+      ))}
+    </Dropdown.RadioGroup>
+  );
+  if (inMenu) {
+    return (
+      <>
+        <Dropdown.Label className="yu-mobile-category-label">
+          {t("Язык сайта")}
+        </Dropdown.Label>
+        {options}
+      </>
+    );
+  }
+
   return (
     <div className="yu-language">
       <Dropdown.Root
@@ -318,31 +354,7 @@ function LanguageSelector() {
             <Dropdown.Label className="yu-language-heading">
               {t("Язык сайта")}
             </Dropdown.Label>
-            <Dropdown.RadioGroup
-              value={language}
-              onValueChange={selectLanguage}
-            >
-              {siteLanguages.map(({ id, code, label }) => (
-                <Dropdown.RadioItem
-                  key={id}
-                  value={id}
-                  className="yu-language-option"
-                  textValue={label}
-                >
-                  <span
-                    className="yu-language-tile"
-                    lang={id}
-                    aria-hidden="true"
-                  >
-                    {code}
-                  </span>
-                  <span lang={id}>{label}</span>
-                  <Dropdown.ItemIndicator className="yu-language-check">
-                    <Check size={15} aria-hidden="true" />
-                  </Dropdown.ItemIndicator>
-                </Dropdown.RadioItem>
-              ))}
-            </Dropdown.RadioGroup>
+            {options}
           </Dropdown.Content>
         </Dropdown.Portal>
       </Dropdown.Root>
@@ -471,6 +483,10 @@ export function PublicHeader() {
                     ))}
                   </Dropdown.Group>
                 ))}
+                <Dropdown.Group className="yu-mobile-preferences">
+                  <SiteThemeToggle inMenu />
+                  <LanguageSelector inMenu />
+                </Dropdown.Group>
               </Dropdown.Content>
             </Dropdown.Portal>
           </Dropdown.Root>

@@ -289,8 +289,11 @@ html[data-site-theme="dark"] .lp-hero.lp-hero-video {
 .lp-hero.lp-hero-video h1 > span:first-child {
   color: var(--hero-ink);
 }
+.lp-hero-copy:has(h1[data-font-ready="false"]) {
+  opacity: 0;
+}
 @media (prefers-reduced-motion: no-preference) {
-  .lp-hero-video h1 {
+  .lp-hero-video h1[data-font-ready="true"] {
     animation: hero-title-in 650ms cubic-bezier(.2, .75, .3, 1) both;
   }
   .lp-hero-atmosphere::before {

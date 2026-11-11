@@ -1,6 +1,12 @@
 import { useSiteLanguage } from "../lib/site-language";
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { useLandingMobile } from "./use-landing-mobile";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import "./tech-title.css";
 
 const TechText = lazy(() =>
@@ -89,24 +95,37 @@ export function TechTitleLine({
 
 export function HeroTitle() {
   const { language, t } = useSiteLanguage();
-  const mobile = useLandingMobile();
-  const desktopMotion = useTechTitleMotion();
-  // Keep the mobile headline on one renderer so its glyphs don't jump on load.
-  const motion = !mobile && desktopMotion;
+  const heading = useRef<HTMLHeadingElement>(null);
+  const [ready, setReady] = useState(false);
+  useLayoutEffect(() => {
+    const element = heading.current;
+    if (!element || !document.fonts) {
+      setReady(true);
+      return;
+    }
+    const style = getComputedStyle(element);
+    const font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    const sample = element.textContent ?? "";
+    if (document.fonts.check(font, sample)) {
+      setReady(true);
+      return;
+    }
+    setReady(false);
+    let active = true;
+    const show = () => {
+      if (active) setReady(true);
+    };
+    void document.fonts.load(font, sample).then(show, show);
+    return () => {
+      active = false;
+    };
+  }, [language]);
   return (
-    <h1 id="hero-title" tabIndex={-1}>
-      <TechTitleLine
-        text={t("Создаём") + (language === "zh-CN" ? "" : " ")}
-        motion={motion}
-        intro="none"
-        nativeMetrics
-      />
-      <TechTitleLine
-        text={t("бренды")}
-        motion={motion}
-        intro="none"
-        nativeMetrics
-      />
+    <h1 ref={heading} id="hero-title" tabIndex={-1} data-font-ready={ready}>
+      <span className="hero-tech-line">
+        {t("Создаём") + (language === "zh-CN" ? "" : " ")}
+      </span>
+      <span className="hero-tech-line">{t("бренды")}</span>
     </h1>
   );
 }

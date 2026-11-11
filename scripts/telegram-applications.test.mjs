@@ -1,9 +1,14 @@
 import { expect, it, vi } from "vitest";
 import { createApplicationHandler } from "./telegram-applications.mjs";
 
-it("delivers a reply to the career prompt before confirming it", async () => {
+it("delivers the application to the configured forum topic before confirming it", async () => {
   const send = vi.fn().mockResolvedValue(undefined);
-  const handle = createApplicationHandler({ botId: 9, inbox: "-1001", send });
+  const handle = createApplicationHandler({
+    botId: 9,
+    inbox: "-1001",
+    threadId: 17,
+    send,
+  });
   const message = {
     chat: { type: "private", id: 42 },
     from: { first_name: "Ирина" },
@@ -13,7 +18,7 @@ it("delivers a reply to the career prompt before confirming it", async () => {
     message: { ...message, text: "/start careers" },
   });
   const [, prompt, markup] = send.mock.calls[0];
-  expect(markup).toEqual({ force_reply: true });
+  expect(markup).toEqual({ reply_markup: { force_reply: true } });
   await handle({
     update_id: 2,
     message: {
@@ -26,6 +31,7 @@ it("delivers a reply to the career prompt before confirming it", async () => {
     2,
     "-1001",
     expect.stringContaining("Заявка №2 · Карьера"),
+    { message_thread_id: 17 },
   );
   expect(send).toHaveBeenNthCalledWith(
     3,
@@ -81,6 +87,7 @@ it("does not confirm a submission if Telegram rejects the delivery", async () =>
       2,
       "-1001",
       expect.stringContaining("Партнёрство"),
+      undefined,
     );
     expect(send).toHaveBeenNthCalledWith(
       3,

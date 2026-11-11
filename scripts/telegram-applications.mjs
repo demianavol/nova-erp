@@ -11,7 +11,7 @@ const maxLength = 2400;
 const prompt = (topic) =>
   `${topics[topic]} · Young Unicorn\n\nОтветьте на это сообщение одним текстом. Укажите имя, как с вами связаться и кратко опишите ваш запрос. Сообщение увидит команда Young Unicorn.`;
 
-export function createApplicationHandler({ botId, inbox, send }) {
+export function createApplicationHandler({ botId, inbox, threadId, send }) {
   return async ({ update_id, message }) => {
     if (
       message?.chat?.type !== "private" ||
@@ -24,7 +24,7 @@ export function createApplicationHandler({ botId, inbox, send }) {
     const [command, argument] = text?.split(/\s+/, 2) ?? [];
     if (command?.split("@", 1)[0] === "/start") {
       const topic = Object.hasOwn(topics, argument) ? argument : "general";
-      await send(chat, prompt(topic), { force_reply: true });
+      await send(chat, prompt(topic), { reply_markup: { force_reply: true } });
       return;
     }
 
@@ -56,6 +56,7 @@ export function createApplicationHandler({ botId, inbox, send }) {
       await send(
         inbox,
         `Заявка №${update_id} · ${topics[topic]}\nОт: ${sender}\n\n${text}`,
+        threadId === undefined ? undefined : { message_thread_id: threadId },
       );
     } catch (error) {
       console.error(
@@ -77,11 +78,18 @@ export function createApplicationHandler({ botId, inbox, send }) {
 async function main() {
   const token = process.env.TELEGRAM_APPLICATION_BOT_TOKEN?.trim();
   const inbox = Number(process.env.TELEGRAM_APPLICATION_CHAT_ID);
+  const threadSetting = process.env.TELEGRAM_APPLICATION_THREAD_ID?.trim();
+  const threadId = threadSetting ? Number(threadSetting) : undefined;
   const listChats = process.argv.includes("--list-chats");
   if (!/^\d+:[\w-]+$/.test(token ?? ""))
     throw new Error("Задайте TELEGRAM_APPLICATION_BOT_TOKEN.");
   if (!listChats && (!Number.isSafeInteger(inbox) || inbox >= 0))
     throw new Error("Задайте TELEGRAM_APPLICATION_CHAT_ID закрытой группы.");
+  if (
+    threadId !== undefined &&
+    (!Number.isSafeInteger(threadId) || threadId <= 0)
+  )
+    throw new Error("Задайте корректный TELEGRAM_APPLICATION_THREAD_ID.");
 
   const controller = new AbortController();
   for (const signal of ["SIGINT", "SIGTERM"]) {
@@ -130,18 +138,29 @@ async function main() {
   const group = await api("getChat", { chat_id: inbox });
   if (group.type !== "group" && group.type !== "supergroup")
     throw new Error("Чат для заявок должен быть группой.");
-  if (group.username)
+  if (group.username || group.active_usernames?.length)
     throw new Error("Укажите закрытую группу без публичного имени.");
+  if (threadId !== undefined && !group.is_forum)
+    throw new Error(
+      "Для доставки в тему в группе должен быть включён режим тем.",
+    );
   const handle = createApplicationHandler({
     botId: bot.id,
     inbox,
-    send: (chat_id, text, reply_markup) =>
-      api("sendMessage", {
+    threadId,
+    send: async (chat_id, text, options) => {
+      const sent = await api("sendMessage", {
         chat_id,
         text,
-        reply_markup,
+        ...options,
         link_preview_options: { is_disabled: true },
-      }),
+      });
+      if (chat_id === inbox)
+        console.log(`Заявка доставлена. ID сообщения: ${sent.message_id}.`);
+      if (options?.reply_markup?.force_reply)
+        console.log("Отправлена форма заявки в личный чат.");
+      return sent;
+    },
   });
   console.log(`Бот @${bot.username} принимает заявки.`);
 

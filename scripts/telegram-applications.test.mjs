@@ -96,7 +96,10 @@ it.each(topicCases)(
         expect.stringContaining(`Продолжение заявки №3\n${tag}`),
         expect.objectContaining({
           message_thread_id: 17,
-          reply_parameters: { message_id: 71 },
+          reply_parameters: {
+            message_id: 71,
+            allow_sending_without_reply: true,
+          },
         }),
       );
     } finally {
@@ -180,7 +183,10 @@ it("continues the correct application in both directions after a restart", async
       1,
       -1001,
       expect.stringContaining("Продолжение заявки №2"),
-      { message_thread_id: 17, reply_parameters: { message_id: 71 } },
+      expect.objectContaining({
+        message_thread_id: 17,
+        reply_parameters: { message_id: 71, allow_sending_without_reply: true },
+      }),
     );
     const continuation = send.mock.calls[0][1];
     expect(send).toHaveBeenNthCalledWith(
@@ -212,7 +218,10 @@ it("continues the correct application in both directions after a restart", async
       1,
       -1001,
       expect.stringContaining("Продолжение заявки №3"),
-      { message_thread_id: 17, reply_parameters: { message_id: 73 } },
+      expect.objectContaining({
+        message_thread_id: 17,
+        reply_parameters: { message_id: 73, allow_sending_without_reply: true },
+      }),
     );
   } finally {
     replies?.close();
@@ -289,5 +298,138 @@ it("does not confirm a submission if Telegram rejects the delivery", async () =>
   } finally {
     replies.close();
     log.mockRestore();
+  }
+});
+
+it("keeps unanswered applications in the team queue until the latest message gets a reply", async () => {
+  const inbox = -10043680;
+  const replies = await openApplicationReplies(":memory:");
+  const send = vi.fn().mockResolvedValue({ message_id: 72 });
+  const answerCallback = vi.fn().mockResolvedValue(undefined);
+  const editMessage = vi.fn().mockResolvedValue(undefined);
+  const editMarkup = vi.fn().mockResolvedValue(undefined);
+  const handle = createApplicationHandler({
+    botId: 9,
+    botUsername: "ExampleBot",
+    inbox,
+    threadId: 17,
+    send,
+    replies,
+    answerCallback,
+    editMessage,
+    editMarkup,
+  });
+  const group = {
+    chat: { type: "supergroup", id: inbox },
+    message_thread_id: 17,
+  };
+  const first = {
+    ...group,
+    message_id: 71,
+    from: { id: 9 },
+    text: "Заявка №2 · Кандидат",
+  };
+  const owner = { id: 23, first_name: "Ирина" };
+  const coworker = { id: 24, first_name: "Анна" };
+  const click = (data, message, from = owner) =>
+    handle({
+      callback_query: { id: "click", data, message, from },
+    });
+  const respond = (reply_to_message, from = owner) =>
+    handle({
+      message: {
+        ...group,
+        from,
+        message_id: 90,
+        text: "Ответ команды",
+        reply_to_message,
+      },
+    });
+  const followUp = () =>
+    handle({
+      message: {
+        chat: { type: "private", id: 42 },
+        from: { id: 42 },
+        text: "Уточнение",
+      },
+    });
+  const log = vi.spyOn(console, "error").mockImplementation(() => {});
+  try {
+    replies.recordIncoming(inbox, 71, 42, 2, "careers", true);
+    await handle({
+      message: { ...group, from: owner, text: "/queue@ExampleBot" },
+    });
+    const [, queue, options] = send.mock.calls[0];
+    expect(queue).toContain("Ждут ответа: 1");
+    expect(options.entities).toEqual([
+      {
+        type: "text_link",
+        offset: queue.indexOf("№2"),
+        length: 2,
+        url: "https://t.me/c/43680/17/71",
+      },
+    ]);
+    await click("work:take", { ...first, message_thread_id: 18 });
+    expect(replies.queueItem(inbox, 2).status).toBe("new");
+    await click("work:take", first);
+    await click("work:take", first, coworker);
+    expect(replies.queueItem(inbox, 2)).toMatchObject({
+      status: "working",
+      owner: 23,
+    });
+    await click("queue:working:0", { ...first, message_id: 80, text: queue });
+    expect(editMessage).toHaveBeenCalledWith(
+      inbox,
+      80,
+      expect.stringContaining("№2 · Кандидат · Ирина"),
+      expect.any(Object),
+    );
+    send.mockClear();
+    await respond(first, coworker);
+    expect(send).toHaveBeenCalledExactlyOnceWith(
+      inbox,
+      expect.stringContaining("Заявка в работе у Ирина"),
+      expect.any(Object),
+    );
+    send.mockRejectedValueOnce(new Error("Telegram sendMessage: ошибка 403."));
+    await respond(first);
+    expect(replies.queueItem(inbox, 2).status).toBe("working");
+
+    await followUp();
+    const second = {
+      ...first,
+      message_id: 72,
+      text: "Продолжение заявки №2\n#карьера",
+    };
+    expect(replies.queueItem(inbox, 2)).toMatchObject({
+      status: "working",
+      message: 72,
+      owner: 23,
+    });
+    await respond(first);
+    expect(replies.queueItem(inbox, 2).status).toBe("working");
+    await respond(second);
+    expect(replies.queueItem(inbox, 2).status).toBe("answered");
+    expect(editMarkup).toHaveBeenLastCalledWith(
+      inbox,
+      72,
+      expect.objectContaining({
+        inline_keyboard: expect.arrayContaining([
+          [{ text: "✅ Отвечено: Ирина", callback_data: "work:status" }],
+        ]),
+      }),
+    );
+
+    send.mockResolvedValue({ message_id: 73 });
+    await followUp();
+    await click("work:release", second);
+    expect(replies.queueItem(inbox, 2)).toMatchObject({
+      status: "new",
+      message: 73,
+      owner: null,
+    });
+  } finally {
+    log.mockRestore();
+    replies.close();
   }
 });

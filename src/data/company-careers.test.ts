@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { companyCareers } from "./company-careers";
+import { publicContactUrl } from "./company";
 
 describe("companyCareers data", () => {
   it("has the approved headlines and subtitle", () => {
@@ -45,6 +46,6 @@ describe("companyCareers data", () => {
     expect(companyCareers.employerValueStatus).toContain(
       "pending employer approval",
     );
-    expect(companyCareers.hrUrl).toBe("https://t.me/kiyamova_alina_yuc");
+    expect(companyCareers.hrUrl).toBe(publicContactUrl("careers"));
   });
 });

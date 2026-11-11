@@ -1,4 +1,4 @@
-import { company } from "./company";
+import { publicContactUrl } from "./company";
 
 export interface CareerBenefit {
   id: "growth" | "impact" | "team" | "projects" | "freedom" | "learning";
@@ -45,7 +45,7 @@ export const companyCareers = {
   ] as const satisfies readonly CareerBenefit[],
   employerValueStatus: "Provisional wording; pending employer approval",
   badge: "media/careers/employee-badge-blank-v2-refined.webp",
-  hrUrl: company.partnerUrl,
+  hrUrl: publicContactUrl("careers"),
   vacanciesDestinationStatus:
     "HR contact fallback; dedicated vacancies URL pending approval",
 } as const;

@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b --pretty false",
     "preview": "vite preview --host 127.0.0.1",
+    "bot:applications": "node --env-file-if-exists=.env scripts/telegram-applications.mjs",
     "test": "vitest run"
   },
   "dependencies": {

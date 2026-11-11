@@ -1,4 +1,14 @@
 // Company-wide statistics and archival observations live in company-metrics.ts.
+export function publicContactUrl(
+  topic: "general" | "partnership" | "careers" = "general",
+) {
+  const username =
+    import.meta.env.VITE_TELEGRAM_APPLICATION_BOT?.trim().replace(/^@/, "");
+  return username && /^[a-z][a-z0-9_]{4,31}$/i.test(username)
+    ? `https://t.me/${username}?start=${topic}`
+    : company.partnerUrl;
+}
+
 export const company = {
   name: "Young Unicorn",
   since: "2020",

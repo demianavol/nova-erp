@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { MemoryRouter } from "react-router-dom";
 import { CompanyFooter } from "./company-footer";
-import { company } from "../data/company";
+import { publicContactUrl } from "../data/company";
 
 function footer() {
   return renderToStaticMarkup(
@@ -31,13 +31,25 @@ describe("Company footer", () => {
   });
   it("keeps one safe Telegram link without personal details or extra footer copy", () => {
     const html = footer();
-    expect(
-      html.match(new RegExp(`href="${company.partnerUrl}"`, "g")),
-    ).toHaveLength(1);
+    expect(html.split(`href="${publicContactUrl()}"`)).toHaveLength(2);
     expect(html.match(/rel="noopener noreferrer"/g)).toHaveLength(1);
     expect(html).toContain("Telegram");
     expect(html).not.toContain("Связаться с HR");
     expect(html).not.toContain("Алина");
     expect(html).not.toContain("Группа компаний");
+  });
+  it("opens the configured application bot from the footer", () => {
+    vi.stubEnv("VITE_TELEGRAM_APPLICATION_BOT", "@example_yuc_bot");
+    try {
+      expect(footer()).toContain("https://t.me/example_yuc_bot?start=general");
+      expect(publicContactUrl("partnership")).toBe(
+        "https://t.me/example_yuc_bot?start=partnership",
+      );
+      expect(publicContactUrl("careers")).toBe(
+        "https://t.me/example_yuc_bot?start=careers",
+      );
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 });

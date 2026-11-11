@@ -8,7 +8,7 @@ import {
 } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowLeft, ArrowUpRight, X } from "lucide-react";
-import { company } from "../data/company";
+import { company, publicContactUrl } from "../data/company";
 import { brandPortfolio, type BrandProfile } from "../data/brand-portfolio";
 import { fashionProducts } from "../data/fashion-catalog";
 import {
@@ -448,7 +448,7 @@ export function BrandExplorerModal({
                   )}
                   <a
                     className="bex-detail-link"
-                    href={company.partnerUrl}
+                    href={publicContactUrl("partnership")}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -482,7 +482,7 @@ export function BrandExplorerModal({
                     {t(direction.description).split("\n")[0]}
                   </p>
                   <a
-                    href={company.partnerUrl}
+                    href={publicContactUrl("partnership")}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

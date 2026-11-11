@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { CompanyBrand } from "./company-brand";
 import { ErpEntryLink } from "./erp-entry-link";
-import { company } from "../data/company";
+import { publicContactUrl } from "../data/company";
 import { useLandingMobile } from "./use-landing-mobile";
 import "../company-footer.css";
 
@@ -133,7 +133,7 @@ export function CompanyFooter({
             </h2>
             <a
               className="company-footer-telegram"
-              href={company.partnerUrl}
+              href={publicContactUrl()}
               target="_blank"
               rel="noopener noreferrer"
             >

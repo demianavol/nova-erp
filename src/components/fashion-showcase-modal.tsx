@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ArrowUpRight, ChevronDown, X } from "lucide-react";
-import { company } from "../data/company";
+import { publicContactUrl } from "../data/company";
 import { ProductRating } from "./product-rating";
 import { marketplaceSnapshot } from "../data/product-evidence";
 import {
@@ -199,7 +199,7 @@ export function FashionShowcaseModal({
                 </span>
               </span>
               <a
-                href={company.partnerUrl}
+                href={publicContactUrl("partnership")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="fsm-cta"

@@ -661,6 +661,23 @@ async function main() {
   });
   console.log(`Бот @${bot.username} принимает заявки.`);
 
+  const scope = { type: "chat", chat_id: inbox };
+  try {
+    const commands = await api("getMyCommands", { scope });
+    if (!commands.some(({ command }) => command === "queue")) {
+      await api("setMyCommands", {
+        scope,
+        commands: [
+          ...commands,
+          { command: "queue", description: "Открыть очередь заявок" },
+        ],
+      });
+    }
+    console.log("Команда /queue доступна в меню группы заявок.");
+  } catch (error) {
+    console.error(`Не удалось обновить меню команд: ${error.message}`);
+  }
+
   let offset;
   while (!controller.signal.aborted) {
     let updates;

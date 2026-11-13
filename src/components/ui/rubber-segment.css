@@ -1,0 +1,60 @@
+.rubber-segment {
+  max-width: 100%;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--card);
+  touch-action: pan-y;
+}
+
+.rubber-segment-track {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  isolation: isolate;
+}
+
+.rubber-segment-thumb {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 6px;
+  background: var(--erp-selection);
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--erp-nav-accent) 22%, transparent);
+  pointer-events: none;
+}
+
+.rubber-segment button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 30px;
+  padding: 4px 8px;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.rubber-segment button:is(:hover, [aria-checked="true"]) {
+  color: var(--erp-nav-accent);
+}
+
+.rubber-segment button[aria-checked="true"] {
+  font-weight: 650;
+}
+
+.rubber-segment button:focus-visible {
+  border-radius: 6px;
+  outline: 2px solid var(--erp-nav-accent);
+  outline-offset: -2px;
+}
+
+@media (max-width: 460px) {
+  .rubber-segment button {
+    padding-inline: 6px;
+    font-size: 10px;
+  }
+}

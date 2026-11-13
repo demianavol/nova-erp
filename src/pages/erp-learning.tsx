@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { Button } from "../components/ui";
+import { HelpfulRating } from "../components/helpful-rating";
 import { guideTopics } from "../data/employee-guide";
 import {
   lessonIds,
@@ -71,6 +72,7 @@ export function ErpLearning() {
                 <ArrowRight size={16} aria-hidden="true" />
               </Button>
             </div>
+            <HelpfulRating key={lesson.id} lessonId={lesson.id} />
           </article>
         </div>
       </div>

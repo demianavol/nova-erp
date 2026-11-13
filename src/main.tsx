@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 import { Inbox } from "lucide-react";
 import { CompanyBrand } from "./components/company-brand";
+import { PageLoader } from "./components/ui/page-loader";
 import { useSiteTheme } from "./components/site-theme";
 import { SiteLanguageProvider, useSiteLanguage } from "./lib/site-language";
 import "@fontsource-variable/inter";
@@ -68,8 +69,13 @@ const Profile = /* @__PURE__ */ lazy(() =>
 const ErpHome = /* @__PURE__ */ lazy(() =>
   import("./pages/erp-home").then((m) => ({ default: m.ErpHome })),
 );
+const ErpAccessBoard = lazy(() =>
+  import("./pages/erp-access-board").then((m) => ({
+    default: m.ErpAccessBoard,
+  })),
+);
 const FirstSteps = /* @__PURE__ */ lazy(() =>
-  import("./pages/erp-sections").then((m) => ({ default: m.FirstSteps })),
+  import("./pages/erp-onboarding").then((m) => ({ default: m.FirstSteps })),
 );
 const ErpLearning = /* @__PURE__ */ lazy(() =>
   import("./pages/erp-learning").then((m) => ({ default: m.ErpLearning })),
@@ -78,7 +84,12 @@ const Documents = /* @__PURE__ */ lazy(() =>
   import("./pages/erp-sections").then((m) => ({ default: m.Documents })),
 );
 const OrgStructure = /* @__PURE__ */ lazy(() =>
-  import("./pages/erp-sections").then((m) => ({ default: m.OrgStructure })),
+  import("./pages/erp-org-structure").then((m) => ({ default: m.OrgStructure })),
+);
+const DepartmentDirectory = lazy(() =>
+  import("./pages/erp-sections").then((m) => ({
+    default: m.DepartmentDirectory,
+  })),
 );
 const Department = /* @__PURE__ */ lazy(() =>
   import("./pages/workspace").then((m) => ({ default: m.Department })),
@@ -176,12 +187,16 @@ function AppContent({
       </a>
       <Suspense
         fallback={
-          <div className="app-loading" role="status">
-            {!isErp && <CompanyBrand compact />}
-            <p className={isLanding ? "sr-only" : undefined}>
-              {t("Собираем ваше пространство…")}
-            </p>
-          </div>
+          isErp ? (
+            <PageLoader className="app-loading" title={t("Собираем ваше пространство…")} />
+          ) : (
+            <div className="app-loading" role="status">
+              <CompanyBrand compact />
+              <p className={isLanding ? "sr-only" : undefined}>
+                {t("Собираем ваше пространство…")}
+              </p>
+            </div>
+          )
         }
       >
         <Routes>
@@ -191,6 +206,7 @@ function AppContent({
           {import.meta.env.DEV ? (
             <Route path="/erp" element={<Protected />}>
               <Route index element={<ErpHome />} />
+              <Route path="access" element={<ErpAccessBoard />} />
               <Route path="sales" element={<SalesIndexRedirect />} />
               <Route path="sales/analytics" element={<Dashboard />} />
               <Route
@@ -205,6 +221,7 @@ function AppContent({
               <Route path="profile" element={<Profile />} />
               <Route path="documents" element={<Documents />} />
               <Route path="org-structure" element={<OrgStructure />} />
+              <Route path="departments" element={<DepartmentDirectory />} />
               <Route path="employees" element={<Employees />} />
               <Route path="learning/start" element={<FirstSteps />} />
               <Route path="learning" element={<ErpLearning />} />

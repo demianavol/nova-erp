@@ -1,0 +1,152 @@
+.spring-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 33px;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.spring-check-control {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+}
+
+.spring-check input {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.spring-check-box {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--muted-foreground);
+  border-radius: 6px;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease;
+}
+
+.spring-check-fill {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--erp-action);
+  transform: scale(0);
+  transition: transform 240ms cubic-bezier(0.18, 0.8, 0.35, 1.35);
+}
+
+.spring-check-box svg {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: white;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.spring-check-box path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 140ms ease;
+}
+
+.spring-check input:checked + .spring-check-box .spring-check-fill {
+  transform: scale(1);
+}
+
+.spring-check input:checked + .spring-check-box path {
+  stroke-dashoffset: 0;
+  transition-delay: 70ms;
+}
+
+.spring-check:hover .spring-check-box {
+  border-color: var(--erp-nav-accent);
+}
+
+.spring-check:active .spring-check-box {
+  transform: scale(0.88);
+}
+
+.spring-check input:focus-visible + .spring-check-box {
+  outline: 2px solid var(--erp-nav-accent);
+  outline-offset: 3px;
+}
+
+.spring-check:has(input:disabled) {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.spring-check-label {
+  position: relative;
+  transition: color 150ms ease;
+}
+
+.spring-check-label::after {
+  position: absolute;
+  inset: 50% 0 auto;
+  border-top: 1px solid currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 190ms ease;
+  content: "";
+}
+
+.spring-check:has(input:checked) .spring-check-label {
+  color: var(--muted-foreground);
+}
+
+.spring-check:has(input:checked) .spring-check-label::after {
+  transform: scaleX(1);
+  transition-delay: 95ms;
+}
+
+.spring-check-round {
+  display: inline-grid;
+  justify-items: center;
+  gap: 5px;
+  padding: 3px 4px;
+  color: var(--muted-foreground);
+}
+
+.spring-check-round .spring-check-box {
+  border-radius: 50%;
+}
+
+.spring-check-round .spring-check-plus {
+  stroke: currentColor;
+  stroke-dasharray: none;
+  opacity: 1;
+  transition: opacity 100ms ease;
+}
+
+.spring-check-round input:checked + .spring-check-box .spring-check-plus {
+  opacity: 0;
+  transition-delay: 0ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spring-check *,
+  .spring-check-label::after {
+    transition: none !important;
+  }
+
+  .spring-check:active .spring-check-box {
+    transform: none;
+  }
+}

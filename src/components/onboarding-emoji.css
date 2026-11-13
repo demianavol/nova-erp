@@ -1,0 +1,494 @@
+.erp-start-emoji {
+  --emoji-size: 40px;
+  position: relative;
+  isolation: isolate;
+  display: block;
+  flex: none;
+  width: var(--emoji-size);
+  height: var(--emoji-size);
+  filter: drop-shadow(0 3px 4px #0e0a222b);
+}
+
+.erp-start-emoji img,
+.erp-emoji-scene {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.erp-start-emoji img {
+  object-fit: contain;
+}
+
+.erp-emoji-scene {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  opacity: 0;
+  /* Complementary fades should add the two frames without dimming their overlap. */
+  mix-blend-mode: plus-lighter;
+  pointer-events: none;
+}
+
+.erp-start-links .erp-start-emoji {
+  --emoji-size: 28px;
+}
+
+.erp-emoji-org-line,
+.erp-emoji-org-node,
+.erp-emoji-kit-inside,
+.erp-emoji-kit-tools,
+.erp-emoji-box-spark,
+.erp-emoji-voice,
+.erp-emoji-sale-receipt,
+.erp-emoji-sale-glow,
+.erp-emoji-sale-badge,
+.erp-emoji-clap-flash,
+.erp-emoji-wallet-spark,
+.erp-emoji-chip-signal,
+.erp-emoji-chip-core,
+.erp-emoji-team-chat {
+  opacity: 0;
+}
+
+.erp-emoji-org-line,
+.erp-emoji-org-node {
+  stroke: #e3ffff;
+  stroke-width: 5px;
+  filter: drop-shadow(0 0 4px #5fffff);
+}
+
+.erp-emoji-org-line,
+.erp-emoji-chip-signal,
+.erp-emoji-order-check {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.erp-emoji-needle {
+  transform-origin: 61px 72px;
+}
+
+.erp-emoji-clapper {
+  transform-origin: 25px 53px;
+}
+
+.erp-emoji-sale-badge {
+  transform-origin: 93px 96px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .erp-start-emoji:has(.erp-emoji-scene) img {
+    /* Keep the poster on the same layer after the animation ends. */
+    will-change: opacity;
+  }
+
+  .erp-start-emoji[data-playing]:has(.erp-emoji-scene) img {
+    animation: erp-emoji-poster var(--scene-duration) linear both;
+  }
+
+  .erp-start-emoji[data-playing]:not(:has(.erp-emoji-scene)) img {
+    animation: erp-emoji-highlight var(--scene-duration) ease-in-out;
+  }
+
+  [data-playing] .erp-emoji-scene {
+    animation: erp-emoji-scene var(--scene-duration) linear both;
+  }
+
+  [data-playing] .erp-emoji-needle {
+    animation: erp-emoji-needle var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-org-line {
+    animation: erp-emoji-org-line 370ms ease-out both;
+  }
+
+  [data-playing] .erp-emoji-org-branch {
+    animation-delay: 140ms;
+  }
+
+  [data-playing] .erp-emoji-org-node {
+    animation: erp-emoji-signal 560ms 390ms ease-out both;
+  }
+
+  [data-playing] .erp-emoji-org-node:last-child {
+    animation-delay: 450ms;
+  }
+
+  [data-playing] .erp-emoji-kit-lid {
+    animation: erp-emoji-kit-lid var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-kit-inside {
+    animation: erp-emoji-kit-inside var(--scene-duration) linear both;
+  }
+
+  [data-playing] .erp-emoji-kit-tools {
+    animation: erp-emoji-kit-tools var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-paper-back {
+    animation: erp-emoji-paper-back var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-paper-front {
+    animation: erp-emoji-paper-front var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-box-lid {
+    animation: erp-emoji-box-lid var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-box-spark {
+    animation: erp-emoji-kit-inside var(--scene-duration) ease both;
+  }
+
+  [data-playing] .erp-emoji-voice {
+    animation: erp-emoji-voice 360ms 90ms ease-out 2 both;
+  }
+
+  [data-playing] .erp-emoji-voice-echo {
+    animation-delay: 215ms;
+  }
+
+  [data-playing] .erp-emoji-sale-receipt {
+    animation: erp-emoji-receipt var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-sale-badge {
+    animation: erp-emoji-badge var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-sale-glow {
+    animation: erp-emoji-signal 330ms 430ms ease-out both;
+  }
+
+  [data-playing] .erp-emoji-clapper {
+    animation: erp-emoji-clapper var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-clap-flash {
+    animation: erp-emoji-signal 280ms 530ms ease-out both;
+  }
+
+  [data-playing] .erp-emoji-wallet-coin {
+    animation: erp-emoji-wallet-coin var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-wallet-spark {
+    animation: erp-emoji-signal 460ms 245ms ease-out both;
+  }
+
+  [data-playing] .erp-emoji-chip-signal {
+    animation: erp-emoji-org-line 310ms 115ms ease-out 2 both;
+  }
+
+  [data-playing] .erp-emoji-chip-signal:nth-child(2) {
+    animation-delay: 230ms;
+  }
+
+  [data-playing] .erp-emoji-chip-core {
+    animation: erp-emoji-chip-core 310ms 265ms ease-in-out 2 both;
+  }
+
+  [data-playing] .erp-emoji-team-chat {
+    animation: erp-emoji-team-chat var(--scene-duration) ease-in-out both;
+    transform-origin: 40px 42px;
+  }
+
+  [data-playing] .erp-emoji-order-check {
+    animation: erp-emoji-order-check var(--scene-duration) ease-in-out both;
+  }
+
+  [data-playing] .erp-emoji-rack-parcel {
+    animation: erp-emoji-rack-parcel var(--scene-duration) ease-in-out both;
+  }
+}
+
+@keyframes erp-emoji-poster {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  5% {
+    opacity: 0;
+  }
+  83% {
+    opacity: 0;
+    animation-timing-function: ease-in-out;
+  }
+}
+
+@keyframes erp-emoji-scene {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  83% {
+    opacity: 1;
+    animation-timing-function: ease-in-out;
+  }
+}
+
+@keyframes erp-emoji-highlight {
+  37%,
+  61% {
+    filter: brightness(1.16) drop-shadow(0 0 4px #a786f488);
+  }
+}
+
+@keyframes erp-emoji-needle {
+  0%,
+  83%,
+  100% {
+    transform: rotate(0);
+  }
+  30% {
+    transform: rotate(-105deg);
+  }
+  62% {
+    transform: rotate(49deg);
+  }
+  74% {
+    transform: rotate(-15deg);
+  }
+}
+
+@keyframes erp-emoji-org-line {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 1;
+  }
+  72% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes erp-emoji-signal {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+@keyframes erp-emoji-kit-lid {
+  0%,
+  83%,
+  100% {
+    transform: none;
+  }
+  34%,
+  58% {
+    transform: translate(3px, -31px) rotate(-11deg);
+  }
+}
+
+@keyframes erp-emoji-kit-inside {
+  0%,
+  18%,
+  84%,
+  100% {
+    opacity: 0;
+  }
+  40%,
+  65% {
+    opacity: 1;
+  }
+}
+
+@keyframes erp-emoji-kit-tools {
+  0%,
+  12%,
+  80%,
+  100% {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  43%,
+  56% {
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes erp-emoji-paper-back {
+  0%,
+  83%,
+  100% {
+    transform: none;
+  }
+  37% {
+    transform: translate(-18px, -16px) rotate(-5deg);
+  }
+  60% {
+    transform: translate(13px, -2px);
+  }
+}
+
+@keyframes erp-emoji-paper-front {
+  0%,
+  83%,
+  100% {
+    transform: none;
+  }
+  38% {
+    transform: translate(9px, 2px);
+  }
+  61% {
+    transform: translate(-14px, -24px) rotate(7deg);
+  }
+}
+
+@keyframes erp-emoji-box-lid {
+  0%,
+  12%,
+  90%,
+  100% {
+    transform: none;
+  }
+  39%,
+  64% {
+    transform: translate(1px, -23px) rotate(-9deg);
+  }
+}
+
+@keyframes erp-emoji-voice {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translateX(-5px);
+  }
+  27% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 0.25;
+    transform: translateX(10px);
+  }
+}
+
+@keyframes erp-emoji-receipt {
+  0%,
+  16%,
+  88%,
+  100% {
+    opacity: 0;
+    transform: translateY(21px);
+  }
+  45%,
+  71% {
+    opacity: 1;
+    transform: translateY(-17px) rotate(7deg);
+  }
+}
+
+@keyframes erp-emoji-badge {
+  0%,
+  29%,
+  88%,
+  100% {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+  49% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  59%,
+  78% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes erp-emoji-clapper {
+  0%,
+  17%,
+  90%,
+  100% {
+    transform: none;
+  }
+  35% {
+    transform: rotate(-15deg);
+  }
+  47%,
+  62% {
+    transform: rotate(15deg);
+  }
+  73% {
+    transform: rotate(-4deg);
+  }
+}
+
+@keyframes erp-emoji-wallet-coin {
+  0%,
+  14%,
+  86%,
+  100% {
+    transform: none;
+  }
+  43%,
+  58% {
+    transform: translateY(-19px);
+  }
+}
+
+@keyframes erp-emoji-chip-core {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  46% {
+    opacity: 0.78;
+  }
+}
+
+@keyframes erp-emoji-team-chat {
+  0%,
+  15%,
+  88%,
+  100% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.65);
+  }
+  38%,
+  66% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1);
+  }
+}
+
+@keyframes erp-emoji-order-check {
+  0%,
+  19% {
+    stroke-dashoffset: 1;
+  }
+  53%,
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes erp-emoji-rack-parcel {
+  0%,
+  15%,
+  86%,
+  100% {
+    transform: none;
+  }
+  43%,
+  58% {
+    transform: translate(13px, -13px);
+  }
+}

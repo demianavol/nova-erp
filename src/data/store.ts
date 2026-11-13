@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { z } from "zod";
+import { assertDepartmentAction, useAccessBoard } from "./access-board";
 import { seedData } from "./seed";
 import { enrichDemoWorkspace } from "./demo-activities";
 import { dashboardLayoutSchema, defaultDashboardLayout } from "./dashboard-layout";
@@ -101,12 +102,13 @@ type Store = {
   storageError: string | null;
   saveCustomer: (input: CustomerInput, id?: string) => string;
   saveOrder: (input: OrderInput, id?: string) => string;
+  approveOrder: (id: string, updatedAt: string) => void;
   saveDeal: (input: DealInput, id?: string) => string;
   moveDeal: (id: string, stage: Stage) => void;
   convertDeal: (id: string) => string;
   saveTask: (input: TaskInput, id?: string) => string;
   toggleTask: (id: string) => void;
-  readNotification: (id?: string) => void;
+  readNotification: (ids?: string | readonly string[]) => void;
   resetData: () => void;
   saveFinance: (input: FinancialSettings) => void;
 };
@@ -159,6 +161,7 @@ export const useERP = create<Store>((set, get) => {
     ...initial,
     storageError: initial.error,
     saveFinance(input) {
+      assertDepartmentAction("finance", "edit");
       const value = financialSettingsSchema.parse(input);
       mutate(
         (data) => {
@@ -173,6 +176,7 @@ export const useERP = create<Store>((set, get) => {
       );
     },
     saveCustomer(input, entityId) {
+      assertDepartmentAction("sales", "edit");
       const value = customerInputSchema.parse(input),
         id = entityId || uid("customer");
       mutate(
@@ -192,18 +196,23 @@ export const useERP = create<Store>((set, get) => {
       return id;
     },
     saveOrder(input, entityId) {
+      assertDepartmentAction("sales", "edit");
       const value = orderInputSchema.parse(input),
         id = entityId || uid("order");
       mutate(
         (data) => {
           const index = data.orders.findIndex((o) => o.id === id);
-          if (index >= 0)
+          if (index >= 0) {
+            const current = data.orders[index];
             data.orders[index] = {
-              ...data.orders[index],
+              ...current,
               ...value,
               updatedAt: new Date().toISOString(),
             };
-          else {
+            if (current.approval && JSON.stringify(orderInputSchema.parse(current)) !== JSON.stringify(value)) {
+              delete data.orders[index].approval;
+            }
+          } else {
             const next =
               Math.max(
                 10480,
@@ -228,7 +237,25 @@ export const useERP = create<Store>((set, get) => {
       );
       return id;
     },
+    approveOrder(id, updatedAt) {
+      assertDepartmentAction("sales", "approve");
+      const current = get().data.orders.find((order) => order.id === id);
+      if (!current || current.updatedAt !== updatedAt) throw new Error("Заказ изменился. Откройте его снова.");
+      if (current.approval) return;
+      const employeeId = useAccessBoard.getState().previewEmployeeId;
+      const by = employeeId
+        ? get().data.employees.find(({ id }) => id === employeeId)?.name
+        : usePreferences.getState().name;
+      if (!by) throw new Error("Сотрудник не найден.");
+      mutate(
+        (data) => {
+          data.orders.find((order) => order.id === id)!.approval = { by, at: new Date().toISOString() };
+        },
+        { title: `Заказ ${current.number} согласован`, entityId: id, route: `/erp/sales/orders?open=${id}`, type: "order" },
+      );
+    },
     saveDeal(input, entityId) {
+      assertDepartmentAction("sales", "edit");
       const value = dealInputSchema.parse(input),
         id = entityId || uid("deal");
       mutate(
@@ -254,6 +281,7 @@ export const useERP = create<Store>((set, get) => {
       get().saveDeal({ ...deal, stage }, id);
     },
     convertDeal(id) {
+      assertDepartmentAction("sales", "edit");
       const existing = get().data.deals.find((d) => d.id === id)?.orderId;
       if (existing) return existing;
       let result = "";
@@ -282,6 +310,9 @@ export const useERP = create<Store>((set, get) => {
     saveTask(input, entityId) {
       const value = taskInputSchema.parse(input),
         id = entityId || uid("task");
+      const existing = get().data.tasks.find((task) => task.id === id);
+      assertDepartmentAction(existing?.department ?? value.department, "edit");
+      assertDepartmentAction(value.department, "edit");
       mutate(
         (data) => {
           const index = data.tasks.findIndex((t) => t.id === id);
@@ -302,10 +333,11 @@ export const useERP = create<Store>((set, get) => {
       const task = get().data.tasks.find((t) => t.id === id);
       if (task) get().saveTask({ ...task, done: !task.done }, id);
     },
-    readNotification(id) {
+    readNotification(ids) {
+      const selected = typeof ids === "string" ? [ids] : ids;
       mutate((data) => {
         data.notifications = data.notifications.map((n) =>
-          !id || n.id === id ? { ...n, read: true } : n,
+          !selected || selected.includes(n.id) ? { ...n, read: true } : n,
         );
       });
     },
@@ -328,6 +360,7 @@ const preferencesSchema = z.object({
   name: z.string().trim().min(2).max(60),
   email: z.email(),
   role: z.string().min(2).max(80),
+  avatarSeed: z.string().min(1).max(100).optional(),
   assistantEmployeeId: z.string().min(1).optional(),
   welcomeHidden: z.boolean().default(false),
   promoHidden: z.boolean().default(false),
@@ -365,20 +398,25 @@ function loadPreferences(): Preferences {
 }
 export const usePreferences = create<
   Preferences & {
-    update: (value: Partial<z.input<typeof preferencesSchema>>) => void;
+    update: (value: Partial<z.input<typeof preferencesSchema>>) => boolean;
   }
 >((set, get) => ({
   ...loadPreferences(),
   update(value) {
     const next = preferencesSchema.parse({ ...get(), ...value });
     try {
-      browserStorage()?.setItem("nova-preferences", JSON.stringify(next));
+      const storage = browserStorage();
+      if (!storage) throw new Error("Browser storage unavailable");
+      storage.setItem("nova-preferences", JSON.stringify(next));
     } catch {
       useERP.setState({
         storageError:
           "Настройки не удалось сохранить. Хранилище браузера недоступно.",
       });
+      set(next);
+      return false;
     }
     set(next);
+    return true;
   },
 }));

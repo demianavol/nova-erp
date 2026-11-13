@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowUpRight, ChartNoAxesCombined, Settings2 } from "lucide-react";
 import { toast } from "sonner";
+import { SaveButton, useSaveAction } from "./ui/action-buttons";
 import { useERP } from "../data/store";
 import {
   channels,
@@ -149,6 +150,7 @@ export function FinanceSettingsDialog({
   onClose: () => void;
 }) {
   const { data, saveFinance } = useERP();
+  const save = useSaveAction();
   const form = useForm<FinancialSettings>({
     resolver: zodResolver(financialSettingsSchema),
     defaultValues: data.finance || defaultFinancialSettings,
@@ -166,9 +168,12 @@ export function FinanceSettingsDialog({
     >
       <form
         onSubmit={form.handleSubmit((input) => {
-          saveFinance(input);
-          toast.success("Финансовая модель обновлена");
-          onClose();
+          void save
+            .run(() => {
+              saveFinance(input);
+              toast.success("Финансовая модель обновлена");
+            }, onClose)
+            .catch(() => toast.error("Не удалось сохранить финансовую модель"));
         })}
       >
         <div className="dialog-body">
@@ -275,7 +280,7 @@ export function FinanceSettingsDialog({
           <Button type="button" variant="outline" onClick={onClose}>
             Отмена
           </Button>
-          <Button type="submit">Сохранить модель</Button>
+          <SaveButton status={save.status}>Сохранить модель</SaveButton>
         </div>
       </form>
     </Dialog>

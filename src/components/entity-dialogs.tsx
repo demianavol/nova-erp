@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { useState } from "react";
 import { EmployeeChip } from "./people";
+import { SaveButton, useSaveAction } from "./ui/action-buttons";
 import { StageMenu } from "./stage-menu";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -13,10 +14,16 @@ import {
   CircleCheck,
   Clock3,
   ShoppingBag,
-  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useWorkspace } from "../data/workspace";
+import {
+  departmentForPage,
+  useAccessBoard,
+  useDepartmentAction,
+} from "../data/access-board";
+import { erpPage, erpSections, salesPages } from "../data/erp-sections";
+import { canOpenErpPage } from "../data/erp-preview";
 import { useERP } from "../data/store";
 import {
   channels,
@@ -57,22 +64,27 @@ function SaveFooter({
   onClose,
   isNew,
   children,
+  readOnly = false,
+  status,
 }: {
+  status: ReturnType<typeof useSaveAction>["status"];
   onClose: () => void;
   isNew: boolean;
   children?: React.ReactNode;
+  readOnly?: boolean;
 }) {
   return (
     <div className="dialog-footer">
       <Button type="button" variant="outline" onClick={onClose}>
-        Отмена
+        {readOnly ? "Закрыть" : "Отмена"}
       </Button>
       <div className="flex flex-wrap gap-2">
         {children}
-        <Button type="submit">
-          <Check size={16} />
-          {isNew ? "Создать" : "Сохранить изменения"}
-        </Button>
+        {!readOnly && (
+          <SaveButton status={status}>
+            {isNew ? "Создать" : "Сохранить изменения"}
+          </SaveButton>
+        )}
       </div>
     </div>
   );
@@ -236,12 +248,15 @@ function History({ entityId }: { entityId: string }) {
 function CustomerForm({
   entity,
   close,
+  readOnly,
 }: {
   entity?: Customer;
   close: () => void;
+  readOnly: boolean;
 }) {
   const navigate = useNavigate();
   const { data, saveCustomer } = useERP();
+  const save = useSaveAction();
   const form = useForm<CustomerInput>({
     resolver: zodResolver(customerInputSchema),
     defaultValues: entity || {
@@ -256,21 +271,21 @@ function CustomerForm({
   });
   const orders = data.orders.filter((o) => o.customerId === entity?.id),
     deals = data.deals.filter((d) => d.customerId === entity?.id);
+  const Body = readOnly ? "fieldset" : "div";
   return (
     <form
       onSubmit={form.handleSubmit((value) => {
-        try {
+        void save.run(() => {
           saveCustomer(value, entity?.id);
           toast.success(
             entity ? "Данные клиента обновлены" : "Клиент добавлен",
           );
-          close();
-        } catch {
+        }, close).catch(() => {
           toast.error("Не удалось сохранить клиента. Проверьте данные.");
-        }
+        });
       })}
     >
-      <div className="dialog-body">
+      <Body className="dialog-body" disabled={readOnly || undefined}>
         {entity && (
           <div className="customer-summary">
             <Avatar name={entity.name} size="lg" />
@@ -385,8 +400,8 @@ function CustomerForm({
             )}
           </div>
         )}
-      </div>
-      <SaveFooter onClose={close} isNew={!entity} />
+      </Body>
+      <SaveFooter status={save.status} onClose={close} isNew={!entity} readOnly={readOnly} />
     </form>
   );
 }
@@ -395,14 +410,18 @@ function OrderForm({
   entity,
   close,
   presetCustomer,
+  readOnly,
 }: {
   entity?: Order;
   close: () => void;
   presetCustomer?: string;
+  readOnly: boolean;
 }) {
   const navigate = useNavigate();
-  const { data, saveOrder } = useERP();
+  const { data, saveOrder, approveOrder } = useERP();
+  const canApprove = useDepartmentAction("sales", "approve");
   const [submitted, setSubmitted] = useState(false);
+  const save = useSaveAction();
   const form = useForm<OrderInput>({
     resolver: zodResolver(orderInputSchema),
     defaultValues: entity || {
@@ -424,22 +443,28 @@ function OrderForm({
     },
   });
   const value = form.watch();
+  const Body = readOnly ? "fieldset" : "div";
+  const input = orderInputSchema.safeParse(value);
+  const saved =
+    entity &&
+    input.success &&
+    JSON.stringify(input.data) ===
+      JSON.stringify(orderInputSchema.parse(entity));
   return (
     <form
       onSubmit={(e) => {
         setSubmitted(true);
         void form.handleSubmit((input) => {
-          try {
+          void save.run(() => {
             saveOrder(input, entity?.id);
             toast.success(entity ? "Заказ обновлён" : "Заказ создан");
-            close();
-          } catch {
+          }, close).catch(() => {
             toast.error("Не удалось сохранить заказ. Проверьте данные.");
-          }
+          });
         })(e);
       }}
     >
-      <div className="dialog-body">
+      <Body className="dialog-body" disabled={readOnly || undefined}>
         <div className="order-summary">
           <div className="entity-icon">
             <Package size={25} />
@@ -590,8 +615,33 @@ function OrderForm({
             <History entityId={entity.id} />
           </>
         )}
-      </div>
-      <SaveFooter onClose={close} isNew={!entity} />
+        {entity?.approval && (
+          <p>
+            <Badge tone="green">Согласован</Badge> {entity.approval.by} ·{" "}
+            {dateLabel(entity.approval.at, true)}
+          </p>
+        )}
+      </Body>
+      <SaveFooter status={save.status} onClose={close} isNew={!entity} readOnly={readOnly}>
+        {entity && !entity.approval && canApprove && (
+          <Button
+            type="button"
+            variant="outline"
+            disabled={!saved}
+            title={!saved ? "Сначала сохраните изменения" : undefined}
+            onClick={() => {
+              try {
+                approveOrder(entity.id, entity.updatedAt);
+                toast.success("Заказ согласован");
+              } catch (error) {
+                toast.error((error as Error).message);
+              }
+            }}
+          >
+            Согласовать заказ
+          </Button>
+        )}
+      </SaveFooter>
     </form>
   );
 }
@@ -603,7 +653,9 @@ type DealPanelProps = {
 };
 function DealForm({ entity, close, initialStage }: DealPanelProps) {
   const { data, saveDeal } = useERP();
+  const preview = useAccessBoard((state) => !!state.previewEmployeeId);
   const [params] = useSearchParams();
+  const save = useSaveAction();
   const form = useForm<DealInput>({
     resolver: zodResolver(dealInputSchema),
     defaultValues: entity || {
@@ -628,16 +680,15 @@ function DealForm({ entity, close, initialStage }: DealPanelProps) {
   return (
     <form
       onSubmit={form.handleSubmit((value) => {
-        try {
+        void save.run(() => {
           const id = saveDeal(value, entity?.id);
           const project = params.get("project");
-          if (!entity && project)
+          if (!entity && !preview && project)
             useWorkspace.getState().attach(project, "dealIds", id);
           toast.success(entity ? "Сделка обновлена" : "Сделка создана");
-          close();
-        } catch {
+        }, close).catch(() => {
           toast.error("Не удалось сохранить сделку. Проверьте данные.");
-        }
+        });
       })}
     >
       <div className="dialog-body simplified-deal-editor">
@@ -729,15 +780,20 @@ function DealForm({ entity, close, initialStage }: DealPanelProps) {
           </div>
         </details>
       </div>
-      <SaveFooter onClose={close} isNew={!entity} />
+      <SaveFooter status={save.status} onClose={close} isNew={!entity} />
     </form>
   );
 }
-function DealPanel({ entity, close, initialStage }: DealPanelProps) {
+function DealPanel({
+  entity,
+  close,
+  initialStage,
+  readOnly,
+}: DealPanelProps & { readOnly: boolean }) {
   const [editing, setEditing] = useState(!entity);
   const { data, moveDeal, convertDeal } = useERP();
   const navigate = useNavigate();
-  if (!entity || editing)
+  if (!entity || (editing && !readOnly))
     return (
       <DealForm entity={entity} close={close} initialStage={initialStage} />
     );
@@ -774,16 +830,18 @@ function DealPanel({ entity, close, initialStage }: DealPanelProps) {
           <ArrowUpRight size={16} />
         </button>
         <div className="deal-quick-fields">
-          <Field label="Текущий этап">
-            <StageMenu
-              label="Текущий этап"
-              value={entity.stage}
-              onChange={(stage) => {
-                moveDeal(entity.id, stage);
-                toast.success("Этап сделки обновлён");
-              }}
-            />
-          </Field>
+          {!readOnly && (
+            <Field label="Текущий этап">
+              <StageMenu
+                label="Текущий этап"
+                value={entity.stage}
+                onChange={(stage) => {
+                  moveDeal(entity.id, stage);
+                  toast.success("Этап сделки обновлён");
+                }}
+              />
+            </Field>
+          )}
           <div className="deal-owner">
             <span>Ответственный</span>
             <EmployeeChip employee={employee} />
@@ -809,20 +867,22 @@ function DealPanel({ entity, close, initialStage }: DealPanelProps) {
                   : "Клиент и товары готовы для переноса в заказ."}
               </p>
             </div>
-            <Button
-              size="sm"
-              onClick={() => {
-                try {
-                  const orderId = entity.orderId || convertDeal(entity.id);
-                  navigate("/erp/sales/orders?open=" + orderId);
-                } catch (error) {
-                  toast.error((error as Error).message);
-                }
-              }}
-            >
-              {entity.orderId ? "Открыть заказ" : "Создать заказ"}
-              <ArrowUpRight size={14} />
-            </Button>
+            {(entity.orderId || !readOnly) && (
+              <Button
+                size="sm"
+                onClick={() => {
+                  try {
+                    const orderId = entity.orderId || convertDeal(entity.id);
+                    navigate("/erp/sales/orders?open=" + orderId);
+                  } catch (error) {
+                    toast.error((error as Error).message);
+                  }
+                }}
+              >
+                {entity.orderId ? "Открыть заказ" : "Создать заказ"}
+                <ArrowUpRight size={14} />
+              </Button>
+            )}
           </div>
         )}
         <details className="deal-advanced">
@@ -853,20 +913,33 @@ function DealPanel({ entity, close, initialStage }: DealPanelProps) {
         <Button variant="outline" onClick={close}>
           Закрыть
         </Button>
-        <Button onClick={() => setEditing(true)}>Редактировать сделку</Button>
+        {!readOnly && (
+          <Button onClick={() => setEditing(true)}>Редактировать сделку</Button>
+        )}
       </div>
     </>
   );
 }
 
-function TaskForm({ entity, close }: { entity?: Task; close: () => void }) {
+function TaskForm({
+  entity,
+  close,
+  scope,
+  readOnly,
+}: {
+  entity?: Task;
+  close: () => void;
+  scope?: Task["department"];
+  readOnly: boolean;
+}) {
   const { data, saveTask } = useERP();
   const [params] = useSearchParams();
-  const department = departments.includes(
-    params.get("department") as Task["department"],
-  )
-    ? (params.get("department") as Task["department"])
-    : "sales";
+  const department =
+    scope ??
+    (departments.includes(params.get("department") as Task["department"])
+      ? (params.get("department") as Task["department"])
+      : "sales");
+  const save = useSaveAction();
   const form = useForm<TaskInput>({
     resolver: zodResolver(taskInputSchema),
     defaultValues: entity || {
@@ -882,23 +955,23 @@ function TaskForm({ entity, close }: { entity?: Task; close: () => void }) {
       notes: "",
     },
   });
+  const Body = readOnly ? "fieldset" : "div";
   return (
     <form
       onSubmit={form.handleSubmit((value) => {
-        try {
+        void save.run(() => {
           const id = saveTask(value, entity?.id);
-          if (!entity && params.get("project"))
+          if (!entity && !scope && params.get("project"))
             useWorkspace
               .getState()
               .attach(params.get("project")!, "taskIds", id);
           toast.success(entity ? "Задача обновлена" : "Задача создана");
-          close();
-        } catch {
+        }, close).catch(() => {
           toast.error("Не удалось сохранить задачу");
-        }
+        });
       })}
     >
-      <div className="dialog-body">
+      <Body className="dialog-body" disabled={readOnly || undefined}>
         <Field
           label="Название задачи"
           error={form.formState.errors.title?.message}
@@ -917,7 +990,7 @@ function TaskForm({ entity, close }: { entity?: Task; close: () => void }) {
           </Field>
           <Field label="Отдел">
             <Select {...form.register("department")}>
-              {departments.map((d) => (
+              {(scope ? [scope] : departments).map((d) => (
                 <option key={d} value={d}>
                   {departmentNames[d]}
                 </option>
@@ -946,8 +1019,8 @@ function TaskForm({ entity, close }: { entity?: Task; close: () => void }) {
           Задача завершена
         </label>
         {entity && <History entityId={entity.id} />}
-      </div>
-      <SaveFooter onClose={close} isNew={!entity} />
+      </Body>
+      <SaveFooter status={save.status} onClose={close} isNew={!entity} readOnly={readOnly} />
     </form>
   );
 }
@@ -957,18 +1030,30 @@ export function EntityDialogs() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const data = useERP((s) => s.data);
-  const id = params.get("open"),
-    creating = params.get("create") === "1",
+  const preview = useAccessBoard((state) => !!state.previewEmployeeId);
+  const page = erpPage(location.pathname);
+  const department =
+    page &&
+    departments.find((id) => erpSections[id].to === departmentForPage(page).to);
+  const scope =
+    preview && (params.has("task") || params.get("newTask") === "1")
+      ? department
+      : undefined;
+  const canEdit = useDepartmentAction(department ?? "sales", "edit");
+  const id = params.get(scope ? "task" : "open"),
+    creating = params.get(scope ? "newTask" : "create") === "1",
     open = !!id || creating;
-  const type = location.pathname.includes("orders")
-    ? "order"
-    : location.pathname.includes("customers")
-      ? "customer"
-      : location.pathname.includes("pipeline")
-        ? "deal"
-        : location.pathname === "/erp/tasks"
-          ? "task"
-          : null;
+  const type = scope
+    ? "task"
+    : page === salesPages.orders
+      ? "order"
+      : page === salesPages.customers
+        ? "customer"
+        : page === salesPages.pipeline
+          ? "deal"
+          : page === erpSections.tasks
+            ? "task"
+            : null;
   const close = () => {
     const remaining = new URLSearchParams();
     for (const key of ["project", "view", "from", "to"])
@@ -978,7 +1063,7 @@ export function EntityDialogs() {
       { replace: true },
     );
   };
-  if (!open || !type) return null;
+  if (!canOpenErpPage(page) || !open || !type || (!id && !canEdit)) return null;
   const entity = id
     ? (type === "order"
         ? data.orders
@@ -986,7 +1071,7 @@ export function EntityDialogs() {
           ? data.customers
           : type === "deal"
             ? data.deals
-            : data.tasks
+            : data.tasks.filter((task) => !scope || task.department === scope)
       ).find((e) => e.id === id)
     : undefined;
   const title =
@@ -1032,18 +1117,21 @@ export function EntityDialogs() {
           entity={entity as Order | undefined}
           close={close}
           presetCustomer={params.get("customer") || undefined}
+          readOnly={!canEdit}
         />
       ) : type === "customer" ? (
         <CustomerForm
           key={id || "new-customer"}
           entity={entity as Customer | undefined}
           close={close}
+          readOnly={!canEdit}
         />
       ) : type === "deal" ? (
         <DealPanel
           key={id || "new-deal"}
           entity={entity as Deal | undefined}
           close={close}
+          readOnly={!canEdit}
           initialStage={
             stages.includes(params.get("initialStage") as Deal["stage"])
               ? (params.get("initialStage") as Deal["stage"])
@@ -1055,6 +1143,8 @@ export function EntityDialogs() {
           key={id || "new-task"}
           entity={entity as Task | undefined}
           close={close}
+          scope={scope}
+          readOnly={!canEdit}
         />
       )}
     </Dialog>

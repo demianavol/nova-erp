@@ -134,6 +134,7 @@ const orderSchema = orderInputSchema.safeExtend({
   createdAt: day,
   updatedAt: z.string(),
   dealId: z.string().optional(),
+  approval: z.object({ by: z.string(), at: z.iso.datetime() }).optional(),
 });
 export const dealInputSchema = z.object({
   title: z.string().trim().min(3, "Минимум 3 символа"),

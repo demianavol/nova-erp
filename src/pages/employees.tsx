@@ -12,6 +12,7 @@ import {
 import { company } from "../data/company";
 import { EmployeeTeam } from "../components/employee-team";
 import { guideTopics, type GuideTopic } from "../data/employee-guide";
+import { erpSections } from "../data/erp-sections";
 import {
   GuideVisual,
   GuideTopicIcon,
@@ -205,6 +206,22 @@ export function Employees() {
               )}
             </div>
             <GuideArticleContent topic={topic} />
+            {topic.id === "services" && (
+              <div className="erp-onboarding-actions">
+                <Link
+                  className="btn btn-outline"
+                  to={`${erpSections.handbook.to}#communication`}
+                >
+                  Каналы коммуникации
+                </Link>
+                <Link
+                  className="btn btn-outline"
+                  to={`${erpSections.learning.to}/lesson/services`}
+                >
+                  Урок о сервисах
+                </Link>
+              </div>
+            )}
             <nav
               className="eg-topic-pagination"
               aria-label="Переход между темами"

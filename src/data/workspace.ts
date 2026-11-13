@@ -10,6 +10,7 @@ const projectSchema = z.object({
   employeeIds: z.array(z.string()),
   taskIds: z.array(z.string()),
   dealIds: z.array(z.string()),
+  archived: z.boolean().optional(),
 });
 const workspaceSchema = z.object({
   projects: z.array(projectSchema),
@@ -103,6 +104,9 @@ export const useWorkspace = create<
   WorkspaceData & {
     selectProject: (id: string | null) => void;
     addProject: (name: string, employeeId: string) => string;
+    renameProject: (id: string, name: string) => void;
+    archiveProject: (id: string, archived: boolean) => void;
+    deleteProject: (id: string) => void;
     attach: (
       projectId: string,
       kind: "taskIds" | "dealIds",
@@ -120,7 +124,11 @@ export const useWorkspace = create<
     ...loadWorkspace(),
     selectProject: (id) =>
       update({
-        selectedProjectId: get().projects.some((p) => p.id === id) ? id : null,
+        selectedProjectId: get().projects.some(
+          (p) => p.id === id && !p.archived,
+        )
+          ? id
+          : null,
       }),
     addProject(name, employeeId) {
       if (!useERP.getState().data.employees.some((e) => e.id === employeeId))
@@ -138,7 +146,40 @@ export const useWorkspace = create<
       });
       return project.id;
     },
+    renameProject(id, name) {
+      update({
+        projects: get().projects.map((project) =>
+          project.id === id
+            ? projectSchema.parse({ ...project, name })
+            : project,
+        ),
+      });
+    },
+    archiveProject(id, archived) {
+      update({
+        projects: get().projects.map((project) =>
+          project.id === id ? { ...project, archived } : project,
+        ),
+        selectedProjectId:
+          archived && get().selectedProjectId === id
+            ? null
+            : get().selectedProjectId,
+      });
+    },
+    deleteProject(id) {
+      update({
+        projects: get().projects.filter((project) => project.id !== id),
+        selectedProjectId:
+          get().selectedProjectId === id ? null : get().selectedProjectId,
+      });
+    },
     attach(projectId, kind, id) {
+      if (
+        !get().projects.some(
+          (project) => project.id === projectId && !project.archived,
+        )
+      )
+        return;
       const data = useERP.getState().data;
       const member =
         kind === "taskIds"

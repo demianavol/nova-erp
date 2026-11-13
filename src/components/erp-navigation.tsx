@@ -1,6 +1,7 @@
 import { useState, type Ref } from "react";
 import { Link, NavLink, matchPath, useLocation } from "react-router-dom";
 import {
+  ArrowLeft,
   ChevronDown,
   FileText,
   GraduationCap,
@@ -11,38 +12,39 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Settings2,
+  Shield,
   UserRound,
   Users,
   X,
   type LucideIcon,
 } from "lucide-react";
-import { departmentNames } from "../data/schema";
+import { erpSections, salesPages, type ErpPage } from "../data/erp-sections";
+import { canOpenErpPage } from "../data/erp-preview";
 import { cn } from "../lib/utils";
 import { Button } from "./ui";
 
-type Page = { label: string; to: string };
 type Entry = { icon: LucideIcon } & (
-  | Page
+  | ErpPage
   | {
       id: "learning" | "departments";
       label: string;
-      pages: Page[];
+      pages: ErpPage[];
     }
 );
 
-const navigation: { title: string; entries: Entry[] }[] = [
+export const erpNavigation: { title: string; entries: Entry[] }[] = [
   {
     title: "Основное",
     entries: [
-      { label: "Главная", to: "/erp", icon: House },
+      { ...erpSections.home, icon: House },
       {
         id: "learning",
         label: "Обучение",
         icon: GraduationCap,
         pages: [
-          { label: "С чего начать", to: "/erp/learning/start" },
-          { label: "Учебный маршрут", to: "/erp/learning" },
-          { label: "Справочник сотрудника", to: "/erp/employees" },
+          erpSections.firstSteps,
+          erpSections.learning,
+          erpSections.handbook,
         ],
       },
       {
@@ -50,11 +52,11 @@ const navigation: { title: string; entries: Entry[] }[] = [
         label: "Отделы",
         icon: Layers3,
         pages: [
-          { label: "Продажи", to: "/erp/sales/orders" },
-          ...["marketing", "purchasing", "warehouse", "finance"].map((id) => ({
-            label: departmentNames[id],
-            to: `/erp/departments/${id}`,
-          })),
+          erpSections.sales,
+          erpSections.marketing,
+          erpSections.purchasing,
+          erpSections.warehouse,
+          erpSections.finance,
         ],
       },
     ],
@@ -62,64 +64,72 @@ const navigation: { title: string; entries: Entry[] }[] = [
   {
     title: "Команда",
     entries: [
-      { label: "Сотрудники", to: "/erp/departments/team", icon: Users },
-      { label: "Оргструктура", to: "/erp/org-structure", icon: Network },
-      { label: "Личный кабинет", to: "/erp/profile", icon: UserRound },
+      { ...erpSections.team, icon: Users },
+      { ...erpSections.orgStructure, icon: Network },
+      { ...erpSections.profile, icon: UserRound },
     ],
   },
   {
     title: "Работа",
     entries: [
-      { label: "Документы", to: "/erp/documents", icon: FileText },
-      { label: "Задачи", to: "/erp/tasks", icon: ListTodo },
+      { ...erpSections.documents, icon: FileText },
+      { ...erpSections.tasks, icon: ListTodo },
+      { ...erpSections.projects, icon: Layers3 },
     ],
   },
   {
     title: "Система",
-    entries: [{ label: "Настройки", to: "/erp/settings", icon: Settings2 }],
+    entries: [
+      { ...erpSections.settings, icon: Settings2 },
+      { ...erpSections.access, icon: Shield },
+    ],
   },
 ];
 
-const salesPages = [
-  { label: "Заказы", to: "/erp/sales/orders" },
-  { label: "Клиенты", to: "/erp/sales/customers" },
-  { label: "Воронка", to: "/erp/sales/pipeline" },
-  { label: "Аналитика", to: "/erp/sales/analytics" },
-  { label: "Уведомления", to: "/erp/sales/notifications" },
-];
-
-const workspacePages: Page[] = [
-  ...salesPages,
-  { label: "Проекты", to: "/erp/tasks/projects" },
-  ...navigation.flatMap(({ entries }) =>
-    entries.flatMap((entry) => ("pages" in entry ? entry.pages : [entry])),
-  ),
-];
-
-function pageIsActive(page: Page, pathname: string) {
-  if (page.to === "/erp/sales/orders")
+function pageIsActive(page: ErpPage, pathname: string) {
+  if (page.to === erpSections.sales.to)
     return Boolean(matchPath("/erp/sales/*", pathname));
-  if (page.to === "/erp/tasks")
-    return Boolean(matchPath("/erp/tasks/*", pathname));
   if (
-    page.to === "/erp/learning" &&
+    page.to === erpSections.learning.to &&
     matchPath("/erp/learning/lesson/:lessonId", pathname)
   )
     return true;
   return Boolean(matchPath(page.to, pathname));
 }
 
-export function erpPage(pathname: string) {
-  const path = matchPath("/erp/learning/lesson/:lessonId", pathname)
-    ? "/erp/learning"
-    : pathname;
-  return workspacePages.find(({ to }) => matchPath(to, path));
+function statusLabel(ready: boolean) {
+  return ready ? "Готово" : "В разработке";
+}
+
+export function ErpSectionStatus({ ready }: { ready: boolean }) {
+  return (
+    <span className="erp-section-status" data-ready={ready}>
+      {statusLabel(ready)}
+    </span>
+  );
+}
+
+export function ErpSectionPlaceholder({ page }: { page: ErpPage }) {
+  return (
+    <section
+      className="card erp-section-placeholder"
+      aria-labelledby="erp-section-title"
+    >
+      <h1 className="erp-page-title" id="erp-section-title">
+        {page.label}
+      </h1>
+      <ErpSectionStatus ready={page.ready} />
+      <Link className="btn btn-outline" to={erpSections.home.to}>
+        <ArrowLeft size={16} aria-hidden="true" /> На главную
+      </Link>
+    </section>
+  );
 }
 
 export function SalesNavigation() {
   return (
     <nav className="erp-sales-tabs" aria-label="Разделы продаж">
-      {salesPages.map(({ to, label }) => (
+      {Object.values(salesPages).map(({ to, label }) => (
         <NavLink to={to} key={to} end>
           {label}
         </NavLink>
@@ -195,7 +205,7 @@ export function ErpNavigation({
         </Button>
       </div>
       <nav id="erp-sections" className="erp-sections" aria-label="Разделы ERP">
-        {navigation.map(({ title, entries }, index) => (
+        {erpNavigation.map(({ title, entries }, index) => (
           <section
             className="erp-nav-group"
             key={title}
@@ -213,11 +223,16 @@ export function ErpNavigation({
                       <Link
                         to={entry.to}
                         className="erp-nav-item"
-                        title={collapsed ? entry.label : undefined}
+                        title={
+                          collapsed
+                            ? `${entry.label} · ${statusLabel(entry.ready)}`
+                            : undefined
+                        }
                         aria-current={active ? "page" : undefined}
                       >
                         <entry.icon size={18} aria-hidden="true" />
                         <span className="erp-nav-label">{entry.label}</span>
+                        <ErpSectionStatus ready={entry.ready} />
                       </Link>
                     </li>
                   );
@@ -268,14 +283,20 @@ export function ErpNavigation({
                           {pages.map((page) => (
                             <li key={page.to}>
                               <Link
-                                to={page.to}
+                                to={
+                                  page === erpSections.sales &&
+                                  canOpenErpPage(page)
+                                    ? salesPages.orders.to
+                                    : page.to
+                                }
                                 aria-current={
                                   pageIsActive(page, location.pathname)
                                     ? "page"
                                     : undefined
                                 }
                               >
-                                {page.label}
+                                <span>{page.label}</span>
+                                <ErpSectionStatus ready={page.ready} />
                               </Link>
                             </li>
                           ))}

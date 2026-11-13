@@ -10,10 +10,12 @@ import {
   type AssistantReply,
 } from "../data/erp-assistant";
 import type { Task } from "../data/schema";
+import { erpAssistantAvailable } from "../data/erp-sections";
 import { useERP, usePreferences } from "../data/store";
 import { defaultTaskFilters, filterTasks, taskStatus } from "../data/tasks";
 import { dateLabel, today } from "../lib/utils";
 import { Button, Dialog, Field, Select, Textarea } from "./ui";
+import { ThoughtLine } from "./ui/thought-line";
 import "../erp-assistant.css";
 
 const suggestions = [
@@ -28,7 +30,36 @@ type Turn = { question: string } & (
   | { kind: "tasks"; answer: string; tasks: TaskSummary[] }
 );
 
+const assistantTrigger = (
+  <Button
+    variant="outline"
+    className="erp-assistant-trigger"
+    aria-label="Спросить ИИ"
+    title="Спросить ИИ"
+  >
+    <Sparkles size={17} aria-hidden="true" />
+    <span>Спросить ИИ</span>
+  </Button>
+);
+
 export function ErpAssistant() {
+  const [open, setOpen] = useState(false);
+  return erpAssistantAvailable ? (
+    <AssistantChat />
+  ) : (
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+      title="ИИ-помощник"
+      description="В разработке"
+      trigger={assistantTrigger}
+    >
+      {null}
+    </Dialog>
+  );
+}
+
+function AssistantChat() {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -146,17 +177,7 @@ export function ErpAssistant() {
       title="ИИ-помощник"
       description="Ваши задачи и справочник сотрудника"
       className="erp-assistant-dialog"
-      trigger={
-        <Button
-          variant="outline"
-          className="erp-assistant-trigger"
-          aria-label="Спросить ИИ"
-          title="Спросить ИИ"
-        >
-          <Sparkles size={17} aria-hidden="true" />
-          <span>Спросить ИИ</span>
-        </Button>
-      }
+      trigger={assistantTrigger}
     >
       {showTaskScope && (
         <Field className="erp-assistant-task-scope" label="Задачи сотрудника">
@@ -265,7 +286,7 @@ export function ErpAssistant() {
               <span className="sr-only">Вы. </span>
               {pendingQuestion}
             </p>
-            <p className="erp-assistant-pending">Готовлю ответ…</p>
+            <ThoughtLine label="Готовлю ответ…" />
           </div>
         )}
       </div>

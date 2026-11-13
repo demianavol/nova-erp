@@ -11,7 +11,8 @@ import {
   Star,
   X,
 } from "lucide-react";
-import { erpPage } from "../components/erp-navigation";
+import { erpPage, erpSections } from "../data/erp-sections";
+import { localPreview } from "../data/erp-preview";
 import { DashboardWidgetActions } from "../components/dashboard-widgets";
 import {
   Avatar,
@@ -25,13 +26,15 @@ import { useErpActivity } from "../data/erp-activity";
 import { company } from "../data/company";
 import { useERP, usePreferences } from "../data/store";
 import { HomeDashboard } from "./dashboard";
+import { ErpSectionMap } from "./erp-section-map";
 import { lessonIds, readLearningProgress } from "../data/learning-progress";
 
-type Shortcut = NonNullable<ReturnType<typeof erpPage>>;
+type Shortcut = Pick<NonNullable<ReturnType<typeof erpPage>>, "to" | "label">;
 const starterLinks: Shortcut[] = [
   { to: "/erp/tasks", label: "Задачи" },
   { to: "/erp/sales/orders", label: "Заказы" },
   { to: "/erp/employees", label: "Справочник сотрудника" },
+  erpSections.access,
 ];
 
 function ShortcutList({ links }: { links: Shortcut[] }) {
@@ -186,6 +189,10 @@ function LearningWidget() {
 }
 
 export function ErpHome() {
+  return localPreview ? <ErpDashboardHome /> : <ErpSectionMap />;
+}
+
+function ErpDashboardHome() {
   const { name, role, welcomeHidden, update } = usePreferences();
   const activity = useErpActivity((state) => state.activity);
   const visited = activity.flatMap(({ path, visits }) => {
@@ -277,16 +284,17 @@ export function ErpHome() {
                 <h2 id="erp-home-profile-title">Мой профиль</h2>
                 <DashboardWidgetActions />
               </div>
-              <div className="erp-home-profile">
-                <Avatar name={name} size="lg" />
-                <div>
+              <Link
+                className="erp-home-profile"
+                to={erpSections.profile.to}
+                aria-label={`Личный кабинет: ${name}`}
+              >
+                <Avatar name={name} />
+                <span className="erp-home-profile-copy">
                   <strong>{name}</strong>
-                  <p>{role}</p>
-                </div>
-              </div>
-              <Link className="erp-home-text-link" to="/erp/profile">
-                Открыть личный кабинет{" "}
-                <ArrowRight size={15} aria-hidden="true" />
+                  <span>{role}</span>
+                </span>
+                <ChevronRight size={15} aria-hidden="true" />
               </Link>
             </section>
           ),

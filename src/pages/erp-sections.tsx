@@ -1,117 +1,101 @@
-import { ArrowRight } from "lucide-react";
-import { lazy, Suspense, useState } from "react";
-import { Link } from "react-router-dom";
-import { company } from "../data/company";
+import { ArrowLeft, BookOpen, FileText } from "lucide-react";
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { erpSections } from "../data/erp-sections";
+import { ErpDepartmentGrid } from "../components/erp-department-grid";
+import "./erp-directory.css";
 
-const firstSteps = [
+const documentGroups = [
   {
-    title: "Пройдите вводное обучение",
-    description:
-      "Узнайте, чем занимается компания, как проходит адаптация и где обсуждают рабочие вопросы.",
-    to: "/erp/learning",
+    title: "Регламенты",
+    description: "Правила общения, звонков и рабочих процессов",
+    topics: [
+      ["Правила коммуникации", "rules"],
+      ["Тон общения и звонки", "calls"],
+      ["Как проходит спринт", "process"],
+    ],
   },
   {
-    title: "Познакомьтесь с командой",
-    description:
-      "Посмотрите, за что отвечают отделы, и уточните у руководителя, к кому обращаться по вашей роли.",
-    to: "/erp/org-structure",
+    title: "Брендбук",
+    description: "Логотипы, цвета, шрифты и принципы визуальной подачи",
+    topics: [],
   },
   {
-    title: "Откройте рабочие задачи",
+    title: "Шаблоны",
     description:
-      "Проверьте список задач и уточните с руководителем, с какой начать и какие доступы понадобятся.",
-    to: "/erp/tasks",
+      "Готовые формы для повторяющихся задач, от чек-листов до договоров",
+    topics: [],
   },
-];
+] as const;
 
-export function FirstSteps() {
+function BackToStart() {
   return (
-    <section
-      className="erp-learning-page"
-      aria-labelledby="erp-first-steps-title"
-    >
-      <h1 id="erp-first-steps-title" className="erp-page-title">
-        С чего начать
-      </h1>
-      <p className="erp-learning-intro">
-        Три шага, чтобы освоиться в рабочем пространстве.
-      </p>
-      <ol className="erp-learning-list">
-        {firstSteps.map(({ title, description, to }, index) => (
-          <li key={to}>
-            <Link className="card erp-learning-row" to={to}>
-              <span className="erp-learning-number" aria-hidden="true">
-                {index + 1}
-              </span>
-              <span>
-                <strong>{title}</strong>
-                <small>{description}</small>
-              </span>
-              <ArrowRight size={17} aria-hidden="true" />
-            </Link>
-          </li>
-        ))}
-      </ol>
-    </section>
+    <Link className="erp-directory-back" to={erpSections.firstSteps.to}>
+      <ArrowLeft size={15} aria-hidden="true" /> С чего начать
+    </Link>
   );
 }
 
 export function Documents() {
   return (
-    <>
-      <h1 className="erp-page-title">Документы</h1>
-      <p className="card erp-empty-documents">Документов пока нет</p>
-    </>
-  );
-}
-
-const offices = [
-  { group: "front", label: "Фронт-офис" },
-  { group: "back", label: "Бэк-офис" },
-] as const;
-const OrgMap = lazy(() =>
-  import("./employees").then((module) => ({ default: module.OrgMap })),
-);
-
-export function OrgStructure() {
-  const [mapOpened, setMapOpened] = useState(false);
-  return (
-    <>
-      <h1 className="erp-page-title">Оргструктура</h1>
-      <div className="erp-org-structure">
-        {offices.map(({ group, label }) => (
-          <section
-            className="card erp-org-office"
-            key={group}
-            aria-labelledby={`erp-office-${group}`}
-          >
-            <h2 id={`erp-office-${group}`}>{label}</h2>
-            <ul>
-              {company.departments
-                .filter((department) => department.group === group)
-                .map((department) => (
-                  <li key={department.id}>
-                    <h3>{department.title}</h3>
-                    <p>{department.description}</p>
+    <section className="erp-directory" aria-labelledby="erp-documents-title">
+      <BackToStart />
+      <header>
+        <h1 id="erp-documents-title">Документы</h1>
+        <p>Внутренние регламенты, брендбук и шаблоны.</p>
+      </header>
+      <div className="erp-directory-documents">
+        {documentGroups.map(({ title, description, topics }) => (
+          <section key={title} className="erp-directory-document">
+            <h2>
+              <FileText size={17} aria-hidden="true" /> {title}
+            </h2>
+            <p>{description}</p>
+            {topics.length ? (
+              <ul>
+                {topics.map(([label, topic]) => (
+                  <li key={topic}>
+                    <Link to={`${erpSections.handbook.to}#${topic}`}>
+                      {label}
+                    </Link>
                   </li>
                 ))}
-            </ul>
+              </ul>
+            ) : (
+              <p className="erp-directory-document-empty">
+                Файлы пока не добавлены
+              </p>
+            )}
           </section>
         ))}
       </div>
-      <details
-        className="erp-org-map"
-        onToggle={(event) => {
-          if (event.currentTarget.open) setMapOpened(true);
-        }}
-      >
-        <summary>Схема взаимодействия отделов</summary>
-        {mapOpened && (
-          <Suspense fallback={<p role="status">Загрузка схемы…</p>}>
-            <OrgMap />
-          </Suspense>
-        )}
-      </details>
-    </>
+    </section>
+  );
+}
+
+export function DepartmentDirectory() {
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (!hash.startsWith("#department-")) return;
+    const frame = window.requestAnimationFrame(() => {
+      const target = document.getElementById(hash.slice(1));
+      target?.focus({ preventScroll: true });
+      target?.scrollIntoView({ block: "nearest" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [hash]);
+
+  return (
+    <section className="erp-directory" aria-labelledby="erp-departments-title">
+      <BackToStart />
+      <header>
+        <h1 id="erp-departments-title">Направления и отделы</h1>
+        <p>Чем занимаются команды Young Unicorn.</p>
+      </header>
+      <ErpDepartmentGrid detailed />
+      <Link className="erp-directory-back" to={erpSections.orgStructure.to}>
+        <BookOpen size={15} aria-hidden="true" /> Открыть оргструктуру
+      </Link>
+    </section>
   );
 }

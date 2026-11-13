@@ -1,0 +1,123 @@
+.erp-department-grid {
+  --department-icon-size: 28px;
+  --department-surface: color-mix(
+    in srgb,
+    var(--card) 64%,
+    var(--erp-selection)
+  );
+  --department-edge: color-mix(
+    in srgb,
+    var(--border) 86%,
+    var(--erp-nav-accent)
+  );
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 104px), 1fr));
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-erp-theme="dark"] .erp-department-grid {
+  --department-surface: #2b2935;
+}
+
+.erp-department-grid[data-detailed="true"] {
+  --department-icon-size: 34px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+}
+
+.erp-department-grid :is(a, .erp-department-description-card) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 100%;
+  min-height: 41px;
+  padding: 7px 8px;
+  border: 1px solid var(--department-edge);
+  border-radius: 8px;
+  background: var(--department-surface);
+  box-shadow: 0 1px 2px #100b2212;
+  color: var(--foreground);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.erp-department-grid a:is(:hover, :focus-visible) {
+  border-color: color-mix(
+    in srgb,
+    var(--department-edge) 58%,
+    var(--erp-nav-accent)
+  );
+  background: color-mix(
+    in srgb,
+    var(--department-surface) 92%,
+    var(--erp-nav-accent)
+  );
+}
+
+.erp-department-grid a:focus-visible {
+  outline: 2px solid var(--erp-nav-accent);
+  outline-offset: 2px;
+}
+
+.erp-department-grid .erp-start-emoji {
+  --emoji-size: var(--department-icon-size);
+}
+
+.erp-department-fallback {
+  display: block;
+  flex: none;
+  width: var(--department-icon-size);
+  height: var(--department-icon-size);
+  color: var(--erp-nav-accent);
+}
+
+.erp-department-grid strong,
+.erp-department-grid small {
+  display: block;
+}
+
+@container erp-start (min-width: 370px) and (max-width: 1040px) {
+  .erp-department-grid[data-detailed="false"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.erp-department-grid[data-detailed="true"]
+  :is(a, .erp-department-description-card) {
+  gap: 10px;
+  min-height: 74px;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.erp-department-grid li[id] {
+  scroll-margin-block: 84px 16px;
+}
+
+.erp-department-grid li:focus-visible {
+  outline: 2px solid var(--erp-nav-accent);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+@container erp-start (max-width: 425px) {
+  .erp-department-grid[data-detailed="false"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .erp-department-grid[data-detailed="false"] a {
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    padding-inline: 4px;
+    text-align: center;
+  }
+}
+
+.erp-department-grid small {
+  margin-top: 3px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+}

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
 import { useAuth } from "../data/erp-session";
+import { useAccessBoard } from "../data/access-board";
 import { salesNotificationLimits } from "../data/sales-notification";
 import {
   Button,
@@ -12,6 +13,7 @@ import {
 } from "../components/ui";
 
 export function SalesNotifications() {
+  const preview = useAccessBoard((state) => !!state.previewEmployeeId);
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
@@ -58,7 +60,7 @@ export function SalesNotifications() {
           title="Telegram"
           description="Получатель — тема «Отдел продаж»."
         />
-        {import.meta.env.VITE_SALES_TELEGRAM_PILOT ? (
+        {import.meta.env.VITE_SALES_TELEGRAM_PILOT && !preview ? (
           <form className="sales-notification-form" onSubmit={sendNotification}>
             <Field label="Заголовок (необязательно)">
               <Input

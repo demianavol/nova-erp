@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useERP } from "../data/store";
+import { useDepartmentAction } from "../data/access-board";
 import { EmployeeChip } from "../components/people";
 import { StageMenu } from "../components/stage-menu";
 import { stageNames, stages, type Stage } from "../data/schema";
@@ -27,6 +28,7 @@ import {
 } from "../components/ui";
 
 export function Pipeline() {
+  const canEdit = useDepartmentAction("sales", "edit");
   const { data, moveDeal } = useERP(),
     navigate = useNavigate();
   const [params, setParams] = useSearchParams();
@@ -47,6 +49,7 @@ export function Pipeline() {
     (d) => d.stage !== "won" && d.stage !== "lost",
   );
   const move = (id: string, stage: Stage) => {
+    if (!canEdit) return;
     moveDeal(id, stage);
     toast.success(`Сделка перемещена: ${stageNames[stage]}`);
     setDragging(null);
@@ -59,10 +62,12 @@ export function Pipeline() {
         title="Воронка продаж"
         description="Каждый контакт — возможность. Помогите ей стать результатом."
         actions={
-          <Button onClick={() => navigate("/erp/sales/pipeline?create=1")}>
-            <Plus size={17} />
-            Новая сделка
-          </Button>
+          canEdit && (
+            <Button onClick={() => navigate("/erp/sales/pipeline?create=1")}>
+              <Plus size={17} />
+              Новая сделка
+            </Button>
+          )
         }
       />
       <div className="pipeline-overview">
@@ -149,16 +154,20 @@ export function Pipeline() {
                     {stageNames[stage]}
                     <small>{column.length}</small>
                   </h2>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={`Создать сделку: ${stageNames[stage]}`}
-                    onClick={() =>
-                      navigate(`/erp/sales/pipeline?create=1&initialStage=${stage}`)
-                    }
-                  >
-                    <Plus size={16} />
-                  </Button>
+                  {canEdit && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={`Создать сделку: ${stageNames[stage]}`}
+                      onClick={() =>
+                        navigate(
+                          `/erp/sales/pipeline?create=1&initialStage=${stage}`,
+                        )
+                      }
+                    >
+                      <Plus size={16} />
+                    </Button>
+                  )}
                 </div>
                 <p className="column-total">
                   {money(column.reduce((s, d) => s + dealValue(d), 0))}
@@ -174,7 +183,7 @@ export function Pipeline() {
                     return (
                       <article
                         key={deal.id}
-                        draggable
+                        draggable={canEdit}
                         onDragStart={(e) => {
                           e.dataTransfer.setData("text/plain", deal.id);
                           e.dataTransfer.effectAllowed = "move";
@@ -191,7 +200,7 @@ export function Pipeline() {
                       >
                         <div className="deal-card-top">
                           <Badge>{deal.channel}</Badge>
-                          <GripVertical size={15} />
+                          {canEdit && <GripVertical size={15} />}
                         </div>
                         <button
                           className="deal-title"
@@ -219,13 +228,15 @@ export function Pipeline() {
                           </span>
                           <EmployeeChip employee={employee} compact />
                         </div>
-                        <StageMenu
-                          compact
-                          label={`Этап сделки ${deal.title}`}
-                          value={deal.stage}
-                          onChange={(stage) => move(deal.id, stage)}
-                        />
-                        {stage === "won" && (
+                        {canEdit && (
+                          <StageMenu
+                            compact
+                            label={`Этап сделки ${deal.title}`}
+                            value={deal.stage}
+                            onChange={(stage) => move(deal.id, stage)}
+                          />
+                        )}
+                        {stage === "won" && (canEdit || deal.orderId) && (
                           <button
                             className="deal-order-link"
                             onClick={() =>

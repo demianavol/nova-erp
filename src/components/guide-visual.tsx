@@ -283,7 +283,6 @@ export function GuideVisual({ id }: { id: string }) {
         <>
           <figcaption>
             <strong>Инструменты по задачам</strong>
-            <span>Рабочая среда команды</span>
           </figcaption>
           <div className="eg-tool-map">
             {[
@@ -294,6 +293,12 @@ export function GuideVisual({ id }: { id: string }) {
                 note: "Задачи и знания",
               },
               {
+                title: "Общаться",
+                icon: MessageCircle,
+                tools: ["Telegram", "Контур.Толк"],
+                note: "Чаты, звонки и встречи",
+              },
+              {
                 title: "Создать",
                 icon: Palette,
                 tools: ["Figma", "Miro"],
@@ -302,7 +307,7 @@ export function GuideVisual({ id }: { id: string }) {
               {
                 title: "Найти идею",
                 icon: Sparkles,
-                tools: ["ChatGPT", "Nano Banana"],
+                tools: ["ChatGPT", "Nano Banana", "Claude"],
                 note: "Тексты и изображения",
               },
               {

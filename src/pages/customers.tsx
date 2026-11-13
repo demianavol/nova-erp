@@ -12,6 +12,7 @@ import {
   Building2,
 } from "lucide-react";
 import { useERP } from "../data/store";
+import { useDepartmentAction } from "../data/access-board";
 import { isRevenue, orderTotal } from "../data/selectors";
 import { money, cn } from "../lib/utils";
 import {
@@ -25,6 +26,7 @@ import {
 } from "../components/ui";
 
 export function Customers() {
+  const canEdit = useDepartmentAction("sales", "edit");
   const data = useERP((s) => s.data),
     navigate = useNavigate();
   const [search, setSearch] = useState(""),
@@ -48,10 +50,12 @@ export function Customers() {
         title="Клиенты"
         description="Люди и компании, с которыми растёт ваш бизнес."
         actions={
-          <Button onClick={() => navigate("/erp/sales/customers?create=1")}>
-            <Plus size={17} />
-            Добавить клиента
-          </Button>
+          canEdit && (
+            <Button onClick={() => navigate("/erp/sales/customers?create=1")}>
+              <Plus size={17} />
+              Добавить клиента
+            </Button>
+          )
         }
       />
       <div className="customer-stat-grid">
@@ -155,7 +159,9 @@ export function Customers() {
                 return (
                   <tr
                     key={c.id}
-                    onClick={() => navigate(`/erp/sales/customers?open=${c.id}`)}
+                    onClick={() =>
+                      navigate(`/erp/sales/customers?open=${c.id}`)
+                    }
                   >
                     <td>
                       <button

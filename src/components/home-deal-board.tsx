@@ -102,10 +102,12 @@ export function HomeDealBoard({
                   label: "Все проекты",
                   onClick: () => workspace.selectProject(null),
                 },
-                ...workspace.projects.map(({ id, name }) => ({
-                  label: name,
-                  onClick: () => workspace.selectProject(id),
-                })),
+                ...workspace.projects
+                  .filter((item) => !item.archived)
+                  .map(({ id, name }) => ({
+                    label: name,
+                    onClick: () => workspace.selectProject(id),
+                  })),
               ]}
             />
           )}

@@ -1,0 +1,87 @@
+.erp-directory {
+  max-width: 1000px;
+  padding-bottom: 24px;
+}
+
+.erp-directory-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  color: var(--erp-nav-accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.erp-directory-back:hover,
+.erp-directory-document a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.erp-directory header {
+  margin: 10px 0 20px;
+}
+
+.erp-directory h1 {
+  margin: 0 0 5px;
+  font-size: clamp(23px, 3vw, 30px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.erp-directory p {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 13px;
+}
+
+.erp-directory .erp-department-grid + .erp-directory-back {
+  margin-top: 12px;
+}
+
+.erp-directory-documents {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 10px;
+}
+
+.erp-directory-document {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+}
+
+.erp-directory-document h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 5px;
+  font-size: 15px;
+}
+
+.erp-directory-document svg,
+.erp-directory-document a {
+  color: var(--erp-nav-accent);
+}
+
+.erp-directory-document ul {
+  display: grid;
+  gap: 5px;
+  margin: 9px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.erp-directory-document a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: 13px;
+}
+
+.erp-directory-document .erp-directory-document-empty {
+  margin-top: 9px;
+  font-size: 12px;
+}

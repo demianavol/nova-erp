@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useERP } from "../data/store";
+import { useDepartmentAction } from "../data/access-board";
 import { channels, paymentNames, shippingNames } from "../data/schema";
 import {
   emptyOrderFilters,
@@ -36,6 +37,7 @@ import {
 } from "../components/ui";
 
 export function Orders() {
+  const canEdit = useDepartmentAction("sales", "edit");
   const navigate = useNavigate();
   const data = useERP((s) => s.data);
   const [params] = useSearchParams();
@@ -109,10 +111,12 @@ export function Orders() {
               <Download size={16} />
               Экспорт CSV
             </Button>
-            <Button onClick={() => openOrder("create", "1")}>
-              <Plus size={17} />
-              Новый заказ
-            </Button>
+            {canEdit && (
+              <Button onClick={() => openOrder("create", "1")}>
+                <Plus size={17} />
+                Новый заказ
+              </Button>
+            )}
           </>
         }
       />
@@ -312,10 +316,7 @@ export function Orders() {
                   )!,
                   employee = data.employees.find((e) => e.id === o.managerId)!;
                 return (
-                  <tr
-                    key={o.id}
-                    onClick={() => openOrder("open", o.id)}
-                  >
+                  <tr key={o.id} onClick={() => openOrder("open", o.id)}>
                     <td>
                       <button
                         className="table-order-button"

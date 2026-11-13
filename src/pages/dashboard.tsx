@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAccessBoard, useDepartmentAction } from "../data/access-board";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -49,11 +50,22 @@ import { ActivityFeed } from "../components/activity-feed";
 import { WorkspacePulse } from "../components/workspace-pulse";
 import { useWorkspace, projectTasks } from "../data/workspace";
 import { HomeDealBoard } from "../components/home-deal-board";
+import { RubberSegment } from "../components/ui/rubber-segment";
 import {
   DashboardWidgetActions,
   DashboardWidgets,
   type WidgetContent,
 } from "../components/dashboard-widgets";
+
+const presets = ["7", "30", "90"] as const;
+const periodOptions = [
+  ...presets.map((days) => ({ value: days, label: `${days} дней` })),
+  {
+    value: "custom" as const,
+    label: "Выбрать произвольный период",
+    icon: <CalendarDays size={15} aria-hidden="true" />,
+  },
+];
 
 export function PeriodPicker({
   period,
@@ -64,38 +76,26 @@ export function PeriodPicker({
 }) {
   const [custom, setCustom] = useState(false),
     [draft, setDraft] = useState(period);
+  const anchor = today();
+  const preset = presets.find(
+    (days) => period.to === anchor && period.from === periodFor(Number(days), anchor).from,
+  );
   return (
     <div className="period-control">
-      <div className="period-tabs">
-        {[7, 30, 90].map((days) => (
-          <button
-            key={days}
-            className={cn(
-              !custom &&
-                period.from === periodFor(days).from &&
-                period.to === today() &&
-                "active",
-            )}
-            onClick={() => {
-              setCustom(false);
-              onChange(periodFor(days));
-            }}
-          >
-            {days} дней
-          </button>
-        ))}
-        <button
-          className={cn(custom && "active")}
-          aria-label="Выбрать произвольный период"
-          title="Свой период"
-          onClick={() => {
+      <RubberSegment
+        label="Период отчёта"
+        items={periodOptions}
+        value={custom ? "custom" : preset ?? "custom"}
+        onChange={(value) => {
+          if (value === "custom") {
             setDraft(period);
             setCustom(!custom);
-          }}
-        >
-          <CalendarDays size={15} />
-        </button>
-      </div>
+          } else {
+            setCustom(false);
+            onChange(periodFor(Number(value), anchor));
+          }
+        }}
+      />
       {custom && (
         <div className="custom-period">
           <Field label="С">
@@ -130,6 +130,9 @@ export function PeriodPicker({
 
 export function TaskRow({ task }: { task: Task }) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const preview = useAccessBoard((state) => !!state.previewEmployeeId);
+  const canEdit = useDepartmentAction(task.department, "edit");
   const { data, toggleTask } = useERP();
   const employee = data.employees.find((e) => e.id === task.employeeId)!;
   const overdue = !task.done && task.dueAt < today();
@@ -137,6 +140,7 @@ export function TaskRow({ task }: { task: Task }) {
     <div className={cn("task-row", task.done && "task-completed")}>
       <button
         className="task-check"
+        disabled={!canEdit}
         aria-label={
           task.done ? `Возобновить: ${task.title}` : `Завершить: ${task.title}`
         }
@@ -152,7 +156,13 @@ export function TaskRow({ task }: { task: Task }) {
       </button>
       <button
         className="task-row-text"
-        onClick={() => navigate(`/erp/tasks?open=${task.id}`)}
+        onClick={() =>
+          navigate(
+            preview
+              ? `${pathname}?task=${encodeURIComponent(task.id)}`
+              : `/erp/tasks?open=${task.id}`,
+          )
+        }
       >
         <strong>{task.title}</strong>
         <span>
@@ -341,6 +351,8 @@ export function HomeDashboard({
 }
 
 export function Dashboard() {
+  const canEdit = useDepartmentAction("sales", "edit");
+  const preview = useAccessBoard((state) => !!state.previewEmployeeId);
   const navigate = useNavigate();
   const data = useERP((s) => s.data);
   const [period, setPeriod] = useState<Period>(periodFor(30));
@@ -383,14 +395,18 @@ export function Dashboard() {
         description="Вся картина продаж. От первого контакта до повторной покупки."
         actions={
           <>
-            <Button variant="outline" onClick={() => navigate("/erp/tasks")}>
-              <CalendarDays size={16} />
-              Задачи команды
-            </Button>
-            <Button onClick={() => navigate("/erp/sales/orders?create=1")}>
-              <Plus size={17} />
-              Новый заказ
-            </Button>
+            {!preview && (
+              <Button variant="outline" onClick={() => navigate("/erp/tasks")}>
+                <CalendarDays size={16} />
+                Задачи команды
+              </Button>
+            )}
+            {canEdit && (
+              <Button onClick={() => navigate("/erp/sales/orders?create=1")}>
+                <Plus size={17} />
+                Новый заказ
+              </Button>
+            )}
           </>
         }
       />
@@ -521,14 +537,22 @@ export function Dashboard() {
             title="В фокусе команды"
             description="Ближайшие задачи и приоритеты"
             action={
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Создать задачу"
-                onClick={() => navigate("/erp/tasks?create=1")}
-              >
-                <Plus size={18} />
-              </Button>
+              canEdit && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Создать задачу"
+                  onClick={() =>
+                    navigate(
+                      preview
+                        ? "/erp/sales/analytics?newTask=1"
+                        : "/erp/tasks?create=1",
+                    )
+                  }
+                >
+                  <Plus size={18} />
+                </Button>
+              )
             }
           />
           <div>
@@ -537,14 +561,21 @@ export function Dashboard() {
             ) : (
               <Empty
                 title="Всё выполнено"
-                description="Создайте новую задачу для команды."
+                description={
+                  canEdit ? "Создайте новую задачу для команды." : undefined
+                }
               />
             )}
           </div>
-          <button className="all-tasks" onClick={() => navigate("/erp/tasks")}>
-            Все задачи
-            <ArrowRight size={15} />
-          </button>
+          {!preview && (
+            <button
+              className="all-tasks"
+              onClick={() => navigate("/erp/tasks")}
+            >
+              Все задачи
+              <ArrowRight size={15} />
+            </button>
+          )}
         </section>
       </div>
     </div>

@@ -1,0 +1,506 @@
+.erp-start-page {
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+.erp-onboarding-guide {
+  container: erp-start / inline-size;
+  background-image:
+    radial-gradient(
+      ellipse 70% 400px at 100% 0,
+      color-mix(in srgb, var(--erp-canvas-tint) 74%, transparent),
+      transparent 74%
+    ),
+    radial-gradient(
+      ellipse 60% 340px at 0 100%,
+      color-mix(in srgb, var(--erp-glass-tint) 75%, transparent),
+      transparent 80%
+    );
+}
+
+.erp-start-status {
+  margin-bottom: 12px;
+}
+
+.erp-start-layout {
+  --start-surface: color-mix(in srgb, var(--card) 90%, var(--erp-glass-tint));
+  --start-border: color-mix(in srgb, var(--border) 92%, var(--erp-nav-accent));
+  --start-gap: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 2.65fr) minmax(232px, 1fr);
+  gap: var(--start-gap);
+}
+
+.erp-start-main {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--start-gap);
+  min-width: 0;
+}
+
+.erp-start-team-panel {
+  grid-column: 1 / -1;
+}
+
+.erp-start-team-panel .erp-department-grid[data-detailed="false"] {
+  --department-surface: color-mix(
+    in srgb,
+    var(--card) 77%,
+    var(--erp-canvas-tint)
+  );
+  --department-edge: color-mix(
+    in srgb,
+    var(--border) 67%,
+    var(--erp-nav-accent)
+  );
+}
+
+html[data-erp-theme="dark"]
+  .erp-start-team-panel
+  .erp-department-grid[data-detailed="false"] {
+  --department-surface: color-mix(
+    in srgb,
+    var(--background) 65%,
+    var(--erp-canvas-tint)
+  );
+}
+
+.erp-start-hero {
+  grid-column: 1 / -1;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 218px;
+  overflow: hidden;
+  padding: clamp(20px, 3cqi, 34px);
+  border: 1px solid #494069;
+  border-radius: 16px;
+  color: #fff;
+  background-color: #19132d;
+}
+
+.erp-start-hero::before,
+.erp-start-hero::after {
+  position: absolute;
+  pointer-events: none;
+  content: "";
+}
+
+.erp-start-hero::before {
+  z-index: -2;
+  inset: -12px;
+  background-image: url("/media/nova-onboarding-trail.webp");
+  background-position: right 17%;
+  background-size: max(110%, 490px) auto;
+  filter: brightness(1.07) saturate(1.08);
+  transform-origin: 76% 48%;
+}
+
+.erp-start-hero::after {
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #191329 0%,
+    #191329a3 34%,
+    transparent 64%
+  );
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .erp-start-hero::before {
+    animation: erp-start-mountain-arrive 4.5s cubic-bezier(0.22, 0.61, 0.36, 1)
+      backwards;
+  }
+}
+
+@keyframes erp-start-mountain-arrive {
+  from {
+    transform: translate(16px, 10px) scale(1.05);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+.erp-start-hero h1 {
+  max-width: min(100%, 460px);
+  margin: 0;
+  font-size: clamp(26px, 4cqi, 46px);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.erp-start-hero h1 span {
+  display: block;
+  color: #c6a5ff;
+}
+
+.erp-start-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.erp-start-panel,
+.erp-start-tile {
+  border: 1px solid var(--start-border);
+  border-radius: 13px;
+  background: var(--start-surface);
+}
+
+.erp-start-panel {
+  padding: 14px 16px;
+}
+
+.erp-start-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  min-height: 76px;
+  padding: 10px 12px;
+  text-align: start;
+  color: inherit;
+  cursor: pointer;
+}
+
+.erp-start-tile:hover {
+  border-color: var(--erp-nav-accent);
+  background: var(--erp-selection);
+}
+
+.erp-start-heading svg {
+  flex: none;
+  color: var(--erp-nav-accent);
+}
+
+.erp-start-tile strong {
+  display: block;
+  font-size: 13px;
+  line-height: 1.25;
+  font-weight: 650;
+}
+
+.erp-start-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3px 10px;
+}
+
+.erp-start-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 650;
+}
+
+.erp-start-heading h2 svg {
+  width: 17px;
+  height: 17px;
+}
+
+.erp-start-heading > span {
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+
+.erp-start-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 0;
+  color: var(--erp-nav-accent);
+  font-size: 12px;
+  font-weight: 650;
+  text-align: start;
+  cursor: pointer;
+}
+
+.erp-start-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.erp-start-timeline,
+.erp-start-links {
+  margin: 11px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.erp-start-first-day {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.erp-start-step-hint {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.erp-start-timeline {
+  --step-size: 34px;
+  --step-hit-size: 44px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+}
+
+.erp-start-timeline li {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  text-align: center;
+}
+
+.erp-start-timeline li + li::before {
+  position: absolute;
+  top: calc(var(--step-hit-size) / 2);
+  right: calc(50% + var(--step-size) / 2 + 7px);
+  width: calc(100% - var(--step-size) - 14px);
+  height: 1px;
+  background: var(--start-border);
+  content: "";
+  pointer-events: none;
+}
+
+.erp-start-timeline li[data-completed="true"] + li::before {
+  background: color-mix(in srgb, var(--erp-action) 72%, var(--start-border));
+}
+
+.erp-start-timeline .spring-check-round {
+  position: relative;
+  z-index: 1;
+  place-items: center;
+  width: var(--step-hit-size);
+  height: var(--step-hit-size);
+  padding: 0;
+}
+
+.erp-start-timeline .spring-check-control {
+  position: static;
+  width: var(--step-size);
+  height: var(--step-size);
+}
+
+.erp-start-timeline .spring-check-box {
+  inset: calc((var(--step-hit-size) - var(--step-size)) / 2);
+  border-color: color-mix(
+    in srgb,
+    var(--start-border) 68%,
+    var(--erp-nav-accent)
+  );
+  background: var(--erp-selection);
+  color: var(--muted-foreground);
+  box-shadow:
+    inset 0 1px 0 var(--erp-glass-rim),
+    0 2px 3px #110a2224;
+}
+
+.erp-start-timeline
+  .spring-check-round:is(:hover, :focus-within)
+  .spring-check-box,
+.erp-start-timeline [data-next="true"] .spring-check-box {
+  border-color: var(--erp-nav-accent);
+  color: var(--erp-nav-accent);
+}
+
+.erp-start-timeline .spring-check-round:hover .spring-check-box {
+  background: color-mix(
+    in srgb,
+    var(--erp-selection) 85%,
+    var(--erp-nav-accent)
+  );
+}
+
+.erp-start-timeline .spring-check-box svg {
+  width: 17px;
+  height: 17px;
+}
+
+.erp-start-step-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 28px;
+  padding-inline: 3px;
+  border-radius: 4px;
+  color: var(--muted-foreground);
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.erp-start-step-link[aria-current],
+.erp-start-step-link:hover {
+  color: var(--erp-nav-accent);
+}
+
+.erp-start-step-link[aria-current] {
+  font-weight: 650;
+}
+
+.erp-start-step-link[aria-expanded="true"] {
+  background: var(--erp-selection);
+  color: var(--erp-nav-accent);
+}
+
+.erp-start-step-link svg {
+  flex: none;
+}
+
+.erp-start-step-link[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.erp-start-step-help {
+  z-index: 60;
+  display: grid;
+  gap: 7px;
+  width: min(280px, calc(100vw - 24px));
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--border) 65%, var(--erp-nav-accent));
+  border-radius: 11px;
+  background: var(--card);
+  box-shadow: var(--erp-glass-shadow);
+  color: var(--foreground);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.erp-start-step-help p {
+  margin: 0;
+  color: var(--muted-foreground);
+}
+
+.erp-start-step-help a {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 5px;
+  padding-block: 4px;
+  color: var(--erp-nav-accent);
+  font-weight: 650;
+}
+
+.erp-start-step-help a:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .erp-start-timeline .spring-check-fill {
+    transition-duration: 330ms;
+  }
+
+  .erp-start-timeline .spring-check-box path:not(.spring-check-plus) {
+    transition-duration: 230ms;
+  }
+}
+
+.erp-start-links a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 33px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.erp-start-aside {
+  min-width: 0;
+  align-self: start;
+  background: color-mix(in srgb, var(--start-surface) 64%, var(--background));
+}
+
+.erp-start-links {
+  margin-top: 8px;
+}
+
+.erp-start-links a {
+  min-height: 36px;
+  padding: 3px 5px;
+  border-radius: 6px;
+}
+
+.erp-start-links a:hover {
+  color: var(--erp-nav-accent);
+  background: color-mix(in srgb, var(--erp-selection) 55%, transparent);
+}
+
+.erp-start-aside .erp-start-emoji,
+.erp-start-help-icon {
+  --emoji-size: 22px;
+  width: var(--emoji-size);
+  height: var(--emoji-size);
+}
+
+.erp-start-help-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  color: var(--erp-nav-accent);
+}
+
+.erp-start-links a > svg {
+  flex: none;
+  margin-inline-start: auto;
+  color: var(--muted-foreground);
+}
+
+.erp-start-help-link {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--start-border);
+}
+
+.erp-onboarding-guide :is(a, button, input):focus-visible {
+  outline: 2px solid var(--erp-nav-accent);
+  outline-offset: 3px;
+}
+
+@container erp-start (max-width: 860px) {
+  .erp-start-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@container erp-start (max-width: 620px) {
+  .erp-start-hero::before {
+    background-position: right 8%;
+    background-size: max(110%, 550px) auto;
+  }
+
+  .erp-start-hero::after {
+    background: linear-gradient(
+      90deg,
+      #191329f0 0%,
+      #191329b8 58%,
+      #19132938 100%
+    );
+  }
+
+  .erp-start-shortcuts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .erp-start-step-link {
+    font-size: 11px;
+  }
+}

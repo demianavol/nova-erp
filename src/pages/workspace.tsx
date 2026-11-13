@@ -15,7 +15,6 @@ import {
   Package,
   Plus,
   RotateCcw,
-  Save,
   ShieldCheck,
   Target,
   Users,
@@ -23,6 +22,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useERP, usePreferences } from "../data/store";
+import { useAccessBoard, useDepartmentAction } from "../data/access-board";
 import { departments, departmentNames } from "../data/schema";
 import { isRevenue, orderTotal } from "../data/selectors";
 import { cn, money, today } from "../lib/utils";
@@ -42,6 +42,8 @@ import {
 import { projectTasks, sprintRange, useWorkspace } from "../data/workspace";
 import { HomeDealBoard } from "../components/home-deal-board";
 import { ProjectNavigation } from "../components/project-navigation";
+import { AvatarPicker } from "../components/avatar-picker";
+import { HoldButton, SaveButton, useSaveAction } from "../components/ui/action-buttons";
 import { TaskRow } from "./dashboard";
 import {
   defaultTaskFilters,
@@ -290,6 +292,17 @@ const info: Record<
 
 export function Department() {
   const { department = "team" } = useParams();
+  const preview = useAccessBoard((state) => !!state.previewEmployeeId);
+  const canEdit = useDepartmentAction(
+    department as (typeof departments)[number],
+    "edit",
+  );
+  const createTask = () =>
+    navigate(
+      preview
+        ? `/erp/departments/${department}?newTask=1`
+        : `/erp/tasks?create=1&department=${department}`,
+    );
   const data = useERP((s) => s.data),
     navigate = useNavigate();
   const item = info[department];
@@ -373,14 +386,12 @@ export function Department() {
         title={departmentNames[department]}
         description={item.description}
         actions={
-          <Button
-            onClick={() =>
-              navigate(`/erp/tasks?create=1&department=${department}`)
-            }
-          >
-            <Plus size={17} />
-            Новая задача
-          </Button>
+          canEdit && (
+            <Button onClick={createTask}>
+              <Plus size={17} />
+              Новая задача
+            </Button>
+          )
         }
       />
       <div className="department-banner">
@@ -428,16 +439,16 @@ export function Department() {
           <SectionHeading
             title="Задачи отдела"
             action={
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Создать задачу отдела"
-                onClick={() =>
-                  navigate(`/erp/tasks?create=1&department=${department}`)
-                }
-              >
-                <Plus size={17} />
-              </Button>
+              canEdit && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label="Создать задачу отдела"
+                  onClick={createTask}
+                >
+                  <Plus size={17} />
+                </Button>
+              )
             }
           />
           {tasks.length ? (
@@ -445,7 +456,9 @@ export function Department() {
           ) : (
             <Empty
               title="Задач пока нет"
-              description="Создайте первую задачу для отдела."
+              description={
+                canEdit ? "Создайте первую задачу для отдела." : undefined
+              }
             />
           )}
         </section>
@@ -491,6 +504,12 @@ export function Department() {
 }
 
 export function Projects() {
+  const { data } = useERP();
+  const { projects, selectedProjectId } = useWorkspace();
+  const project = projects.find((item) => item.id === selectedProjectId);
+  const empty = !projects.some((item) => !item.archived) ||
+    (!!project && !projectTasks(data.tasks, project).length &&
+      !data.deals.some(({ id }) => project.dealIds.includes(id)));
   return (
     <>
       <PageHeading
@@ -502,8 +521,8 @@ export function Projects() {
           </Link>
         }
       />
-      <ProjectNavigation />
-      <HomeDealBoard />
+      <ProjectNavigation showEmpty={empty} />
+      {!empty && <HomeDealBoard />}
     </>
   );
 }
@@ -513,16 +532,21 @@ export function Profile() {
   const [name, setName] = useState(preferences.name),
     [email, setEmail] = useState(preferences.email),
     [role, setRole] = useState(preferences.role),
+    [avatarSeed, setAvatarSeed] = useState(preferences.avatarSeed),
     [error, setError] = useState("");
+  const save = useSaveAction();
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
-    try {
-      preferences.update({ name, email, role });
-      setError("");
-      toast.success("Профиль сохранён");
-    } catch {
-      setError("Укажите имя и должность от 2 символов и корректный email.");
-    }
+    void save.run(() => {
+      try {
+        const saved = preferences.update({ name, email, role, avatarSeed });
+        setError(saved ? "" : "Не удалось сохранить профиль в браузере.");
+        return saved;
+      } catch {
+        setError("Укажите имя и должность от 2 символов и корректный email.");
+        return false;
+      }
+    });
   };
   return (
     <>
@@ -537,12 +561,20 @@ export function Profile() {
           description="Эти данные используются в интерфейсе"
         />
         <div className="profile-preview">
-          <Avatar name={preferences.name} size="lg" />
+          <Avatar name={name} size="lg" seed={avatarSeed} />
           <div>
-            <strong>{preferences.name}</strong>
-            <span>{preferences.role}</span>
+            <strong>{name}</strong>
+            <span>{role}</span>
           </div>
           <Badge tone="violet">Демо-аккаунт</Badge>
+        </div>
+        <div className="nova-profile-avatar-actions">
+          <AvatarPicker name={name} onChoose={setAvatarSeed} />
+          {avatarSeed && (
+            <Button type="button" size="sm" variant="ghost" onClick={() => setAvatarSeed(undefined)}>
+              Вернуть стандартный
+            </Button>
+          )}
         </div>
         <Field label="Имя и фамилия">
           <Input
@@ -575,10 +607,7 @@ export function Profile() {
             {error}
           </p>
         )}
-        <Button type="submit">
-          <Save size={16} />
-          Сохранить профиль
-        </Button>
+        <SaveButton status={save.status}>Сохранить профиль</SaveButton>
       </form>
     </>
   );
@@ -659,22 +688,22 @@ export function Settings() {
         open={confirm}
         onOpenChange={setConfirm}
         title="Восстановить демоданные?"
-        description="Созданные и изменённые записи будут заменены исходным набором. Это действие нельзя отменить."
+        description="Записи будут заменены исходным набором. Для подтверждения удерживайте кнопку."
       >
         <div className="dialog-footer">
           <Button variant="outline" onClick={() => setConfirm(false)}>
             Отмена
           </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
+          <HoldButton
+            danger
+            onConfirm={() => {
               resetData();
               setConfirm(false);
               toast.success("Демонстрационные данные восстановлены");
             }}
           >
             Сбросить данные
-          </Button>
+          </HoldButton>
         </div>
       </Dialog>
     </>

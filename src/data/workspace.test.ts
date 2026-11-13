@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { seedData } from "./seed";
+import { useERP } from "./store";
 import { enrichDemoWorkspace } from "./demo-activities";
 import {
   initialWorkspace,
@@ -9,6 +10,38 @@ import {
 } from "./workspace";
 
 describe("Проекты и рабочее пространство", () => {
+  it("архивирует и восстанавливает связи проекта, а удаление сохраняет задачи ERP", () => {
+    const workspace = useWorkspace.getState();
+    try {
+      const id = workspace.addProject("Проект для проверки", "e1");
+      workspace.attach(id, "taskIds", "t1");
+      workspace.renameProject(id, "Новое название");
+      workspace.archiveProject(id, true);
+      expect(useWorkspace.getState().selectedProjectId).toBeNull();
+      workspace.selectProject(id);
+      expect(useWorkspace.getState().selectedProjectId).toBeNull();
+      expect(
+        useWorkspace.getState().projects.find((p) => p.id === id),
+      ).toMatchObject({
+        archived: true,
+        name: "Новое название",
+        taskIds: ["t1"],
+      });
+      workspace.archiveProject(id, false);
+      workspace.selectProject(id);
+      expect(useWorkspace.getState().selectedProjectId).toBe(id);
+      workspace.deleteProject(id);
+      expect(useWorkspace.getState().selectedProjectId).toBeNull();
+      expect(useWorkspace.getState().projects.some((p) => p.id === id)).toBe(
+        false,
+      );
+      expect(
+        useERP.getState().data.tasks.some((task) => task.id === "t1"),
+      ).toBe(true);
+    } finally {
+      useWorkspace.setState(workspace);
+    }
+  });
   it("добавляет демособытия в старый набор без дубликатов и сброса записей", () => {
     const data = seedData("2026-10-26");
     data.activities = data.activities.filter((a) => !a.demo);

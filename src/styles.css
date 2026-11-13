@@ -1250,35 +1250,6 @@ select {
 .period-control {
   position: relative;
 }
-.period-tabs {
-  display: flex;
-  align-items: center;
-  background: var(--card);
-  border: 1px solid var(--border);
-  padding: 3px;
-  border-radius: 7px;
-  gap: 3px;
-}
-.period-tabs > button {
-  padding: 6px 11px;
-  font-size: 9px;
-  color: var(--muted-foreground);
-  border-radius: 4px;
-  min-height: 27px;
-}
-.period-tabs > button:last-child {
-  display: grid;
-  place-items: center;
-  padding: 6px 8px;
-}
-.period-tabs > button.active {
-  background: var(--violet-bg);
-  color: var(--primary);
-  font-weight: 600;
-}
-.period-tabs > button:hover {
-  background: var(--hover);
-}
 .custom-period {
   position: absolute;
   right: 0;
@@ -4058,10 +4029,6 @@ tbody > tr:has(button):hover {
   .overview-heading h2 .badge {
     font-size: 7px;
   }
-  .period-tabs > button {
-    font-size: 8px;
-    padding: 6px 8px;
-  }
   .dashboard-middle {
     grid-template-columns: 1fr;
   }
@@ -4547,22 +4514,6 @@ tbody > tr:has(button):hover {
   .overview-heading p {
     font-size: 8px;
     margin-top: 7px;
-  }
-  .period-tabs {
-    padding: 2px;
-    gap: 1px;
-  }
-  .period-tabs > button {
-    padding: 6px;
-    font-size: 8px;
-    min-height: 25px;
-  }
-  .period-tabs > button:last-child {
-    padding: 5px;
-  }
-  .period-tabs > button:last-child > svg {
-    height: 13px;
-    width: 13px;
   }
   .custom-period {
     width: calc(100vw - 36px);

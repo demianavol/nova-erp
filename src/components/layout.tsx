@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Navigate,
+  Link,
   Outlet,
   matchPath,
   useLocation,
@@ -14,7 +15,6 @@ import {
   Check,
   ChevronRight,
   CircleHelp,
-  Command,
   LayoutDashboard,
   ListTodo,
   LogOut,
@@ -35,16 +35,42 @@ import {
 import { Toaster } from "sonner";
 import { useERP, usePreferences } from "../data/store";
 import { useAuth } from "../data/erp-session";
+import {
+  canManageAccess,
+  departmentForPage,
+  departmentPermissions,
+  employeeDepartments,
+  useAccessBoard,
+} from "../data/access-board";
+import { erpPage, erpSections, salesPages } from "../data/erp-sections";
+import { canOpenErpPage, isErpRouteOpen } from "../data/erp-preview";
 import { readSiteTheme } from "./site-theme";
 import { useErpActivity } from "../data/erp-activity";
 import { cn, dateLabel, money, today } from "../lib/utils";
 import { orderTotal } from "../data/selectors";
 import { Avatar, Badge, Button, Dialog, Empty, Input, Menu } from "./ui";
+import { PageLoader } from "./ui/page-loader";
 import { EntityDialogs } from "./entity-dialogs";
 import { ErpAssistant } from "./erp-assistant";
-import { ErpNavigation, SalesNavigation, erpPage } from "./erp-navigation";
+import {
+  ErpNavigation,
+  ErpSectionPlaceholder,
+  ErpSectionStatus,
+  SalesNavigation,
+} from "./erp-navigation";
 import "../refinements.css";
 import "../workspace.css";
+
+const salesOpen = canOpenErpPage(erpSections.sales);
+const tasksOpen = canOpenErpPage(erpSections.tasks);
+const searchAvailable = salesOpen || tasksOpen;
+const notificationsAvailable =
+  searchAvailable || canOpenErpPage(erpSections.finance);
+const createActions = [
+  { label: "Новый заказ", icon: ShoppingBag, route: salesPages.orders.to },
+  { label: "Новая задача", icon: ListTodo, route: erpSections.tasks.to },
+  { label: "Новая сделка", icon: Target, route: salesPages.pipeline.to },
+].filter(({ route }) => isErpRouteOpen(route));
 
 function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
   const data = useERP((s) => s.data),
@@ -53,7 +79,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
   const q = query.toLowerCase().trim();
   const result = q
     ? [
-        ...data.orders
+        ...(salesOpen ? data.orders : [])
           .filter((o) =>
             `${o.number} ${data.customers.find((c) => c.id === o.customerId)?.name}`
               .toLowerCase()
@@ -68,7 +94,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
             type: "Заказ",
             icon: ShoppingBag,
           })),
-        ...data.customers
+        ...(salesOpen ? data.customers : [])
           .filter((c) =>
             `${c.name} ${c.email} ${c.phone}`.toLowerCase().includes(q),
           )
@@ -81,7 +107,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
             type: "Клиент",
             icon: Users,
           })),
-        ...data.deals
+        ...(salesOpen ? data.deals : [])
           .filter((d) => d.title.toLowerCase().includes(q))
           .slice(0, 5)
           .map((d) => ({
@@ -92,7 +118,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
             type: "Сделка",
             icon: Target,
           })),
-        ...data.tasks
+        ...(tasksOpen ? data.tasks : [])
           .filter((t) => t.title.toLowerCase().includes(q))
           .slice(0, 5)
           .map((t) => ({
@@ -112,7 +138,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
         if (!v) close();
       }}
       title="Поиск в рабочем пространстве"
-      description="Заказы, клиенты, сделки и задачи"
+      description="Поиск по записям в доступных разделах"
     >
       <div className="global-search-body">
         <div className="search-input large">
@@ -145,19 +171,21 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
                   route: "/erp/tasks",
                   icon: ListTodo,
                 },
-              ].map((item) => (
-                <button
-                  key={item.route}
-                  onClick={() => {
-                    close();
-                    navigate(item.route);
-                  }}
-                >
-                  <item.icon size={18} />
-                  {item.title}
-                  <ArrowUpRight size={15} />
-                </button>
-              ))}
+              ]
+                .filter(({ route }) => isErpRouteOpen(route))
+                .map((item) => (
+                  <button
+                    key={item.route}
+                    onClick={() => {
+                      close();
+                      navigate(item.route);
+                    }}
+                  >
+                    <item.icon size={18} />
+                    {item.title}
+                    <ArrowUpRight size={15} />
+                  </button>
+                ))}
             </div>
           ) : result.length ? (
             result.map((r) => (
@@ -183,7 +211,7 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
           ) : (
             <Empty
               title="Ничего не найдено"
-              description="Попробуйте имя клиента, номер заказа или название задачи."
+              description="Проверьте название или номер записи."
             />
           )}
         </div>
@@ -195,23 +223,117 @@ function GlobalSearch({ open, close }: { open: boolean; close: () => void }) {
 export function ProtectedLayout() {
   const { authenticated, check } = useAuth();
   const location = useLocation();
+  const previewEmployeeId = useAccessBoard((state) => state.previewEmployeeId);
   useEffect(() => {
     if (authenticated === null) void check();
   }, [authenticated, check]);
   if (authenticated === null)
     return (
-      <div className="app-loading" role="status">
-        Проверяем доступ…
-      </div>
+      <PageLoader className="app-loading" title="Проверяем доступ…" />
     );
-  return authenticated ? (
-    <Layout />
+  if (!authenticated)
+    return (
+      <Navigate
+        to="/login"
+        state={{ from: location.pathname + location.search + location.hash }}
+        replace
+      />
+    );
+  return previewEmployeeId ? (
+    <EmployeePreview employeeId={previewEmployeeId} />
   ) : (
-    <Navigate
-      to="/login"
-      state={{ from: location.pathname + location.search + location.hash }}
-      replace
-    />
+    <Layout />
+  );
+}
+
+function EmployeePreview({ employeeId }: { employeeId: string }) {
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { graph, preview } = useAccessBoard();
+  const employee = useERP((state) =>
+    state.data.employees.find(({ id }) => id === employeeId),
+  );
+  const theme = usePreferences((state) => state.theme);
+  const departments = employee ? employeeDepartments(graph, employee.id) : [];
+  const page = erpPage(pathname);
+  const managesAccess = !!employee && canManageAccess(graph, employee.id);
+  const department =
+    page && departments.find(({ to }) => to === departmentForPage(page).to);
+  const allowed = department || (page === erpSections.access && managesAccess);
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.erpTheme = theme;
+    return () => {
+      delete document.documentElement.dataset.erpTheme;
+    };
+  }, [theme]);
+
+  function closePreview() {
+    preview(null);
+    navigate(erpSections.access.to, { replace: true });
+  }
+
+  return (
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="page-content erp-employee-preview"
+    >
+      <header className="card erp-preview-header">
+        <div>
+          <h1>Проверка доступа</h1>
+          <p>{employee?.name}</p>
+        </div>
+        <Button variant="outline" onClick={closePreview}>
+          Вернуться к доске
+        </Button>
+      </header>
+      <nav className="erp-preview-departments" aria-label="Доступные отделы">
+        {departments.map(({ to, label }) => (
+          <Link className="btn btn-outline" to={to} key={to}>
+            {label}
+          </Link>
+        ))}
+        {managesAccess && (
+          <Link className="btn btn-outline" to={erpSections.access.to}>
+            Управление доступами
+          </Link>
+        )}
+      </nav>
+      {page === erpSections.home ? (
+        <p>
+          {departments.length
+            ? "Выберите доступный отдел."
+            : "Доступ к отделам пока не выдан."}
+        </p>
+      ) : !page || !allowed ? (
+        <Empty
+          title="Нет доступа"
+          description="У сотрудника нет роли, которая открывает этот раздел."
+        />
+      ) : !canOpenErpPage(page) ? (
+        <ErpSectionPlaceholder page={page} />
+      ) : (
+        <>
+          {department && (
+            <p className="muted">
+              {[
+                department.edit && departmentPermissions.edit,
+                department.approve && departmentPermissions.approve,
+              ]
+                .filter(Boolean)
+                .join(" · ") || departmentPermissions.view}
+            </p>
+          )}
+          {pathname.startsWith("/erp/sales/") && <SalesNavigation />}
+          <Suspense fallback={<PageLoader compact title="Загрузка раздела…" />}>
+            <Outlet />
+          </Suspense>
+          <EntityDialogs />
+        </>
+      )}
+      <Toaster richColors position="bottom-right" theme={theme} closeButton />
+    </main>
   );
 }
 
@@ -241,8 +363,10 @@ function Layout() {
   }, [location.key, navigationType]);
   const page = erpPage(location.pathname);
   const section = page?.label ?? "ERP";
-  const isHome = page?.to === "/erp";
-  const path = page?.to;
+  const isHome = page === erpSections.home;
+  const pageOpen = canOpenErpPage(page);
+  const unavailablePage = page && !pageOpen ? page : undefined;
+  const path = pageOpen ? page?.to : undefined;
   const lastPage = useRef<string | undefined>(undefined);
   useEffect(() => {
     if (lastPage.current === path) return;
@@ -280,12 +404,22 @@ function Layout() {
     media.addEventListener("change", update);
     return () => media.removeEventListener("change", update);
   }, []);
-  const unread = data.notifications.filter((n) => !n.read).length;
+  const visibleNotifications = data.notifications.filter(
+    ({ route }) => route === "/" || isErpRouteOpen(route),
+  );
+  const unreadIds = visibleNotifications
+    .filter(({ read }) => !read)
+    .map(({ id }) => id);
+  const unread = unreadIds.length;
   const isSales = /^\/erp\/sales(?:\/|$)/.test(location.pathname);
   const goBack = () => {
     const index: unknown = window.history.state?.idx;
     if (typeof index === "number" && visitedErpEntries.current.has(index - 1)) {
       navigate(-1);
+      return;
+    }
+    if (unavailablePage) {
+      navigate(erpSections.home.to, { replace: true });
       return;
     }
     const { pathname, hash } = location;
@@ -303,7 +437,7 @@ function Layout() {
     navigate(fallback, { replace: true });
   };
   useEffect(() => {
-    if (mobile) return;
+    if (mobile || !searchAvailable) return;
     const key = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
@@ -443,45 +577,41 @@ function Layout() {
             )}
           </div>
           <div className="topbar-right">
-            <button
-              aria-label="Поиск по рабочему пространству"
-              aria-haspopup="dialog"
-              className="global-search-trigger"
-              onClick={() => setSearch(true)}
-            >
-              <Search size={16} aria-hidden="true" />
-              <span>Поиск</span>
-              <kbd>Ctrl K</kbd>
-            </button>
+            {searchAvailable && (
+              <button
+                aria-label="Поиск по рабочему пространству"
+                aria-haspopup="dialog"
+                className="global-search-trigger"
+                onClick={() => setSearch(true)}
+              >
+                <Search size={16} aria-hidden="true" />
+                <span>Поиск</span>
+                <kbd>Ctrl K</kbd>
+              </button>
+            )}
             {import.meta.env.DEV && <ErpAssistant />}
             <span className="topbar-date">
               <CalendarDays size={14} />
               {dateLabel(today(), true)}
             </span>
-            <Menu
-              trigger={
-                <Button variant="ghost" size="icon" aria-label="Создать запись">
-                  <Plus size={18} />
-                </Button>
-              }
-              items={[
-                {
-                  label: "Новый заказ",
-                  icon: <ShoppingBag size={15} />,
-                  onClick: () => navigate("/erp/sales/orders?create=1"),
-                },
-                {
-                  label: "Новая задача",
-                  icon: <ListTodo size={15} />,
-                  onClick: () => navigate("/erp/tasks?create=1"),
-                },
-                {
-                  label: "Новая сделка",
-                  icon: <Target size={15} />,
-                  onClick: () => navigate("/erp/sales/pipeline?create=1"),
-                },
-              ]}
-            />
+            {createActions.length > 0 && (
+              <Menu
+                trigger={
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Создать запись"
+                  >
+                    <Plus size={18} />
+                  </Button>
+                }
+                items={createActions.map(({ label, icon: Icon, route }) => ({
+                  label,
+                  icon: <Icon size={15} />,
+                  onClick: () => navigate(`${route}?create=1`),
+                }))}
+              />
+            )}
             <span className="topbar-divider" />
             <Button
               variant="ghost"
@@ -499,21 +629,23 @@ function Layout() {
                 <Moon size={18} aria-hidden="true" />
               )}
             </Button>
-            <button
-              className="notifications-button"
-              aria-label={`Уведомления: ${unread} непрочитанных`}
-              onClick={() => setNotifications(true)}
-            >
-              <Bell size={19} />
-              {unread > 0 && <span />}
-            </button>
+            {notificationsAvailable && (
+              <button
+                className="notifications-button"
+                aria-label={`Уведомления: ${unread} непрочитанных`}
+                onClick={() => setNotifications(true)}
+              >
+                <Bell size={19} />
+                {unread > 0 && <span />}
+              </button>
+            )}
             <Menu
               trigger={
                 <button
                   className="topbar-avatar"
                   aria-label="Открыть меню пользователя"
                 >
-                  <Avatar name={preferences.name} size="sm" />
+                  <Avatar name={preferences.name} size="sm" seed={preferences.avatarSeed} />
                 </button>
               }
               label={preferences.name}
@@ -565,30 +697,43 @@ function Layout() {
             <div role="alert" className="storage-warning">
               <AlertCircle size={18} />
               <span>{storageError}</span>
-              <button onClick={() => navigate("/erp/settings")}>
-                Настройки
-                <ArrowUpRight size={13} />
-              </button>
+              {canOpenErpPage(erpSections.settings) && (
+                <button onClick={() => navigate(erpSections.settings.to)}>
+                  Настройки
+                  <ArrowUpRight size={13} />
+                </button>
+              )}
             </div>
           )}
-          {isSales && <SalesNavigation />}
-          <Suspense
-            fallback={
-              <p className="muted" role="status">
-                Загрузка раздела…
-              </p>
-            }
-          >
-            <Outlet />
-          </Suspense>
+          {unavailablePage ? (
+            <ErpSectionPlaceholder page={unavailablePage} />
+          ) : (
+            <>
+              {page && !page.ready && page !== erpSections.firstSteps && (
+                <div className="erp-section-preview">
+                  <ErpSectionStatus ready={page.ready} />
+                </div>
+              )}
+              {isSales && salesOpen && <SalesNavigation />}
+              <Suspense
+                fallback={
+                  <PageLoader compact title="Загрузка раздела…" />
+                }
+              >
+                <Outlet />
+              </Suspense>
+            </>
+          )}
         </main>
       </div>
-      <EntityDialogs />
-      <GlobalSearch
-        key={search ? "open" : "closed"}
-        open={search}
-        close={() => setSearch(false)}
-      />
+      {pageOpen && !isHome && <EntityDialogs />}
+      {searchAvailable && (
+        <GlobalSearch
+          key={search ? "open" : "closed"}
+          open={search}
+          close={() => setSearch(false)}
+        />
+      )}
       <Dialog
         open={notifications}
         onOpenChange={setNotifications}
@@ -600,15 +745,15 @@ function Layout() {
             variant="ghost"
             size="sm"
             disabled={!unread}
-            onClick={() => readNotification()}
+            onClick={() => readNotification(unreadIds)}
           >
             <Check size={14} />
             Прочитать все
           </Button>
         </div>
         <div className="notification-list">
-          {data.notifications.length ? (
-            data.notifications.map((n) => (
+          {visibleNotifications.length ? (
+            visibleNotifications.map((n) => (
               <button
                 key={n.id}
                 className={cn("notification-item", !n.read && "unread")}
@@ -686,23 +831,25 @@ function Layout() {
               text: "Назначайте задачи, сроки и ответственных.",
               route: "/erp/tasks",
             },
-          ].map((step) => (
-            <button
-              className="help-step"
-              key={step.n}
-              onClick={() => {
-                setHelp(false);
-                navigate(step.route);
-              }}
-            >
-              <span>{step.n}</span>
-              <div>
-                <strong>{step.title}</strong>
-                <p>{step.text}</p>
-              </div>
-              <ArrowUpRight size={17} />
-            </button>
-          ))}
+          ]
+            .filter(({ route }) => isErpRouteOpen(route))
+            .map((step) => (
+              <button
+                className="help-step"
+                key={step.n}
+                onClick={() => {
+                  setHelp(false);
+                  navigate(step.route);
+                }}
+              >
+                <span>{step.n}</span>
+                <div>
+                  <strong>{step.title}</strong>
+                  <p>{step.text}</p>
+                </div>
+                <ArrowUpRight size={17} />
+              </button>
+            ))}
           <div className="demo-disclaimer">
             <ShieldIcon />
             Это демоверсия. Данные хранятся в браузере, реальных платежей и

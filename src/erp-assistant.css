@@ -139,8 +139,69 @@
   flex-shrink: 0;
 }
 
-.erp-assistant-pending {
+.erp-thought-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   color: var(--muted-foreground);
+}
+
+.erp-thought-line svg {
+  color: var(--erp-nav-accent);
+  animation: erp-thought-breath 1.6s ease-in-out infinite alternate;
+}
+
+.erp-thought-line time {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .erp-thought-line > span {
+    background: linear-gradient(
+      105deg,
+      var(--muted-foreground) 28%,
+      var(--erp-nav-accent) 50%,
+      var(--muted-foreground) 72%
+    );
+    background-clip: text;
+    background-size: 240% 100%;
+    color: transparent;
+    animation: erp-thought-shimmer 1.8s linear infinite;
+  }
+}
+
+@keyframes erp-thought-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
+@keyframes erp-thought-breath {
+  from {
+    opacity: 0.62;
+    transform: scale(0.91);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .erp-thought-line svg {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .erp-thought-line > span {
+    background: none;
+    color: CanvasText;
+  }
 }
 
 .erp-assistant-form {

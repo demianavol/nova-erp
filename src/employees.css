@@ -1018,6 +1018,25 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
 }
+.employee-guide-erp .eg-tool-map {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 144px), 1fr));
+}
+.employee-guide-erp .eg-tool-map > div {
+  padding: 12px;
+  border-color: transparent;
+  background: color-mix(in srgb, var(--erp-selection) 60%, transparent);
+}
+.employee-guide-erp .eg-tool-map > div > h3 {
+  margin: 8px 0 0;
+  color: var(--foreground);
+}
+.employee-guide-erp .eg-tool-map > div > p {
+  min-height: 0;
+  margin-top: 4px;
+}
+.employee-guide-erp .eg-tool-map > div > div {
+  margin-top: 8px;
+}
 .eg-tool-map > div {
   border: 1px solid #e0d6e4;
   border-radius: 9px;

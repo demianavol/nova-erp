@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Settings2, Wallet } from "lucide-react";
 import { useERP } from "../data/store";
+import { useDepartmentAction } from "../data/access-board";
 import { periodFor, type Period } from "../data/selectors";
 import { financialMetrics } from "../data/finance";
 import { dateLabel, money } from "../lib/utils";
@@ -14,6 +15,7 @@ import { FinancialBreakdown } from "../components/metric-details";
 import { PeriodPicker } from "./dashboard";
 
 export function FinancePage() {
+  const canEdit = useDepartmentAction("finance", "edit");
   const data = useERP((s) => s.data),
     [period, setPeriod] = useState<Period>(periodFor(30)),
     [editing, setEditing] = useState(false);
@@ -25,10 +27,12 @@ export function FinancePage() {
         title="Финансы"
         description="От выручки к результату. Прибыль, затраты и операционная эффективность."
         actions={
-          <Button variant="outline" onClick={() => setEditing(true)}>
-            <Settings2 size={16} />
-            Настроить модель
-          </Button>
+          canEdit && (
+            <Button variant="outline" onClick={() => setEditing(true)}>
+              <Settings2 size={16} />
+              Настроить модель
+            </Button>
+          )
         }
       />
       <div className="overview-heading">
@@ -83,11 +87,13 @@ export function FinancePage() {
             Налоги, проценты и амортизация не включены.
           </p>
         </div>
-        <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
-          Изменить допущения
-        </Button>
+        {canEdit && (
+          <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
+            Изменить допущения
+          </Button>
+        )}
       </div>
-      {editing && (
+      {canEdit && editing && (
         <FinanceSettingsDialog open onClose={() => setEditing(false)} />
       )}
     </>

@@ -5,6 +5,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X, Search, ArrowUpRight, Inbox, Check } from "lucide-react";
 import { cn, initials } from "../../lib/utils";
+import { GeneratedAvatar } from "./generated-avatar";
 
 const buttonVariants = cva("btn", {
   variants: {
@@ -205,11 +206,13 @@ export function Avatar({
   color = "violet",
   size = "normal",
   portrait = true,
+  seed: selectedSeed,
 }: {
   name: string;
   color?: string;
   size?: "normal" | "sm" | "lg";
   portrait?: boolean;
+  seed?: string;
 }) {
   const seed = Array.from(name).reduce((sum, c) => sum + c.charCodeAt(0), 0);
   const photo = (seed % 6) + 1;
@@ -233,7 +236,9 @@ export function Avatar({
       role={portrait ? "img" : undefined}
       aria-label={portrait ? name : undefined}
     >
-      {portrait ? (
+      {portrait && selectedSeed ? (
+        <GeneratedAvatar seed={selectedSeed} />
+      ) : portrait ? (
         <img
           src={`${import.meta.env.BASE_URL}avatars/portrait-${photo}.png`}
           alt=""
